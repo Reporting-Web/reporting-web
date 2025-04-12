@@ -1,0 +1,45 @@
+<div class="sidebar-wrapper" data-simplebar="true">
+    <div class="sidebar-header">
+        <div>
+
+            <img [src]="logo" id="preview" height="55" alt="Image preview" />
+        </div>
+        <div>
+            <h4 class="logo-text">مجمع عيادات المحاكم</h4>
+        </div>
+        <div class="toggle-icon ms-auto"><i class='bx bx-arrow-back'></i>
+        </div>
+    </div>
+    <!--navigation-->
+    <ul class="metismenu" id="menu">
+        <li>
+            <a [routerLink]="['/home']">
+                <div class="parent-icon"><i class='bx bxs-dashboard'></i>
+                </div>
+                <div class="menu-title">{{'Dashbord' | i18n:i18nService.currentLanguage}}</div>
+            </a>
+        </li>
+
+
+        <li>
+            <a [routerLink]="['/menu_edition']">
+                <div class="parent-icon"><i class='bx bxs-report'></i>
+                </div>
+                <div class="menu-title">{{'Edition' | i18n:i18nService.currentLanguage}}</div>
+            </a>
+
+        </li>
+
+
+
+
+
+
+
+    </ul>
+    <!--end navigation-->
+</div>
+
+
+<script>
+</script>

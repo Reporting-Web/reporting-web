@@ -1,0 +1,38 @@
+{
+    "/auth": {
+        "target": "http://localhost:5051/api",
+        "secure": false,
+        "logLevel": "debug",
+        "changeOrigin": true,
+        "timeout": 360000
+    },
+    "/soc": {
+        "target": "http://localhost:5051/api",
+        "secure": false,
+        "logLevel": "debug",
+        "changeOrigin": true,
+        "timeout": 360000
+    },
+    "/dashbord": {
+        "target": "http://localhost:5051/api",
+        "secure": false,
+        "logLevel": "debug",
+        "changeOrigin": true,
+        "timeout": 360000
+    },
+    "/parametrage": {
+        "target": "http://localhost:5051/api",
+        "secure": false,
+        "logLevel": "debug",
+        "changeOrigin": true,
+        "timeout": 360000
+    },
+    "/reception": {
+        "target": "http://localhost:5051/api",
+        "secure": false,
+        "logLevel": "debug",
+        "changeOrigin": true,
+        "timeout": 360000
+    }
+
+}

@@ -1,0 +1,14 @@
+<div class="spinner" *ngIf="IsLoading">
+    <div class="lds-roller">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+
+    <div style="font-size: 20px;">{{'Loading' | i18n:i18nService.currentLanguage}}...</div>
+</div>

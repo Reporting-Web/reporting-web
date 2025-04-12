@@ -1,0 +1,80 @@
+<div class="container">
+    <div class="row text-center">
+        <h2 class="TitleMenu"> {{'Edition' | i18nForMenuReception:i18nService.currentLanguage}} </h2>
+        <div id="menu-box">
+            <div id="item" class="col-sm-6 col-md-3 myDIV " [routerLink]="['/menu_edition/rapport_opd']">
+                <div class="container-block ">
+                    <div class="block1">
+                        <i class="fa-solid fa-user" style="font-size: 20px; margin-top: 5px;"></i>
+                    </div>
+                    <div class="block2  ">
+                        <span class="FloatRight ">  {{'OutPatient' | i18nForMenuReception:i18nService.currentLanguage}}  </span>
+
+                    </div>
+                </div>
+            </div>
+            <div id="item" class="col-sm-6 col-md-3 myDIV " [routerLink]="['/menu_edition/rapport_labo']">
+                <div class="container-block ">
+                    <div class="block1">
+                        <i class="fa-solid fa-flask-vial" style="font-size: 20px; margin-top: 5px;"></i>
+                    </div>
+                    <div class="block2  ">
+                        <span class="FloatRight ">  {{'Laboratoire' | i18nForMenuReception:i18nService.currentLanguage}}  </span>
+
+                    </div>
+                </div>
+            </div>
+            <div id="item" class="col-sm-6 col-md-3 myDIV " [routerLink]="['/menu_edition/rapport_radio']">
+                <div class="container-block ">
+                    <div class="block1">
+                        <i class="fa-solid fa-lungs" style="font-size: 20px; margin-top: 5px;"></i>
+                    </div>
+                    <div class="block2  ">
+                        <span class="FloatRight ">  {{'Radiologie' | i18nForMenuReception:i18nService.currentLanguage}}  </span>
+
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+            <div id="item" class="col-sm-6 col-md-3 myDIV ">
+                <div class="container-block ">
+                    <div class="block1">
+                        <i class='fa-solid fa-kit-medical' [ngClass]="{ 'MenuOpened': IsOpened4 }" style="font-size: 20px; padding-top:6px"></i>
+                    </div>
+                    <div class="block2 ">
+                        <span class="FloatRight" [ngClass]="{ 'MenuOpened': IsOpened4 }">  {{'Pharmacie' | i18nForMenuReception:i18nService.currentLanguage}}  </span>
+                        <i class='FloatLeft bx bx-dots-vertical-rounded MenuMoreBtn' [ngClass]="{ 'MenuOpened': IsOpened4 }" (click)="onOpened4()" mat-button [matMenuTriggerFor]="menu4"></i>
+                        <mat-menu #menu4="matMenu" class="div-panel" (closed)="onClosed4()">
+                            <button mat-menu-item [routerLink]="['/menu_edition/rapport_pharmacie_normal']"><i class='fa-solid fa-briefcase-medical'></i> <span style="font-weight: bold;"> {{'PrescriptionNormal' | i18nForMenuReception:i18nService.currentLanguage}} </span>  </button>
+                            <button mat-menu-item [routerLink]="['/menu_edition/rapport_pharmacie_chronique']"> <i class='fa-solid fa-book-medical'></i> <span style="font-weight: bold;"> {{'PrescriptionChronique' | i18nForMenuReception:i18nService.currentLanguage}} </span> </button>
+                        </mat-menu>
+                    </div>
+                </div>
+            </div>
+            <div id="item" class="col-sm-6 col-md-3" [routerLink]="['/menu_edition/rapport_employee']">
+                <div class="container-block">
+                    <div class="block1">
+                        <i class='fa-solid fa-users' style="font-size: 20px; padding-top:6px"></i>
+                    </div>
+                    <div class="block2">
+                        <span class="FloatRight">  {{'Employee' | i18nForMenuReception:i18nService.currentLanguage}}  </span>
+                    </div>
+                </div>
+            </div>
+            <div id="item" class="col-sm-6 col-md-3" [routerLink]="['/menu_edition/rapport_doctor_performance']">
+                <div class="container-block">
+                    <div class="block1">
+                        <i class='fa-solid fa-user-doctor '></i>
+                    </div>
+                    <div class="block2">
+                        <span class="FloatRight">  {{'DoctorPerformance' | i18nForMenuReception:i18nService.currentLanguage}}  </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

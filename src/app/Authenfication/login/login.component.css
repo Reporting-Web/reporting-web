@@ -1,0 +1,115 @@
+label {
+    display: block;
+    margin-top: 10px;
+}
+
+.card-container.card {
+    max-width: 400px !important;
+    padding: 40px 40px;
+    width: 340px;
+}
+
+.col-md-12 {
+    background: #f5f5f5;
+}
+
+.card {
+    background-color: #efefef;
+    padding: 20px 25px 30px;
+    margin: 0 20% 25px;
+    margin-top: 8%;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    border-radius: 6px;
+    -moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    justify-self: center;
+}
+
+.profile-img-card {
+    width: 96px;
+    height: 96px;
+    margin: 0 auto 10px;
+    display: block;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+}
+
+.mainbox {
+    display: grid;
+    width: 100%;
+    grid-template-areas: "head head" "left main" "left foot";
+    grid-template-rows: 0px 0fr 0px;
+    grid-template-columns: 0px 2fr 0px;
+    grid-gap: 5px;
+    margin: 0px;
+    font-size: 15px;
+    height: 100vh;
+    overflow-y: scroll;
+}
+
+.Langage {
+    /* position: absolute; */
+    /* left: 210px; */
+    /* height: 40px; */
+    /* top: 301px; */
+    justify-self: center;
+}
+
+:host ::ng-deep .p-dropdown-trigger {
+    padding-left: 10px;
+    margin-right: 5px;
+}
+
+:host ::ng-deep .p-dropdown-items-wrapper {
+    background: #efefef;
+}
+
+
+/* flag  */
+
+.flex.align-items-center.gap-2 {
+    display: flex;
+    place-content: space-around;
+}
+
+span.flag {
+    width: 44px;
+    height: 30px;
+    display: inline-block;
+}
+
+img.flag {
+    width: 30px
+}
+
+.flag-icon {
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+
+/* .flag {
+    background-image: url("../../../assets/images/flags/flags_responsive.png");
+    background-size: 100%;
+    vertical-align: middle;
+} */
+
+.flex.align-items-center.gap-2.ng-star-inserted {
+    display: flex;
+    justify-content: space-around;
+}
+
+.flag-ly {
+    background-position: 0 53.305785%
+}
+
+.flag-us {
+    background-position: 0 93.38843%
+}
+
+.flag-fr {
+    background-position: 0 29.752066%
+}
