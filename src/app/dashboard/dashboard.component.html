@@ -42,7 +42,7 @@
 
                                 <button data-backdrop="false" type="button" class="Bouton-add-new1 btn  btn-default " data-original-title="Add" data-toggle="modal" data-target="#Modal" (click)="GetData()">
                                         <div class="bouton_style-2"> {{'Voir' | i18n:i18nService.currentLanguage}}</div>
-                                        <i class="fa-solid fa-file-pdf iconPDF"
+                                        <i class="fa-solid fa-magnifying-glass iconPDF"
                                              ></i>
                                     </button>
 
@@ -272,7 +272,7 @@
                             <div class="d-flex align-items-center">
                                 <div>
                                     <p class="mb-0 text-secondary name-card"> إجمالي الدخول </p>
-                                    <h4 class="my-1  text-danger" *ngIf="!IsLoading" style="font-weight: bold;">8.4K</h4>
+                                    <h4 class="my-1  text-danger" *ngIf="!IsLoading" style="font-weight: bold;">{{totalAdmission}}</h4>
                                     <p-skeleton *ngIf="IsLoading" width="5rem" styleClass="mb-2" />
 
                                 </div>

@@ -7,10 +7,11 @@ import { I18nPipeForMenuReception } from '../Shared/i18n/i18nForMenuReception.pi
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { TagModule } from 'primeng/tag';
+import { ChartModule } from 'primeng/chart';
   
 @NgModule({
   declarations: [
-    MenuEditionComponent,I18nPipeForMenuReception, 
+    MenuEditionComponent,I18nPipeForMenuReception,  
   ],
   imports: [
     CommonModule,TagModule,MatIconModule,MatMenuModule,

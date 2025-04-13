@@ -8163,6 +8163,10 @@ fieldset:disabled .btn {
     width: 50%!important
 }
 
+.w-60 {
+    width: 60%!important
+}
+
 .w-75 {
     width: 75%!important
 }

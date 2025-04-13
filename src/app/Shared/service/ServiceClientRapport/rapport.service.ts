@@ -23,7 +23,14 @@ export class RapportService {
     GetAllAdmission(  ){
       return this.http.get(`${environment.API_RECEPTION}admission/all`  )
     }
+
+    GetAllAdmissionByDate(dateDebut : any , dateFin : any ,  ){
+      return this.http.get(`${environment.API_RECEPTION}admission/findAllByDate?dateDebut=`+ dateDebut + `&dateFin=`+dateFin  )
+    }
  
+    GetAllAdmissionByDateAndCodeCabinet(dateDebut : any , dateFin : any , codeCabinet : any ){
+      return this.http.get(`${environment.API_RECEPTION}admission/findAllByDateAndCabinet?dateDebut=`+ dateDebut + `&dateFin=`+dateFin +`&codeCabinet=`+codeCabinet  )
+    }
     GetAllAdmissionBySpecialite(codeSpecialite : number ){
       return this.http.get(`${environment.API_RECEPTION}admission/findBySpecialite?codeSpecialite=`+ codeSpecialite  )
     }
@@ -31,5 +38,24 @@ export class RapportService {
     GetAllAdmissionByCabinet(codeCabinet : number ){
       return this.http.get(`${environment.API_RECEPTION}admission/findByCabinet?codeCabinet=`+ codeCabinet  )
     }
+
+    //// examen Lab 
+
+    GetAllDdeExamenLab(  ){
+      return this.http.get(`${environment.API_RECEPTION}dde_examen_lab/all`  )
+    }
+
+    GetAllDdeExamenLabByDate(dateDebut : any , dateFin : any ,  ){
+      return this.http.get(`${environment.API_RECEPTION}dde_examen_lab/findAllByDate?dateDebut=`+ dateDebut + `&dateFin=`+dateFin  )
+    }
+ 
+    GetAllDdeExamenLabByDateAndCodeSociete(dateDebut : any , dateFin : any , codeSociete : any ){
+      return this.http.get(`${environment.API_RECEPTION}dde_examen_lab/findAllByDateAndSociete?dateDebut=`+ dateDebut + `&dateFin=`+dateFin +`&codeSociete=`+codeSociete  )
+    }
+
+    GetAllDdeExamenLabByDateAndCodeInterv(dateDebut : any , dateFin : any , codeInterv : any ){
+      return this.http.get(`${environment.API_RECEPTION}dde_examen_lab/findAllByDateAndIntervenant?dateDebut=`+ dateDebut + `&dateFin=`+dateFin +`&codeInterv=`+codeInterv  )
+    }
+   
 }
 

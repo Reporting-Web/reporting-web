@@ -43,10 +43,9 @@
 
 
                                 <button data-backdrop="false" type="button" class="Bouton-add-new1 btn  btn-default " data-original-title="Add" data-toggle="modal" data-target="#Modal" (click)="GetData()">
-                                        <div class="bouton_style-2"> {{'Voir' | i18n:i18nService.currentLanguage}}</div>
-                                        <i class="fa-solid fa-file-pdf iconPDF"
-                                             ></i>
-                                    </button>
+                                    <div class="bouton_style-2"> {{'Voir' | i18n:i18nService.currentLanguage}}</div>
+                                    <i class="fa-solid fa-magnifying-glass iconPDF"></i>
+                                </button>
 
 
                             </div>
@@ -63,7 +62,7 @@
 <div class="row">
 
     <div class="col-12 col-lg-12 d-flex">
-        <div class="card radius-10 w-100">
+        <div class="card radius-10 w-50">
 
             <div class="card-body">
 
@@ -72,7 +71,7 @@
                         <div class="card">
                             <p-table [paginator]="true" [rows]="20" [rows]="20" [rowsPerPageOptions]="[20, 40,80,100]" [showCurrentPageReport]="true" [first]="first" currentPageReportTemplate="{{'Page' | i18n:i18nService.currentLanguage}} {first} {{'To' | i18n:i18nService.currentLanguage}} {last} {{'of' | i18n:i18nService.currentLanguage}} {totalRecords} {{'entiers' | i18n:i18nService.currentLanguage}}"
                                 #dt1 [columns]="cols" [value]="dataCabinet" [globalFilterFields]="['designationAr', 'designationLt']" selectionMode="single" [metaKeySelection]="false" [(selection)]="selectedCabinet" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)"
-                                dataKey="code" [tableStyle]="{'min-width': '50rem', 'width': '100%' , 'padding': '1px 1px 1px 1px'}">
+                                dataKey="codeSaisieCabinet" [tableStyle]="{'min-width': '35rem', 'width': '100%' , 'padding': '1px 1px 1px 1px'}">
 
                                 <ng-template pTemplate="colgroup" let-col>
                                     <colgroup>
@@ -86,19 +85,27 @@
                                         </th>
                                     </tr>
 
-                                    <tr class="filter-row">
+                                    <!-- <tr class="filter-row">
                                         <th *ngFor="let col of columns let i = index">
                                             <p-columnFilter *ngIf="i !== 0 " [hideOnClear]="true" [showMenu]="false" [showAddButton]="false" [showOperator]="false" [matchMode]="'contains'" [showMatchModes]="false" type={{col.type}} field={{col.field}} placeholder=" " ariaLabel="Filter Country"></p-columnFilter>
                                         </th>
-                                    </tr>
+                                    </tr> -->
                                 </ng-template>
                                 <ng-template pTemplate="body" let-domaine>
                                     <tr [pSelectableRow]="domaine">
 
                                         <td style="font-size: 15px !important;">{{domaine.designationArCabinet}}</td>
-                                        <td style="font-size: 15px !important;">{{domaine.codeSaisieAdmission}}</td>
+                                        <td style="font-size: 15px !important;">{{domaine.designationLtCabinet}}</td>
+                                        <!-- <td style="font-size: 15px !important;">{{domaine.codeSaisieCabinet}}</td> -->
+                                        <td style="font-size: 15px !important;">{{domaine.count}}</td>
 
 
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="footer">
+                                    <tr>
+                                        <td colspan="2"><strong>المجموع:</strong></td>
+                                        <td>{{ calculateTotal() }}</td>
                                     </tr>
                                 </ng-template>
                                 <ng-template pTemplate="emptymessage">
@@ -108,11 +115,27 @@
                                 </ng-template>
                             </p-table>
                         </div>
+
+
                     </div>
                 </section>
 
             </div>
 
+        </div>
+        <div class="card radius-10 w-50">
+            <div class="row row-cols-1 row-cols-lg-9" [ngClass]="{ 'disabled': IsLoading }">
+                <div class="col d-flex">
+                    <div class="card radius-10 w-100">
+                        <div class="card-body">
+
+                            <div id="options11" echarts [options]="options11" [theme]="theme" class="demo-chart"></div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

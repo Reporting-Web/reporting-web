@@ -1,10 +1,610 @@
-import { Component } from '@angular/core';
 
+import { Component, OnInit } from '@angular/core';
+
+import { LoadingComponent } from '../../Shared/loading/loading.component';
+import { ControlServiceAlertify } from '../../Shared/Control/ControlRow';
+import { I18nService } from '../../Shared/i18n/i18n.service';
+import { DatePipe } from '@angular/common';
+import { CalanderTransService } from '../../Shared/CalanderService/CalanderTransService';
+import { RapportService } from '../../Shared/service/ServiceClientRapport/rapport.service';
+import { ThemeOption } from 'ngx-echarts';
+import { color, EChartsCoreOption, EChartsOption } from 'echarts';
+import * as echarts from 'echarts';
+
+
+
+
+interface DataItem {
+  code: number;
+  codePrestation: number;
+  designationArPres: string;
+  designationLtPres: string;
+  codePatient: string;
+  codeInterv: number;
+  nomIntervAr: string;
+  codeSociete: number;
+  designationLtSoc: string;
+  designationArSoc: string;
+  dateCreate: string;
+  codeSousFamille: number;
+  designationArSousFam: string;
+  designationLtSousFam: string;
+  codeFamPres: number;
+  desigtionArFam: string;
+  designationLtFam: string;
+}
 @Component({
   selector: 'app-rapport-labo',
   templateUrl: './rapport-labo.component.html',
-  styleUrl: './rapport-labo.component.css'
+  styleUrls: ['./rapport-labo.component.css', '.../../../src/assets/css/newStyle.css', '.../../../src/assets/css/StyleApplication.css'],
+  providers: [CalanderTransService]
 })
-export class RapportLaboComponent {
+export class RapportLaboComponent implements OnInit {
+  constructor(private rapportService: RapportService, private loadingComponent: LoadingComponent,
+    public i18nService: I18nService, private datePipe: DatePipe, private CtrlAlertify: ControlServiceAlertify
+    , private calandTrans: CalanderTransService) { this.calandTrans.setLangAR(); }
+
+
+  IsLoading = false;
+  Blocked: any = false;
+  cols!: any[];
+  dateDeb: any = null;;
+  dateFin: any = null;
+  first = 0;
+  ngOnInit(): void {
+
+    this.createChartOptions();
+    this.GetColumns();
+
+
+
+  }
+
+  GetColumns() {
+    this.cols = [
+      { field: 'designationArPres', header: this.i18nService.getString('Cabinet') || 'عيادة', type: 'text' },
+      { field: 'designationLtPres', header: this.i18nService.getString('DesignationLt') || 'DesignationLt', type: 'text' },
+      { field: 'countPatient', header: this.i18nService.getString('countPatient') || ' عدد المرضى', type: 'number' },// patient Count
+
+      { field: 'count', header: this.i18nService.getString('Count') || 'عدد التحاليل', type: 'number' }, // exam Count
+    ];
+  }
+
+
+  DateTempNew: any;
+  formatInputNew(event: any) {  // Use any because of p-calendar event type
+    let inputValue = event.target.value.replace(/\D/g, ''); // Remove non-digits
+    if (inputValue.length > 0) {
+      inputValue = inputValue.replace(/(\d{2})(\d{2})(\d{4})/, '$1/$2/$3');
+    }
+    event.target.value = inputValue;
+    this.DateTempNew = inputValue;
+    this.tryParseAndSetDateNew(inputValue);
+  }
+
+  tryParseAndSetDateNew(inputValue: string) {
+    let parts = inputValue.split('/');
+    if (parts.length === 3) {
+      let day = parseInt(parts[0], 10);
+      let month = parseInt(parts[1], 10) - 1; // Month is 0-indexed
+      let year = parseInt(parts[2], 10);
+
+      if (!isNaN(day) && !isNaN(month) && !isNaN(year)) {
+        let dateObject = new Date(year, month, day); // Create Date object
+        this.dateDeb = dateObject; // Assign to your dateDeb property (might be a different type, handle accordingly)
+        this.DateTempNew = this.datePipe.transform(dateObject, 'yyyy-MM-dd')!; // Format here
+      }
+    }
+  }
+
+  DateTempNewFin: any;
+  formatInputNewFin(event: any) {  // Use any because of p-calendar event type
+    let inputValue = event.target.value.replace(/\D/g, ''); // Remove non-digits
+    if (inputValue.length > 0) {
+      inputValue = inputValue.replace(/(\d{2})(\d{2})(\d{4})/, '$1/$2/$3');
+    }
+    event.target.value = inputValue;
+    this.DateTempNewFin = inputValue;
+    this.tryParseAndSetDateNewFin(inputValue);
+  }
+
+  tryParseAndSetDateNewFin(inputValue: string) {
+    let parts = inputValue.split('/');
+    if (parts.length === 3) {
+      let day = parseInt(parts[0], 10);
+      let month = parseInt(parts[1], 10) - 1; // Month is 0-indexed
+      let year = parseInt(parts[2], 10);
+
+      if (!isNaN(day) && !isNaN(month) && !isNaN(year)) {
+        let dateObject = new Date(year, month, day); // Create Date object
+        this.dateFin = dateObject; // Assign to your dateDeb property (might be a different type, handle accordingly)
+        this.DateTempNew = this.datePipe.transform(dateObject, 'yyyy-MM-dd')!; // Format here
+      }
+    }
+  }
+  transformDateFormatNewFin() {
+    if (this.dateFin) {
+      this.DateTempNewFin = this.datePipe.transform(this.dateFin, 'yyyy-MM-dd')!;
+    }
+  };
+
+
+  transformDateFormat() {
+    this.dateDeb = this.datePipe.transform(this.dateDeb, "yyyy-MM-dd")
+  };
+
+
+
+  transformDateFormatFin() {
+    this.dateFin = this.datePipe.transform(this.dateFin, "yyyy-MM-dd")
+  };
+
+  GetData() {
+    if (this.dateDeb == null || this.dateFin == null) {
+      this.CtrlAlertify.PostionLabelNotification();
+      this.CtrlAlertify.showNotificationِCustom('PleaseSelectedAnyDate');
+    } else if (this.dateFin < this.dateDeb) {
+      this.CtrlAlertify.PostionLabelNotification();
+      this.CtrlAlertify.showNotificationِCustom('ErrorDate');
+    } else {
+      this.GetAllDdeExamenLab();
+      this.createChartOptions();
+
+    }
+  }
+
+
+  theme: string | ThemeOption = 'dark';
+  options11: EChartsCoreOption | null = null;
+
+  createChartOptions(valeur1: any = 0, valeur2: any = 0, valeur3: any = 0, valeur4: any = 0): void {  // void return type
+    this.options11 = {
+      title: {
+        left: '50%',
+        text: ' عدد الحالات حسب الجهة و العيادة',
+        // subtext: 'Data',
+        textAlign: 'center',
+        textStyle: { // Use textStyle for title font settings
+          fontSize: 16, // Adjust as needed
+          fontWeight: 'bold', // Optional
+          // fontStyle: 'italic' // Optional
+        }
+      },
+      tooltip: {
+        trigger: 'item',
+        formatter: '{a} <br/>{b} : {c} ({d}%)',
+      },
+      legend: {
+        align: 'auto',
+        bottom: 10,
+        data: ["النيابات ", "الهيئات القضائية", 'الخدمات ', 'الطوارئ'],
+        textStyle: { //Use textStyle for legend font settings
+          fontSize: 14, // Adjust as needed
+          fontWeight: 'bold',
+        },
+
+      },
+      calculable: true,
+      series: [
+        {
+          name: 'عدد الحالات بالنسبة',
+          type: 'pie',
+          radius: [30, 110],
+          roseType: 'عدد الحالات بالنسبة',
+          label: { // Style labels here
+            fontSize: 12, // Adjust as needed
+            fontWeight: 'bold',
+            formatter: '{b}: {c} ({d}%)' //Customize the label text
+          },
+          data: [
+            { value: valeur1, name: "النيابات ", },
+            { value: valeur2, name: "الهيئات القضائية", },
+            { value: valeur3, name: 'الخدمات ', },
+            { value: valeur4, name: 'الطوارئ', },
+          ],
+        },
+      ],
+    };
+  }
+
+
+  // newEcharts() {
+
+  //   this.option33 = {
+  //     title: [
+  //       {
+  //         text: 'Tangential Polar Bar Label Position (middle)'
+  //       }
+  //     ],
+  //     polar: {
+  //       radius: [30, '80%']
+  //     },
+  //     angleAxis: {
+  //       max: 4,
+  //       startAngle: 75
+  //     },
+  //     radiusAxis: {
+  //       type: 'category',
+  //       data: ['a', 'b', 'c', 'd']
+  //     },
+  //     tooltip: {},
+  //     series: {
+  //       type: 'bar',
+  //       data: [2, 1.2, 2.4, 3.6],
+  //       coordinateSystem: 'polar',
+  //       label: {
+  //         show: true,
+  //         position: 'middle', // or 'start', 'insideStart', 'end', 'insideEnd'
+  //         formatter: '{b}: {c}'
+  //       }
+  //     }
+  //   };
+
+  //   // this.option33 && myChart.setOption(this.option33);
+  // }
+
+  dataDdeExamenLab = new Array<any>();
+  countPatientPerCabAndSociete374: any;
+  countPatientPerCabAndSociete375: any;
+  countPatientPerCabAndSociete379: any;
+  countPatientPerCabAndSociete376: any;
+  PatientCounted: any;
+
+  GetAllDdeExamenLab() {
+    this.rapportService.GetAllDdeExamenLabByDate(this.dateDeb, this.dateFin).subscribe((data: any) => {
+      this.loadingComponent.IsLoading = false;
+      this.IsLoading = false;
+
+      this.dataDdeExamenLab = this.aggregateData(data);
+
+      const patientCountMap = this.createPatientCountMap(this.aggregateDataPatient(data));
+
+      this.dataDdeExamenLab.forEach(group => {
+        group.countPatient = patientCountMap[group.designationArPres] || 0; // Handle cases where a prestation might not have patients
+
+
+      });
+
+
+      this.dataDdeExamenLab.forEach((dataGrouped: any) => {
+        if (dataGrouped.codeSociete == 374) {
+          this.countPatientPerCabAndSociete374 = dataGrouped.count;
+
+
+        } else if (dataGrouped.codeSociete == 375) {
+          this.countPatientPerCabAndSociete375 = dataGrouped.count;
+
+
+        } else if (dataGrouped.codeSociete == 376) {
+          this.countPatientPerCabAndSociete376 = dataGrouped.count;
+
+
+        } else if (dataGrouped.codeSociete == 379) {
+          this.countPatientPerCabAndSociete379 = dataGrouped.count;
+        }
+
+
+
+
+      })
+      this.createChartOptions(this.countPatientPerCabAndSociete374, this.countPatientPerCabAndSociete375, this.countPatientPerCabAndSociete376, this.countPatientPerCabAndSociete379);
+      this.GetChartRound();
+    });
+  }
+
+  aggregateData(data: any[]): any[] {
+    return data.reduce((accumulator: any[], currentValue: any) => {
+      const existingIndex = accumulator.findIndex(item => item.designationArPres === currentValue.designationArPres);
+
+      if (existingIndex !== -1) {
+        accumulator[existingIndex].count++;
+      } else {
+        accumulator.push({
+          designationArPres: currentValue.designationArPres,
+          designationLtPres: currentValue.designationLtPres,
+          // codeSaisieCabinet: currentValue.codeSaisieCabinet,  
+          count: 1,
+          // Add other fields if needed from currentValue
+
+          codeSociete: currentValue.codeSociete, // Add codeSociete
+          codeFamPres: currentValue.codeFamPres, //Add codeFamPres
+          desigtionArFam: currentValue.desigtionArFam //Add desigtionArFam
+
+        });
+      }
+      return accumulator;
+    }, []);
+
+
+  }
+
+  createPatientCountMap(patientData: any[]): { [key: string]: number } {
+    const patientCountMap: { [key: string]: number } = {};
+    patientData.forEach(item => {
+      patientCountMap[item.designationArPres] = item.count;
+    });
+    return patientCountMap;
+  }
+  aggregateDataPatient(data: any[]): any[] {
+    const patientsPerPres: { [key: string]: Set<string> } = {}; // Use a dictionary of Sets
+
+    //First pass: Build the dictionary of patients per prestation
+    data.forEach(item => {
+      const presKey = item.designationArPres;
+      if (!patientsPerPres[presKey]) {
+        patientsPerPres[presKey] = new Set();
+      }
+      patientsPerPres[presKey].add(item.codePatient);
+    });
+
+    //Second pass: Create the resulting array
+    const result: any[] = [];
+    for (const presKey in patientsPerPres) {
+      if (patientsPerPres.hasOwnProperty(presKey)) {
+        result.push({
+          designationArPres: presKey,
+          // designationLtPres:  //Add other properties as needed from your original data.
+          count: patientsPerPres[presKey].size, // count of unique patients
+        });
+      }
+    }
+    return result;
+  }
+  calculateTotal(): number {
+    return this.dataDdeExamenLab.reduce((sum, item) => sum + item.count, 0);
+  }
+
+  selectedExamen!: any;
+
+  onRowSelect(event: any) { }
+
+  onRowUnselect(event: any) {
+    this.createChartOptions()
+    this.selectedExamen = event.data = null;
+  }
+
+
+  option33: EChartsCoreOption | null = null;
+  // GetChartRound(valeurDesignationFam:any =null, valeurCountFamille:any=null , valeurDetailsCount:any=null, DesignationDetails:any=null){
+
+  // this.option33 = {
+  //   tooltip: {
+  //     trigger: 'item',
+  //     formatter: '{a} <br/>{b}: {c} ({d}%)'
+  //   },
+  //   legend: {
+  //     data: [
+  //       'Direct',
+  //       'Marketing',
+  //       'Search Engine',
+  //       'Email',
+  //       'Union Ads',
+  //       'Video Ads',
+  //       'Baidu',
+  //       'Google',
+  //       'Bing',
+  //       'Others'
+  //     ]
+  //   },
+  //   series: [
+  //     {
+  //       name: 'Access From',
+  //       type: 'pie',
+  //       selectedMode: 'single',
+  //       radius: [0, '40%'],
+  //       label: {
+  //         position: 'inner',
+  //         fontSize: 13,
+  //         borderColor: '#ffffff',
+  //         color:'#000000',
+  //         fontWeight:'bold'  
+  //       },
+  //       labelLine: {
+  //         show: false
+  //       },
+  //       data: [
+  //         { value: valeurCountFamille, name: valeurDesignationFam}, 
+  //       ]
+  //     },
+  //     {
+  //       name: 'Access From',
+  //       type: 'pie',
+  //       radius: ['45%', '60%'],
+  //       labelLine: {
+  //         length: 30
+  //       },
+  //       label: {
+  //         formatter: '{a|{a}}{abg|}\n{hr|}\n  {b|{b}}  {c} :  {per|{d}%}  ',
+  //         backgroundColor: '#F6F8FC',
+  //         borderColor: '#8C8D8E',
+  //         borderWidth: 1,
+  //         borderRadius: 4,
+  //         rich: {
+  //           a: {
+  //             color: '#6E7079',
+  //             lineHeight: 22,
+  //             align: 'center'
+  //           },c: {
+  //             color: '#000000',
+  //             // lineHeight: 22,
+  //             align: 'center'
+  //           },
+  //           hr: {
+  //             borderColor: '#8C8D8E',
+  //             width: '100%',
+  //             borderWidth: 1,
+  //             height: 0
+  //           },
+  //           b: {
+  //             color: '#000000',
+  //             fontSize: 16,
+  //             fontWeight: 'bold',
+  //             lineHeight: 33
+  //           },
+  //           per: {
+  //             color: '#00ff00',
+  //             backgroundColor: '#4C5058',
+  //             padding: [3, 4],
+  //             borderRadius: 4
+  //           }
+  //         }
+  //       },
+  //       data: [
+  //         { value: valeurDetailsCount, name: DesignationDetails },
+
+  //       ]
+  //     } 
+
+  //   ]
+  // };
+
+
+  // }
+
+
+  GetChartRound() {
+    const familyCounts: { [family: string]: number } = {};
+    this.dataDdeExamenLab.forEach(item => {
+        const family = item.desigtionArFam;
+        familyCounts[family] = (familyCounts[family] || 0) + item.count;
+    });
+
+    // Aggregate family counts, grouping those under 20 into "Other"
+    const aggregatedFamilyCounts: { [family: string]: number } = {};
+    let otherCount = 0;
+    for (const family in familyCounts) {
+        if (familyCounts[family] >= 1) {
+            aggregatedFamilyCounts[family] = familyCounts[family];
+        } else {
+            otherCount += familyCounts[family];
+        }
+    }
+    if (otherCount > 0) {
+        aggregatedFamilyCounts["Other"] = otherCount;
+    }
+
+
+    // Find the most frequent family (from aggregated data)
+    let mostFrequentFamily = '';
+    let maxFamilyCount = 0;
+    for (const family in aggregatedFamilyCounts) {
+        if (aggregatedFamilyCounts[family] > maxFamilyCount) {
+            maxFamilyCount = aggregatedFamilyCounts[family];
+            mostFrequentFamily = family;
+        }
+    }
+
+     //prepare data for the inner ring
+     const detailsCounts: { [prestation: string]: number } = {};
+     this.dataDdeExamenLab.forEach(item => {
+         if (item.desigtionArFam === mostFrequentFamily) {
+             detailsCounts[item.designationArPres] = (detailsCounts[item.designationArPres] || 0) + item.count;
+         }
+     });
+ 
+     //Limit details to top 10, or all if fewer than 10 exist, and then add "Other"
+     const sortedDetails = Object.entries(detailsCounts).sort(([, a], [, b]) => b - a);
+     let topDetails = sortedDetails.slice(0, Math.min(7, sortedDetails.length)); //Take top 10 or all available
+     let otherDetailsCount = 0;
+     if(sortedDetails.length > 7){ //Only add "other" if there are more than 10 items.
+         for (let i = 7; i < sortedDetails.length; i++) {
+             otherDetailsCount += sortedDetails[i][1];
+         }
+     }
+ 
+     let detailsData = topDetails.map(([name, value]) => ({ name, value }));
+     if (otherDetailsCount > 0) {
+         detailsData.push({ name: "Other", value: otherDetailsCount });
+     }
+
+
+    // Prepare data for outer ring
+    const familyData = Object.entries(aggregatedFamilyCounts).map(([name, value]) => ({ name, value }));
+
+
+    this.option33 = {
+      tooltip: {
+        trigger: 'item',
+        formatter: '{a} <br/>{b}: {c} ({d}%)'
+      },
+      legend: {
+        //removed hardcoded legend data.
+        type: 'scroll',  //Add scroll for longer lists
+        orient: 'vertical',
+        right: 10,
+        top: 20,
+        data: Object.keys(aggregatedFamilyCounts) //Dynamic legend from data
+      },
+      series: [
+        {
+          name: 'Family of Tests', // More descriptive name
+          type: 'pie',
+          selectedMode: 'single',
+          radius: [0, '40%'],
+          label: {
+            position: 'inner',
+            fontSize: 12,
+            borderColor: '#ffffff',
+            color: '#000000',
+            fontWeight: 'bold'
+          },
+          labelLine: {
+            show: false
+          },
+          data: familyData //Use dynamic data here
+        },
+        {
+          name: 'Individual Tests', //More descriptive name
+          type: 'pie',
+          radius: ['45%', '60%'],
+          labelLine: {
+            length: 20
+          },
+          // width: '20',
+          fontSize: 12,
+          label: {
+            formatter: '{a|{a}}{abg|}\n{hr|}\n  {b|{b}}  {c} :  {per|{d}%}  ',
+            backgroundColor: '#F6F8FC',
+            borderColor: '#8C8D8E',
+            borderWidth: 1,
+            borderRadius: 4,
+            rich: {
+              a: {
+                color: '#6E7079',
+                lineHeight: 22,
+                align: 'center'
+              },
+              c: {
+                color: '#000000',
+                align: 'center'
+              },
+              hr: {
+                borderColor: '#8C8D8E',
+                width: '100%',
+                borderWidth: 1,
+                height: 0
+              },
+              b: {
+                color: '#000000',
+                fontSize: 16,
+                fontWeight: 'bold',
+                lineHeight: 33
+              },
+              per: {
+                color: '#00ff00',
+                backgroundColor: '#4C5058',
+                padding: [3, 4],
+                borderRadius: 4
+              }
+            }
+          },
+          data: detailsData //Use dynamic data here
+        }
+      ]
+    };
+  }
+
 
 }
+
+

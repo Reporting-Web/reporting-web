@@ -187,7 +187,9 @@ const arI18n = {
  'Pharmacie':'صيدلية',
  'Mois':'الشهر',
  'Annee':'السنة',
-'PleaseSelectedAnyDate':'الرجاء إختيار تاريخ'
+'PleaseSelectedAnyDate':'الرجاء إختيار تاريخ',
+'ErrorDate':'الرجاء التأكد من التاريخ',
+'Count':'عدد القبولات'
 };
 
 

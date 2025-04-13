@@ -10,7 +10,8 @@ import { LoadingComponent } from '../Shared/loading/loading.component';
 import { I18nService } from '../Shared/i18n/i18n.service';
 import { ControlServiceAlertify } from '../Shared/Control/ControlRow';
 import { DatePipe } from '@angular/common';
-import { CalanderTransService } from '../Shared/CalanderService/CalanderTransService';
+import { CalanderTransService } from '../Shared/CalanderService/CalanderTransService'; 
+import { RapportService } from '../Shared/service/ServiceClientRapport/rapport.service';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -22,7 +23,7 @@ import { CalanderTransService } from '../Shared/CalanderService/CalanderTransSer
 export class DashboardComponent implements OnInit {
   constructor(private dashbordService: DashbordService, private loadingComponent: LoadingComponent,
     public i18nService: I18nService,private datePipe: DatePipe, private CtrlAlertify: ControlServiceAlertify
-    , private calandTrans: CalanderTransService)
+    , private calandTrans: CalanderTransService,private rapportService: RapportService)
      {  this.calandTrans.setLangAR(); }
 
 
@@ -38,7 +39,7 @@ export class DashboardComponent implements OnInit {
 
 
     this.getLogoData(); // Combine logo fetching
- 
+ this.createChartOptions();
 
   }
 
@@ -46,10 +47,13 @@ export class DashboardComponent implements OnInit {
     if (this.dateDeb == null || this.dateFin == null  ) {
       this.CtrlAlertify.PostionLabelNotification();
       this.CtrlAlertify.showNotificationِCustom('PleaseSelectedAnyDate');
-    } else {
+    } else if (this.dateFin < this.dateDeb) {
+      this.CtrlAlertify.PostionLabelNotification();
+      this.CtrlAlertify.showNotificationِCustom('ErrorDate');
+    } else   {
       this.getTotalPatients(); // Get total patient counts
       this.getTotalPatientsBloquer(); // Get total patient counts
-
+      this.GetTotalAdmissionByDate();
 
     }
 
@@ -90,13 +94,18 @@ export class DashboardComponent implements OnInit {
   options11: EChartsCoreOption | null = null;
 
 
-  createChartOptions(): void {  // void return type
+  createChartOptions(valeur1 : any =0, valeur2 : any =0, valeur3:any=0 , valeur4 : any=0): void {  // void return type
     this.options11 = {
       title: {
         left: '50%',
         text: 'عدد الحالات حسب الجهة',
-        subtext: 'Data',
+        // subtext: 'Data',
         textAlign: 'center',
+        textStyle: { // Use textStyle for title font settings
+          fontSize: 16, // Adjust as needed
+          fontWeight: 'bold', // Optional
+          // fontStyle: 'italic' // Optional
+        }
       },
       tooltip: {
         trigger: 'item',
@@ -106,19 +115,28 @@ export class DashboardComponent implements OnInit {
         align: 'auto',
         bottom: 10,
         data: ['النيابات ', 'الهيئات القضائية', 'الخدمات ', 'الطوارئ'],
+        textStyle: { //Use textStyle for legend font settings
+          fontSize: 14, // Adjust as needed
+          fontWeight: 'bold',
+        },
       },
       calculable: true,
       series: [
         {
-          name: 'area',
+          name: 'عدد الحالات بالنسبة',
           type: 'pie',
           radius: [30, 110],
-          roseType: 'area',
+          roseType: 'عدد الحالات بالنسبة',
+          label: { // Style labels here
+            fontSize: 12, // Adjust as needed
+            fontWeight: 'bold',
+            formatter: '{b}: {c} ({d}%)' //Customize the label text
+          },
           data: [
-            { value: this.totalNiyebet, name: 'النيابات' },
-            { value: this.total9othat, name: 'القضائية' },
-            { value: this.total5adamet, name: 'الخدمات' },
-            { value: this.totalEr, name: 'الطوارئ' },
+            { value: valeur1, name: 'النيابات ' },
+            { value: valeur2, name: 'الهيئات القضائية' },
+            { value: valeur3, name: 'الخدمات ' },
+            { value: valeur4, name: 'الطوارئ' },
           ],
         },
       ],
@@ -169,7 +187,8 @@ export class DashboardComponent implements OnInit {
         this.total5adamet = this.sumPatients(data5adamet);
         this.totalEr = this.sumPatients(dataEr);
         this.totalPatient = this.total9othat + this.totalNiyebet + this.total5adamet + this.totalEr;
-        this.createChartOptions();
+        this.createChartOptions(this.totalNiyebet,this.total9othat,this.total5adamet,this.totalEr);
+        
 
       })
     ).subscribe({
@@ -192,7 +211,18 @@ export class DashboardComponent implements OnInit {
     return sum;
   }
 
+  totalAdmission:any = 0 ;
+  GetTotalAdmissionByDate(){
+    this.rapportService.GetAllAdmissionByDate(this.dateDeb, this.dateFin).subscribe((data: any) => {
+      this.loadingComponent.IsLoading = false;
+      this.IsLoading = false;
+      this.totalAdmission = data.length;
+    
+    });
+  }
 
+
+ 
   /////  patient bloquer
   Blocked: any = false;
   getTotalPatientsBloquer(): void {

@@ -89,6 +89,7 @@ import { RapportPharmacieChroniqueComponent } from './menu-edition/rapport-pharm
 import { RapportPharmacieNormalComponent } from './menu-edition/rapport-pharmacie-normal/rapport-pharmacie-normal.component';
 import { SkeletonModule } from 'primeng/skeleton';
 import { RapportDoctorPerformanceComponent } from './menu-edition/rapport-doctor-performance/rapport-doctor-performance.component';
+import { RapportRadioComponent } from './menu-edition/rapport-radio/rapport-radio.component';
  
 const languages = [
   { lang: 'عربي', flag: 'assets/images/county/ar.png', file: arI18n, valeur: 'ar' },
@@ -128,7 +129,7 @@ const languages = [
     /////// rapport edition
 
     RapportOPDComponent,RapportDoctorPerformanceComponent,RapportEmployeeComponent,RapportLaboComponent,
-    RapportPharmacieChroniqueComponent,RapportPharmacieNormalComponent
+    RapportPharmacieChroniqueComponent,RapportPharmacieNormalComponent,RapportRadioComponent
     
   ],
   imports: [   
