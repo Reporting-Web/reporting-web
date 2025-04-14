@@ -62,11 +62,11 @@ export class RapportLaboComponent implements OnInit {
 
   GetColumns() {
     this.cols = [
-      { field: 'designationArPres', header: this.i18nService.getString('Cabinet') || 'عيادة', type: 'text' },
-      { field: 'designationLtPres', header: this.i18nService.getString('DesignationLt') || 'DesignationLt', type: 'text' },
-      { field: 'countPatient', header: this.i18nService.getString('countPatient') || ' عدد المرضى', type: 'number' },// patient Count
+      { field: 'designationArPres', header: this.i18nService.getString('Cabinet') || 'عيادة', type: 'text', width: '16%' },
+      { field: 'designationLtPres', header: this.i18nService.getString('DesignationLt') || 'DesignationLt', type: 'text', width: '16%' },
+      { field: 'countPatient', header: this.i18nService.getString('countPatient') || ' عدد المرضى', type: 'number', width: '16%' },// patient Count
 
-      { field: 'count', header: this.i18nService.getString('Count') || 'عدد التحاليل', type: 'number' }, // exam Count
+      { field: 'count', header: this.i18nService.getString('Count') || 'عدد التحاليل', type: 'number', width: '16%' }, // exam Count
     ];
   }
 
@@ -289,6 +289,7 @@ export class RapportLaboComponent implements OnInit {
       })
       this.createChartOptions(this.countPatientPerCabAndSociete374, this.countPatientPerCabAndSociete375, this.countPatientPerCabAndSociete376, this.countPatientPerCabAndSociete379);
       this.GetChartRound();
+      this.GetDataComplex(data);
     });
   }
 
@@ -306,9 +307,11 @@ export class RapportLaboComponent implements OnInit {
           count: 1,
           // Add other fields if needed from currentValue
 
-          codeSociete: currentValue.codeSociete, // Add codeSociete
-          codeFamPres: currentValue.codeFamPres, //Add codeFamPres
-          desigtionArFam: currentValue.desigtionArFam //Add desigtionArFam
+          codeSociete: currentValue.codeSociete,
+          codeFamPres: currentValue.codeFamPres,
+          desigtionArFam: currentValue.desigtionArFam,
+          codePrestation: currentValue.codePrestation,
+
 
         });
       }
@@ -465,22 +468,22 @@ export class RapportLaboComponent implements OnInit {
   GetChartRound() {
     const familyCounts: { [family: string]: number } = {};
     this.dataDdeExamenLab.forEach(item => {
-        const family = item.desigtionArFam;
-        familyCounts[family] = (familyCounts[family] || 0) + item.count;
+      const family = item.desigtionArFam;
+      familyCounts[family] = (familyCounts[family] || 0) + item.count;
     });
 
     // Aggregate family counts, grouping those under 20 into "Other"
     const aggregatedFamilyCounts: { [family: string]: number } = {};
     let otherCount = 0;
     for (const family in familyCounts) {
-        if (familyCounts[family] >= 1) {
-            aggregatedFamilyCounts[family] = familyCounts[family];
-        } else {
-            otherCount += familyCounts[family];
-        }
+      if (familyCounts[family] >= 1) {
+        aggregatedFamilyCounts[family] = familyCounts[family];
+      } else {
+        otherCount += familyCounts[family];
+      }
     }
     if (otherCount > 0) {
-        aggregatedFamilyCounts["Other"] = otherCount;
+      aggregatedFamilyCounts["Other"] = otherCount;
     }
 
 
@@ -488,34 +491,34 @@ export class RapportLaboComponent implements OnInit {
     let mostFrequentFamily = '';
     let maxFamilyCount = 0;
     for (const family in aggregatedFamilyCounts) {
-        if (aggregatedFamilyCounts[family] > maxFamilyCount) {
-            maxFamilyCount = aggregatedFamilyCounts[family];
-            mostFrequentFamily = family;
-        }
+      if (aggregatedFamilyCounts[family] > maxFamilyCount) {
+        maxFamilyCount = aggregatedFamilyCounts[family];
+        mostFrequentFamily = family;
+      }
     }
 
-     //prepare data for the inner ring
-     const detailsCounts: { [prestation: string]: number } = {};
-     this.dataDdeExamenLab.forEach(item => {
-         if (item.desigtionArFam === mostFrequentFamily) {
-             detailsCounts[item.designationArPres] = (detailsCounts[item.designationArPres] || 0) + item.count;
-         }
-     });
- 
-     //Limit details to top 10, or all if fewer than 10 exist, and then add "Other"
-     const sortedDetails = Object.entries(detailsCounts).sort(([, a], [, b]) => b - a);
-     let topDetails = sortedDetails.slice(0, Math.min(7, sortedDetails.length)); //Take top 10 or all available
-     let otherDetailsCount = 0;
-     if(sortedDetails.length > 7){ //Only add "other" if there are more than 10 items.
-         for (let i = 7; i < sortedDetails.length; i++) {
-             otherDetailsCount += sortedDetails[i][1];
-         }
-     }
- 
-     let detailsData = topDetails.map(([name, value]) => ({ name, value }));
-     if (otherDetailsCount > 0) {
-         detailsData.push({ name: "Other", value: otherDetailsCount });
-     }
+    //prepare data for the inner ring
+    const detailsCounts: { [prestation: string]: number } = {};
+    this.dataDdeExamenLab.forEach(item => {
+      if (item.desigtionArFam === mostFrequentFamily) {
+        detailsCounts[item.designationArPres] = (detailsCounts[item.designationArPres] || 0) + item.count;
+      }
+    });
+
+    //Limit details to top 10, or all if fewer than 10 exist, and then add "Other"
+    const sortedDetails = Object.entries(detailsCounts).sort(([, a], [, b]) => b - a);
+    let topDetails = sortedDetails.slice(0, Math.min(7, sortedDetails.length)); //Take top 10 or all available
+    let otherDetailsCount = 0;
+    if (sortedDetails.length > 7) { //Only add "other" if there are more than 10 items.
+      for (let i = 7; i < sortedDetails.length; i++) {
+        otherDetailsCount += sortedDetails[i][1];
+      }
+    }
+
+    let detailsData = topDetails.map(([name, value]) => ({ name, value }));
+    if (otherDetailsCount > 0) {
+      detailsData.push({ name: "Other", value: otherDetailsCount });
+    }
 
 
     // Prepare data for outer ring
@@ -603,6 +606,175 @@ export class RapportLaboComponent implements OnInit {
       ]
     };
   }
+
+  optionsChartComplex: EChartsCoreOption | null = null;
+  // GetDataComplex() {
+  //   const data = genData(50);
+
+  //   this.optionsChartComplex = {
+  //     title: {
+  //       text: 'List Examen',
+  //       subtext: '纯属虚构',
+  //       left: 'center'
+  //     },
+  //     tooltip: {
+  //       trigger: 'item',
+  //       formatter: '{a} <br/>{b} : {c} ({d}%)'
+  //     },
+  //     legend: {
+  //       type: 'scroll',
+  //       orient: 'vertical',
+  //       right: 10,
+  //       top: 20,
+  //       bottom: 20,
+  //       data: data.legendData
+  //     },
+  //     series: [
+  //       {
+  //         name: '姓名',
+  //         type: 'pie',
+  //         radius: '55%',
+  //         center: ['40%', '50%'],
+  //         data: data.seriesData,
+  //         emphasis: {
+  //           itemStyle: {
+  //             shadowBlur: 10,
+  //             shadowOffsetX: 0,
+  //             shadowColor: 'rgba(0, 0, 0, 0.5)'
+  //           }
+  //         }
+  //       }
+  //     ]
+  //   };
+
+  //   function genData(count: number) {
+  //     // prettier-ignore
+  //     const nameList = [
+  //       '赵', '钱', '孙', '李', '周', '吴', '郑', '王', '冯', '陈', '褚', '卫', '蒋', '沈', '韩', '杨', '朱', '秦', '尤', '许', '何', '吕', '施', '张', '孔', '曹', '严', '华', '金', '魏', '陶', '姜', '戚', '谢', '邹', '喻', '柏', '水', '窦', '章', '云', '苏', '潘', '葛', '奚', '范', '彭', '郎', '鲁', '韦', '昌', '马', '苗', '凤', '花', '方', '俞', '任', '袁', '柳', '酆', '鲍', '史', '唐', '费', '廉', '岑', '薛', '雷', '贺', '倪', '汤', '滕', '殷', '罗', '毕', '郝', '邬', '安', '常', '乐', '于', '时', '傅', '皮', '卞', '齐', '康', '伍', '余', '元', '卜', '顾', '孟', '平', '黄', '和', '穆', '萧', '尹', '姚', '邵', '湛', '汪', '祁', '毛', '禹', '狄', '米', '贝', '明', '臧', '计', '伏', '成', '戴', '谈', '宋', '茅', '庞', '熊', '纪', '舒', '屈', '项', '祝', '董', '梁', '杜', '阮', '蓝', '闵', '席', '季', '麻', '强', '贾', '路', '娄', '危'
+  //     ];
+  //     const legendData = [];
+  //     const seriesData = [];
+  //     for (var i = 0; i < count; i++) {
+  //       var name =
+  //         Math.random() > 0.65
+  //           ? makeWord(4, 1) + '·' + makeWord(3, 0)
+  //           : makeWord(2, 1);
+  //       legendData.push(name);
+  //       seriesData.push({
+  //         name: name,
+  //         value: Math.round(Math.random() * 100000)
+  //       });
+  //     }
+
+  //     return {
+  //       legendData: legendData,
+  //       seriesData: seriesData
+  //     };
+
+  //     function makeWord(max: number, min: number) {
+  //       const nameLen = Math.ceil(Math.random() * max + min);
+  //       const name = [];
+  //       for (var i = 0; i < nameLen; i++) {
+  //         name.push(nameList[Math.round(Math.random() * nameList.length - 1)]);
+  //       }
+  //       return name.join('');
+  //     }
+  //   }
+
+  GetDataComplex(data: any[]) {
+    const nameList: string[] = [];
+    const seriesData: { name: string; value: number }[] = [];
+    // const prestationCounts: { [key: string]: number } = {};
+    const prestationCounts = new Map<number, { designation: string; count: number }>();
+
+    // Extract unique designations and counts
+   
+    data.forEach(item => {
+      if (item && typeof item.designationArPres === 'string' && typeof item.codePrestation === 'number') {
+          const designation = item.designationArPres;
+          const codePrestation = item.codePrestation;
+
+          //Check if codePrestation already exists in the map
+          if(prestationCounts.has(codePrestation)){
+              prestationCounts.get(codePrestation)!.count++;
+          } else {
+              prestationCounts.set(codePrestation, { designation: designation, count: 1 });
+          }
+
+          nameList.push(designation); // Add to nameList
+
+      } else {
+          console.warn("Missing or invalid data item or 'designationArPres' or 'codePrestation':", item);
+      }
+  });
+    
+    //   if (item && typeof item.designationArPres === 'string') {  //Check if item exists
+    //     const designation = item.designationArPres;
+    //     // const codePrestation = item.codePrestation;
+    //     nameList.push(designation);
+    //     // prestationCounts[codePrestation] = (prestationCounts[codePrestation] || 0) + 1;
+    // } else {
+    //     console.warn("Missing or invalid data item or 'designationArPres':", item);
+    // }
+
+ 
+    const uniqueCodePrest = [...prestationCounts.keys()];
+    uniqueCodePrest.forEach(code => {
+      const { designation, count } = prestationCounts.get(code)!;
+      seriesData.push({ name: designation, value: count });
+    });
+    //Remove duplicates from nameList
+    const uniqueNameList = [...new Set(nameList)];
+
+
+    // Create seriesData from the counts
+    // uniqueNameList.forEach(designation => {
+    //   seriesData.push({
+    //     name: designation,
+    //     value: prestationCounts[designation]
+    //   });
+    // });
+
+
+    this.optionsChartComplex = {
+      title: {
+        text: 'List Examen',
+        subtext: 'Based on provided data',
+        left: 'center'
+      },
+      tooltip: {
+        trigger: 'item',
+        formatter: '{a} <br/>{b} : {c} ({d}%)'
+      },
+      legend: {
+        type: 'scroll',
+        orient: 'vertical',
+        right: 10,
+        top: 20,
+        bottom: 20,
+        data: uniqueNameList
+      },
+      series: [
+        {
+          name: 'عدد الفحوصات', // Changed name to be more descriptive
+          type: 'pie',
+          radius: '55%',
+          center: ['40%', '50%'],
+          data: seriesData,
+          emphasis: {
+            itemStyle: {
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
+          }
+        }
+      ]
+    };
+  }
+
+
+ 
 
 
 }

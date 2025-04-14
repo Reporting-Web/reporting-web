@@ -62,7 +62,7 @@
                 <section id="main-container">
                     <div class="material-table">
                         <div class="card">
-                            <p-table [paginator]="true" [rows]="20" [rows]="20" [rowsPerPageOptions]="[20, 40,80,100]" [showCurrentPageReport]="true" [first]="first" currentPageReportTemplate="{{'Page' | i18n:i18nService.currentLanguage}} {first} {{'To' | i18n:i18nService.currentLanguage}} {last} {{'of' | i18n:i18nService.currentLanguage}} {totalRecords} {{'entiers' | i18n:i18nService.currentLanguage}}"
+                            <p-table [paginator]="true" sortField="dateExiste" sortMode="single" [rows]="20" [rows]="20" [rowsPerPageOptions]="[20, 40,80,100]" [showCurrentPageReport]="true" [first]="first" currentPageReportTemplate="{{'Page' | i18n:i18nService.currentLanguage}} {first} {{'To' | i18n:i18nService.currentLanguage}} {last} {{'of' | i18n:i18nService.currentLanguage}} {totalRecords} {{'entiers' | i18n:i18nService.currentLanguage}}"
                                 #dt1 [columns]="cols" [value]="dataDdeExamenLab" [globalFilterFields]="['designationAr', 'designationLt']" selectionMode="single" [metaKeySelection]="false" [(selection)]="selectedExamen" (onRowSelect)="onRowSelect($event)"
                                 (onRowUnselect)="onRowUnselect($event)" dataKey="codeSaisieCabinet" [tableStyle]="{'min-width': '35rem', 'width': '100%' , 'padding': '1px 1px 1px 1px'}">
 
@@ -136,14 +136,33 @@
 <div class="card radius-10 w-100">
     <div class="row row-cols-1 row-cols-lg-9" [ngClass]="{ 'disabled': IsLoading }">
         <div class="col d-flex">
-            <div class="card radius-10 w-100">
+            <div class="card radius-10 w-50">
                 <div class="card-body">
 
-                    <div id="options11" echarts [options]="option33" darkMode="auto" class="demo-chart"></div>
+                    <div id="options11" echarts [options]="option33" darkMode="auto" class="demo-chart33"></div>
                     <!-- <div echarts [options]="option33" class="chart-container"></div> -->
                 </div>
 
             </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="card radius-10 w-100">
+    <div class="row row-cols-1 row-cols-lg-9" [ngClass]="{ 'disabled': IsLoading }">
+        <div class="col d-flex">
+            <div class="card radius-10 w-100">
+                <div class="card-body">
+
+                    <div id="optionsChartComplex" echarts [options]="optionsChartComplex" darkMode="auto" class="demo-chartComplex"></div>
+                </div>
+
+            </div>
+
         </div>
     </div>
 </div>
