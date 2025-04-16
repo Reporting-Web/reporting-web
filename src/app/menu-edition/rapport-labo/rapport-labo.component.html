@@ -69,81 +69,94 @@
         <div class="row">
 
             <div class="col-12 col-lg-12 d-flex">
-                <div class="card radius-10 w-60">
+                <div class="card radius-10 w-60" style="margin: 5px;">
 
                     <div class="card-body">
 
-                        <section id="main-container">
+                        <!-- <section id="main-container">
                             <div class="material-table">
-                                <div class="card">
-                                    <p-table [paginator]="true" sortField="count" [sortOrder]="-1" sortMode="single" [rows]="20" [rows]="20" [rowsPerPageOptions]="[20, 40,80,100]" [showCurrentPageReport]="true" [first]="first" currentPageReportTemplate="{{'Page' | i18n:i18nService.currentLanguage}} {first} {{'To' | i18n:i18nService.currentLanguage}} {last} {{'of' | i18n:i18nService.currentLanguage}} {totalRecords} {{'entiers' | i18n:i18nService.currentLanguage}}"
-                                        #dt1 [columns]="cols" [value]="dataDdeExamenLab" [globalFilterFields]="['designationAr', 'designationLt']" selectionMode="single" [metaKeySelection]="false" [(selection)]="selectedExamen" (onRowSelect)="onRowSelect($event)"
-                                        (onRowUnselect)="onRowUnselect($event)" dataKey="codePrestation" [tableStyle]="{'min-width': '35rem', 'width': '100%' , 'padding': '1px 1px 1px 1px'}">
+                                <div class="card"> -->
+                        <p-table [paginator]="true" sortField="count" [sortOrder]="-1" sortMode="single" [rows]="20" [rows]="20" [rowsPerPageOptions]="[20, 40,80,100]" [showCurrentPageReport]="true" [first]="first" currentPageReportTemplate="{{'Page' | i18n:i18nService.currentLanguage}} {first} {{'To' | i18n:i18nService.currentLanguage}} {last} {{'of' | i18n:i18nService.currentLanguage}} {totalRecords} {{'entiers' | i18n:i18nService.currentLanguage}}"
+                            #dt1 [columns]="cols" [value]="dataDdeExamenLab" [globalFilterFields]="['designationAr', 'designationLt']" selectionMode="single" [metaKeySelection]="false" [(selection)]="selectedExamen" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)"
+                            dataKey="codePrestation" [tableStyle]="{'min-width': '35rem', 'width': '100%' , 'padding': '1px 1px 1px 1px'}">
 
-                                        <ng-template pTemplate="colgroup" let-col>
-                                            <colgroup>
-                                                <col *ngFor="let col of col" [style.width]="col.width">
-                                            </colgroup>
-                                        </ng-template>
-                                        <ng-template pTemplate="header" let-columns>
-                                            <tr>
-                                                <th *ngFor="let col of columns" [pSortableColumn]="col.field">
-                                                    {{ col.header }}
-                                                    <p-sortIcon [field]="col.field" />
-                                                </th>
-                                            </tr>
+                            <ng-template pTemplate="caption">
+                                <div class="flex align-items-center justify-content-between">
+                                    عدد التحاليل حسب حالات الدخول
 
-                                            <tr class="filter-row">
-                                                <th *ngFor="let col of columns  ">
-                                                    <p-columnFilter [hideOnClear]="true" [showMenu]="false" [showAddButton]="false" [showOperator]="false" [matchMode]="'contains'" [showMatchModes]="false" type={{col.type}} field={{col.field}} placeholder=" " ariaLabel="Filter Country"></p-columnFilter>
-                                                </th>
-                                            </tr>
-                                        </ng-template>
-                                        <ng-template pTemplate="body" let-domaine>
-                                            <tr [pSelectableRow]="domaine">
-
-                                                <td style="font-size: 15px !important;">{{domaine.designationArPres}}
-                                                </td>
-                                                <td style="font-size: 15px !important;">{{domaine.designationLtPres}}
-                                                </td>
-                                                <td style="font-size: 15px !important;">{{domaine.countPatient}}</td>
-                                                <td style="font-size: 15px !important;">{{domaine.count}}</td>
-
-
-
-                                            </tr>
-                                        </ng-template>
-                                        <ng-template pTemplate="footer">
-                                            <tr>
-                                                <td colspan="2"><strong>المجموع:</strong></td>
-                                                <td>{{ calculateTotal() }}</td>
-                                            </tr>
-                                        </ng-template>
-                                        <ng-template pTemplate="emptymessage">
-                                            <tr>
-                                                <td colspan="4">لا توجد بيانات</td>
-                                            </tr>
-                                        </ng-template>
-                                    </p-table>
                                 </div>
+                            </ng-template>
+
+                            <ng-template pTemplate="colgroup" let-col>
+                                <colgroup>
+                                    <col *ngFor="let col of col" [style.width]="col.width">
+                                </colgroup>
+                            </ng-template>
+                            <ng-template pTemplate="header" let-columns>
+                                <tr>
+                                    <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                        {{ col.header }}
+                                        <p-sortIcon [field]="col.field" />
+                                    </th>
+                                </tr>
+
+                                <tr class="filter-row">
+                                    <th *ngFor="let col of columns  ">
+                                        <p-columnFilter [hideOnClear]="true" [showMenu]="false" [showAddButton]="false" [showOperator]="false" [matchMode]="'contains'" [showMatchModes]="false" type={{col.type}} field={{col.field}} placeholder=" " ariaLabel="Filter Country"></p-columnFilter>
+                                    </th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-domaine>
+                                <tr [pSelectableRow]="domaine">
+
+                                    <td style="font-size: 15px !important;">{{domaine.designationArPres}}
+                                    </td>
+                                    <td style="font-size: 15px !important;">{{domaine.designationLtPres}}
+                                    </td>
+                                    <td style="font-size: 15px !important;">{{domaine.countPatient}}</td>
+                                    <td style="font-size: 15px !important;">{{domaine.count}}</td>
+
+
+
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="footer">
+                                <tr>
+                                    <td colspan="2"><strong>المجموع:</strong></td>
+                                    <td>{{ calculateTotal() }}</td>
+                                    <td>{{ calculateTotalExam() }}</td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="emptymessage">
+                                <tr>
+                                    <td colspan="4">لا توجد بيانات</td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                        <!-- </div>
                             </div>
-                        </section>
+                        </section> -->
 
                     </div>
 
                 </div>
-                <div class="card radius-10 w-40">
+                <div class="card radius-10 w-40" style="margin: 5px;">
                     <div class="row row-cols-1 row-cols-lg-9" [ngClass]="{ 'disabled': IsLoading }">
                         <div class="col d-flex">
                             <div class="card radius-10 w-100">
                                 <div class="card-body">
 
-                                    <!-- <div id="options11" echarts [options]="options11" [theme]="theme" class="demo-chart"></div> -->
 
-                                    <p-table [paginator]="true" sortField="count" [sortOrder]="-1" sortMode="single" [rows]="20" [rows]="20" [rowsPerPageOptions]="[20, 40,80,100]" [showCurrentPageReport]="true" [first]="first" currentPageReportTemplate="{{'Page' | i18n:i18nService.currentLanguage}} {first} {{'To' | i18n:i18nService.currentLanguage}} {last} {{'of' | i18n:i18nService.currentLanguage}} {totalRecords} {{'entiers' | i18n:i18nService.currentLanguage}}"
+                                    <p-table [loading]="loadingData" [paginator]="true" sortField="count" [sortOrder]="-1" sortMode="single" [rows]="20" [rowsPerPageOptions]="[20, 40,80,100]" [showCurrentPageReport]="true" [first]="first" currentPageReportTemplate="{{'Page' | i18n:i18nService.currentLanguage}} {first} {{'To' | i18n:i18nService.currentLanguage}} {last} {{'of' | i18n:i18nService.currentLanguage}} {totalRecords} {{'entiers' | i18n:i18nService.currentLanguage}}"
                                         #dt1 [columns]="colsMedecin" [value]="dataMedecin" selectionMode="single" [metaKeySelection]="false" [(selection)]="selectedMedecin" (onRowSelect)="onRowSelectMedecin($event)" (onRowUnselect)="onRowUnselectMedecin($event)"
-                                        dataKey="codePrestation" [tableStyle]="{'min-width': '25rem', 'width': '100%' , 'padding': '1px 1px 1px 1px'}">
+                                        dataKey="codePrestation" [tableStyle]="{'min-width': '22rem', 'width': '100%' , 'padding': '1px 1px 1px 1px'}">
 
+                                        <ng-template pTemplate="caption">
+                                            <div class="flex align-items-center justify-content-between">
+                                                عدد الحالات المطلوبة لتحليل : {{designationArExam}} حسب الطبيب
+
+                                            </div>
+                                        </ng-template>
                                         <ng-template pTemplate="colgroup" let-col>
                                             <colgroup>
                                                 <col *ngFor="let col of col" [style.width]="col.width">
@@ -197,11 +210,34 @@
             </div>
         </div>
 
+        <div class="card radius-10 w-100">
+            <div class="row row-cols-1 row-cols-lg-9" [ngClass]="{ 'disabled': IsLoading }">
+                <div class="col d-flex">
+                    <div class="card radius-10 w-60" style="margin: 5px;">
+                        <div class="card-body">
+
+                            <div id="options11" echarts [options]="options12" [theme]="theme" class="demo-chart"></div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card radius-10 w-40" style="margin: 5px;">
+                        <div class="card-body">
+                            <div id="options11" echarts [options]="options11" [theme]="theme" class="demo-chart"></div>
+
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="card radius-10 w-100">
             <div class="row row-cols-1 row-cols-lg-9" [ngClass]="{ 'disabled': IsLoading }">
                 <div class="col d-flex">
-                    <div class="card radius-10 w-100">
+                    <div class="card radius-10 w-100" style="margin: 5px;">
                         <div class="card-body">
 
                             <div id="options11" echarts [options]="option33" darkMode="auto" class="demo-chart33"></div>
@@ -209,6 +245,7 @@
                         </div>
 
                     </div>
+
 
                 </div>
             </div>
@@ -220,7 +257,7 @@
         <div class="card radius-10 w-100">
             <div class="row row-cols-1 row-cols-lg-9" [ngClass]="{ 'disabled': IsLoading }">
                 <div class="col d-flex">
-                    <div class="card radius-10 w-100">
+                    <div class="card radius-10 w-100" style="margin: 5px;">
                         <div class="card-body">
 
                             <div id="optionsChartComplex" echarts [options]="optionsChartComplex" darkMode="auto" class="demo-chartComplex"></div>
