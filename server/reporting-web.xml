@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<service>
+    <id>ReportingWebService</id>
+    <name>Reporting Web Service</name>
+    <description>Runs the Reporting Web Application</description>
+    <executable>C:\Program Files\nodejs\node.exe</executable> <!-- Path to Node.exe -->
+    <arguments>C:\reporting\web\reporting-web\server\server.js</arguments> <!-- Path to server.js -->
+    <logpath>C:\reporting\web\reporting-web\logs\logs</logpath> <!-- Log directory -->
+    <logmode>rotate</logmode> <!-- Optional: Rotate logs -->
+    <stdout>C:\reporting\web\reporting-web\logs\reporting-web.log</stdout> <!-- Log to file -->
+    <stderr>C:\reporting\web\reporting-web\logs\reporting-web.log</stderr> <!-- Log to file -->
+    <startmode>delayed</startmode> <!-- Optional: Delayed start -->
+    <onfailure>restart</onfailure>  <!--Optional: Restart on failure -->
+    <startupauto>true</startupauto> <!-- Optional: Autostart -->
+</service>

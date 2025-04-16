@@ -19,14 +19,19 @@ export class AuthService {
    
   }
 
+  // login(userName: string, password: string): Observable<any> {
+  //   return this.http.post(
+  //     `${environment.API_AUTH}` + 'login', { userName, password, },
+  //     httpOptions
+  //   );
+  // }
+
   login(userName: string, password: string): Observable<any> {
     return this.http.post(
       `${environment.API_AUTH}` + 'login', { userName, password, },
       httpOptions
-    );
+    ) 
   }
-
- 
 
 
   logout(): Observable<any> {
@@ -35,13 +40,22 @@ export class AuthService {
 
 
 
-  GetImageProfil() {
+  // GetImageProfil() {
 
+
+  //   return this.http.get(`${environment.API_AUTH}` + 'accessUser/imageProfil?userName=' + username);
+
+  // }
+
+
+
+  GetImageProfil(): Observable<Blob> {
     const username = JSON.parse(sessionStorage.getItem("auth-user") ?? '{}')?.userName?.toLowerCase();
-    return this.http.get(`${environment.API_AUTH}` + 'accessUser/imageProfil?userName=' + username);
+    const apiUrl = environment.production 
+        ? `http://localhost:5051/api/auth/accessUser/imageProfil?userName=${username}`
+        : `${environment.API_AUTH}accessUser/imageProfil?userName=${username}`; // Use environment variables
 
-  }
-
-
+    return this.http.get(apiUrl, { responseType: 'blob' });
+}
 
 }

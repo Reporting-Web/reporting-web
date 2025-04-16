@@ -64,9 +64,9 @@ export class RapportLaboComponent implements OnInit {
     this.cols = [
       { field: 'designationArPres', header: this.i18nService.getString('Cabinet') || 'عيادة', type: 'text', width: '16%' },
       { field: 'designationLtPres', header: this.i18nService.getString('DesignationLt') || 'DesignationLt', type: 'text', width: '16%' },
-      { field: 'countPatient', header: this.i18nService.getString('countPatient') || ' عدد المرضى', type: 'number', width: '16%' },// patient Count
+      { field: 'countPatient', header: this.i18nService.getString('countPatient') || ' عدد المرضى', type: 'text', width: '16%' },// patient Count
 
-      { field: 'count', header: this.i18nService.getString('Count') || 'عدد التحاليل', type: 'number', width: '16%' }, // exam Count
+      { field: 'count', header: this.i18nService.getString('Count') || 'عدد التحاليل', type: 'text', width: '16%' }, // exam Count
     ];
   }
 
@@ -148,7 +148,7 @@ export class RapportLaboComponent implements OnInit {
       this.CtrlAlertify.showNotificationِCustom('ErrorDate');
     } else {
       this.GetAllDdeExamenLab();
-      this.createChartOptions();
+      // this.createChartOptions();
 
     }
   }
@@ -157,12 +157,12 @@ export class RapportLaboComponent implements OnInit {
   theme: string | ThemeOption = 'dark';
   options11: EChartsCoreOption | null = null;
 
-  createChartOptions(valeur1: any = 0, valeur2: any = 0, valeur3: any = 0, valeur4: any = 0): void {  // void return type
+  createChartOptions(valeur1: any = 0, valeur2: any = 0, valeur3: any = 0, valeur4: any = 0,totalAdmission:any=0): void {  // void return type
     this.options11 = {
       title: {
         left: '50%',
-        text: ' عدد الحالات حسب الجهة و العيادة',
-        // subtext: 'Data',
+        text: ' عدد الحالات حسب الجهة ',
+        subtext: 'مجموع الحالات : ' +  totalAdmission,
         textAlign: 'center',
         textStyle: { // Use textStyle for title font settings
           fontSize: 16, // Adjust as needed
@@ -244,6 +244,7 @@ export class RapportLaboComponent implements OnInit {
   // }
 
   dataDdeExamenLab = new Array<any>();
+  dataGroupedBySociete = new Array<any>();
   countPatientPerCabAndSociete374: any;
   countPatientPerCabAndSociete375: any;
   countPatientPerCabAndSociete379: any;
@@ -256,6 +257,7 @@ export class RapportLaboComponent implements OnInit {
       this.IsLoading = false;
 
       this.dataDdeExamenLab = this.aggregateData(data);
+      this.dataGroupedBySociete = this.GroupedDataBySociete(data);
 
       const patientCountMap = this.createPatientCountMap(this.aggregateDataPatient(data));
 
@@ -266,7 +268,7 @@ export class RapportLaboComponent implements OnInit {
       });
 
 
-      this.dataDdeExamenLab.forEach((dataGrouped: any) => {
+      this.dataGroupedBySociete.forEach((dataGrouped: any) => {
         if (dataGrouped.codeSociete == 374) {
           this.countPatientPerCabAndSociete374 = dataGrouped.count;
 
@@ -287,8 +289,12 @@ export class RapportLaboComponent implements OnInit {
 
 
       })
-      this.createChartOptions(this.countPatientPerCabAndSociete374, this.countPatientPerCabAndSociete375, this.countPatientPerCabAndSociete376, this.countPatientPerCabAndSociete379);
-      this.GetChartRound();
+      this.createChartOptions(this.countPatientPerCabAndSociete374, this.countPatientPerCabAndSociete375, this.countPatientPerCabAndSociete376, this.countPatientPerCabAndSociete379,
+
+        (this.countPatientPerCabAndSociete374 + +this.countPatientPerCabAndSociete375 + +this.countPatientPerCabAndSociete376 + +this.countPatientPerCabAndSociete379)
+      );
+      // this.GetChartRoundParFamille();
+      this.GetChartRoundParSousFamille();
       this.GetDataComplex(data);
     });
   }
@@ -310,8 +316,30 @@ export class RapportLaboComponent implements OnInit {
           codeSociete: currentValue.codeSociete,
           codeFamPres: currentValue.codeFamPres,
           desigtionArFam: currentValue.desigtionArFam,
+          designationArSousFam: currentValue.designationArSousFam,
           codePrestation: currentValue.codePrestation,
 
+
+        });
+      }
+      return accumulator;
+    }, []);
+
+
+  }
+
+  GroupedDataBySociete(data: any[]): any[] {
+    return data.reduce((accumulator: any[], currentValue: any) => {
+      const existingIndex = accumulator.findIndex(item => item.designationArSoc === currentValue.designationArSoc);
+
+      if (existingIndex !== -1) {
+        accumulator[existingIndex].count++;
+      } else {
+        accumulator.push({
+          designationArSoc: currentValue.designationArSoc,
+          designationLtSoc: currentValue.designationLtSoc,
+          codeSociete: currentValue.codeSociete, //You might want to keep one, choose wisely
+          count: 1,
 
         });
       }
@@ -362,113 +390,18 @@ export class RapportLaboComponent implements OnInit {
   onRowSelect(event: any) { }
 
   onRowUnselect(event: any) {
-    this.createChartOptions()
+    // this.createChartOptions()
     this.selectedExamen = event.data = null;
   }
 
 
-  option33: EChartsCoreOption | null = null;
-  // GetChartRound(valeurDesignationFam:any =null, valeurCountFamille:any=null , valeurDetailsCount:any=null, DesignationDetails:any=null){
-
-  // this.option33 = {
-  //   tooltip: {
-  //     trigger: 'item',
-  //     formatter: '{a} <br/>{b}: {c} ({d}%)'
-  //   },
-  //   legend: {
-  //     data: [
-  //       'Direct',
-  //       'Marketing',
-  //       'Search Engine',
-  //       'Email',
-  //       'Union Ads',
-  //       'Video Ads',
-  //       'Baidu',
-  //       'Google',
-  //       'Bing',
-  //       'Others'
-  //     ]
-  //   },
-  //   series: [
-  //     {
-  //       name: 'Access From',
-  //       type: 'pie',
-  //       selectedMode: 'single',
-  //       radius: [0, '40%'],
-  //       label: {
-  //         position: 'inner',
-  //         fontSize: 13,
-  //         borderColor: '#ffffff',
-  //         color:'#000000',
-  //         fontWeight:'bold'  
-  //       },
-  //       labelLine: {
-  //         show: false
-  //       },
-  //       data: [
-  //         { value: valeurCountFamille, name: valeurDesignationFam}, 
-  //       ]
-  //     },
-  //     {
-  //       name: 'Access From',
-  //       type: 'pie',
-  //       radius: ['45%', '60%'],
-  //       labelLine: {
-  //         length: 30
-  //       },
-  //       label: {
-  //         formatter: '{a|{a}}{abg|}\n{hr|}\n  {b|{b}}  {c} :  {per|{d}%}  ',
-  //         backgroundColor: '#F6F8FC',
-  //         borderColor: '#8C8D8E',
-  //         borderWidth: 1,
-  //         borderRadius: 4,
-  //         rich: {
-  //           a: {
-  //             color: '#6E7079',
-  //             lineHeight: 22,
-  //             align: 'center'
-  //           },c: {
-  //             color: '#000000',
-  //             // lineHeight: 22,
-  //             align: 'center'
-  //           },
-  //           hr: {
-  //             borderColor: '#8C8D8E',
-  //             width: '100%',
-  //             borderWidth: 1,
-  //             height: 0
-  //           },
-  //           b: {
-  //             color: '#000000',
-  //             fontSize: 16,
-  //             fontWeight: 'bold',
-  //             lineHeight: 33
-  //           },
-  //           per: {
-  //             color: '#00ff00',
-  //             backgroundColor: '#4C5058',
-  //             padding: [3, 4],
-  //             borderRadius: 4
-  //           }
-  //         }
-  //       },
-  //       data: [
-  //         { value: valeurDetailsCount, name: DesignationDetails },
-
-  //       ]
-  //     } 
-
-  //   ]
-  // };
+  option33: EChartsCoreOption | null = null; 
 
 
-  // }
-
-
-  GetChartRound() {
+  GetChartRoundParFamille() {
     const familyCounts: { [family: string]: number } = {};
     this.dataDdeExamenLab.forEach(item => {
-      const family = item.desigtionArFam;
+      const family = item.desigtionArFam; 
       familyCounts[family] = (familyCounts[family] || 0) + item.count;
     });
 
@@ -602,6 +535,140 @@ export class RapportLaboComponent implements OnInit {
             }
           },
           data: detailsData //Use dynamic data here
+        }
+      ]
+    };
+  }
+
+
+  GetChartRoundParSousFamille() {
+    const SousfamilyCounts: { [Sousfamily: string]: number } = {};
+    this.dataDdeExamenLab.forEach(item => {
+      const Sousfamily = item.designationArSousFam; 
+      
+      SousfamilyCounts[Sousfamily] = (SousfamilyCounts[Sousfamily] || 0) + item.count;
+    });
+   
+
+    // Aggregate family counts, grouping those under 20 into "Other"
+    const aggregatedSousFamilyCounts: { [Sousfamily: string]: number } = {};
+    let otherCount = 0;
+    for (const Sousfamily in SousfamilyCounts) {
+      if (SousfamilyCounts[Sousfamily] >= 5) {
+        aggregatedSousFamilyCounts[Sousfamily] = SousfamilyCounts[Sousfamily];
+      } else {
+        otherCount += SousfamilyCounts[Sousfamily];
+      }
+    }
+    if (otherCount > 0) {
+      aggregatedSousFamilyCounts["Other"] = otherCount;
+    }
+
+
+    // Find the most frequent family (from aggregated data)
+    let mostFrequentSousFamily = '';
+    let maxSousFamilyCount = 0;
+    for (const Sousfamily in aggregatedSousFamilyCounts) {
+      if (aggregatedSousFamilyCounts[Sousfamily] > maxSousFamilyCount) {
+        maxSousFamilyCount = aggregatedSousFamilyCounts[Sousfamily];
+        mostFrequentSousFamily = Sousfamily;
+      }
+    }
+
+    //prepare data for the inner ring
+    const detailsCounts: { [prestation: string]: number } = {};
+    this.dataDdeExamenLab.forEach(item => {
+      if (item.designationArSousFam === mostFrequentSousFamily) {
+        detailsCounts[item.designationArSousFam] = (detailsCounts[item.designationArSousFam] || 0) + item.count;
+      }
+    });
+
+    //Limit details to top 10, or all if fewer than 10 exist, and then add "Other"
+    const sortedDetails = Object.entries(detailsCounts).sort(([, a], [, b]) => b - a);
+    let topDetails = sortedDetails.slice(0, Math.min(7, sortedDetails.length)); //Take top 10 or all available
+    let otherDetailsCount = 0;
+    if (sortedDetails.length > 7) { //Only add "other" if there are more than 10 items.
+      for (let i = 7; i < sortedDetails.length; i++) {
+        otherDetailsCount += sortedDetails[i][1];
+      }
+    }
+
+    let detailsData = topDetails.map(([name, value]) => ({ name, value }));
+    if (otherDetailsCount > 0) {
+      detailsData.push({ name: "Other", value: otherDetailsCount });
+    }
+
+
+    // Prepare data for outer ring
+    const SousfamilyData = Object.entries(aggregatedSousFamilyCounts).map(([name, value]) => ({ name, value }));
+
+
+    this.option33 = {
+
+            title: {
+        text: 'حسب الفئة',
+        // subtext: '纯属虚构',
+        left: 'center'
+      },
+      tooltip: {
+        trigger: 'item',
+        formatter: '{a} <br/>{b}: {c} ({d}%)'
+      },
+      legend: {
+        //removed hardcoded legend data.
+        type: 'scroll',  //Add scroll for longer lists
+        orient: 'vertical',
+        right: 10,
+        top: 20,
+        data: Object.keys(aggregatedSousFamilyCounts) //Dynamic legend from data
+      },
+      series: [ 
+        {
+          name: 'فئة الاختبارات', //More descriptive name
+          type: 'pie',
+          radius: ['45%', '60%'],
+          labelLine: {
+            length: 20
+          },
+          // width: '20',
+          fontSize: 12,
+          label: {
+            formatter: '{a|{a}}{abg|}\n{hr|}\n  {b|{b}}  {c} :  {per|{d}%}  ',
+            backgroundColor: '#F6F8FC',
+            borderColor: '#8C8D8E',
+            borderWidth: 1,
+            borderRadius: 4,
+            rich: {
+              a: {
+                color: '#6E7079',
+                lineHeight: 22,
+                align: 'center'
+              },
+              c: {
+                color: '#000000',
+                align: 'center'
+              },
+              hr: {
+                borderColor: '#8C8D8E',
+                width: '100%',
+                borderWidth: 1,
+                height: 0
+              },
+              b: {
+                color: '#000000',
+                fontSize: 16,
+                fontWeight: 'bold',
+                lineHeight: 33
+              },
+              per: {
+                color: '#00ff00',
+                backgroundColor: '#4C5058',
+                padding: [3, 4],
+                borderRadius: 4
+              }
+            }
+          },
+          data: SousfamilyData //Use dynamic data here
         }
       ]
     };

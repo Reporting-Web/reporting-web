@@ -1,0 +1,18 @@
+version: "3.9"
+services:
+  reportingweb:
+    container_name: reportingwebcontainer
+    build: .
+    image: reportingweb:v1
+    ports:
+      - 4010:80
+
+    expose:
+      - 80
+
+    networks:
+      - internalnet
+
+networks:
+  internalnet:
+    driver: bridge

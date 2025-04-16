@@ -27,9 +27,10 @@
                             "rxjs-compat",
                             "alertifyjs",
                             "quill",
-                            "file-saver"
+                            "file-saver",
+                            "lodash"
                         ],
-                        "outputPath": "dist/reporting-web",
+                        "outputPath": "dist",
                         "index": "src/index.html",
                         "browser": "src/main.ts",
                         "polyfills": [
@@ -51,18 +52,15 @@
                     },
                     "configurations": {
                         "production": {
-                            "budgets": [{
-                                    "type": "initial",
-                                    "maximumWarning": "2mb",
-                                    "maximumError": "5mb"
-                                },
-                                {
-                                    "type": "anyComponentStyle",
-                                    "maximumWarning": "6kb",
-                                    "maximumError": "4kB"
-                                }
-                            ],
-                            "outputHashing": "all"
+                            "optimization": true,
+                            "outputHashing": "all",
+                            "sourceMap": false,
+                            "namedChunks": false,
+                            "extractLicenses": true,
+                            "fileReplacements": [{
+                                "replace": "src/environments/environment.ts",
+                                "with": "src/environments/environment.production.ts"
+                            }]
                         },
                         "development": {
                             "optimization": false,
@@ -70,7 +68,7 @@
                             "sourceMap": true,
                             "fileReplacements": [{
                                 "replace": "src/environments/environment.ts",
-                                "with": "src/environments/environment.development.ts"
+                                "with": "src/environments/environment.production.ts"
                             }]
                         }
                     },

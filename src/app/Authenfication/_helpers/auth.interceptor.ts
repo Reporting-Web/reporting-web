@@ -39,18 +39,13 @@ export class AuthInterceptor implements HttpInterceptor {
       if (currentUrl != '/login') {
         req = req.clone({ headers: req.headers.set('Authorization', 'Bearer ' + tk) });
       } 
-    
-        //  if (req.url == 'soufien/ReportServer') {
-        
-        //   req = req.clone({ headers: req.headers.set('Authorization', 'Bearer ' + tk) });
-        // }
-  
+     
       req = req.clone({ headers: req.headers.set("Accept-Language", this.langSession) });
      
-       req = req.clone({ headers: req.headers.set('cache-control', 'no-cache') });
-      req = req.clone({ headers: req.headers.set('Access-Control-Allow-Origin', '*') });
-      req = req.clone({ headers: req.headers.set("Access-Control-Allow-Methods", "POST, GET, PUT") });
-      req = req.clone({ headers: req.headers.set("Access-Control-Allow-Headers", "Content-Type") });
+      //  req = req.clone({ headers: req.headers.set('cache-control', 'no-cache') });
+      // req = req.clone({ headers: req.headers.set('Access-Control-Allow-Origin', '*') });
+      // req = req.clone({ headers: req.headers.set("Access-Control-Allow-Methods", "POST, GET, PUT") });
+      // req = req.clone({ headers: req.headers.set("Access-Control-Allow-Headers", "Content-Type") });
   
       req = req.clone({ headers: req.headers.set("Accept", "application/json,text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7") });
       

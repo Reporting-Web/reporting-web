@@ -13,7 +13,7 @@
         "changeOrigin": true,
         "timeout": 360000
     },
-    "/dashbord": {
+    "/dashbords": {
         "target": "http://localhost:5051/api",
         "secure": false,
         "logLevel": "debug",
@@ -33,6 +33,13 @@
         "logLevel": "debug",
         "changeOrigin": true,
         "timeout": 360000
+    },
+    "/api/*": {
+        "target": "http://localhost:5051/",
+        "secure": false,
+        "changeOrigin": true,
+        "pathRewrite": {
+            "^/api": ""
+        }
     }
-
 }

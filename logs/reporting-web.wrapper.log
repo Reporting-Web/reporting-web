@@ -1,0 +1,12 @@
+2025-04-15 20:21:48,930 DEBUG - Starting WinSW in console mode
+2025-04-15 20:21:48,970 INFO  - Installing service 'Reporting Web Service (ReportingWebService)'...
+2025-04-15 20:21:48,996 FATAL - Unhandled exception
+System.ArgumentException: Requested value 'delayed' was not found.
+   at System.Enum.TryParseByName(RuntimeType enumType, ReadOnlySpan`1 value, Boolean ignoreCase, Boolean throwOnFailure, UInt64& result)
+   at System.Enum.TryParseInt32Enum(RuntimeType enumType, ReadOnlySpan`1 value, Int32 minInclusive, Int32 maxInclusive, Boolean ignoreCase, Boolean throwOnFailure, TypeCode type, Int32& result)
+   at System.Enum.TryParse(Type enumType, ReadOnlySpan`1 value, Boolean ignoreCase, Boolean throwOnFailure, Object& result)
+   at System.Enum.TryParse(Type enumType, String value, Boolean ignoreCase, Boolean throwOnFailure, Object& result)
+   at WinSW.XmlServiceConfig.get_StartMode()
+   at WinSW.Program.<Run>g__Install|5_0(<>c__DisplayClass5_0& )
+   at WinSW.Program.Run(String[] argsArray, IServiceConfig config)
+   at WinSW.Program.Main(String[] args)
