@@ -189,7 +189,9 @@ const arI18n = {
  'Annee':'السنة',
 'PleaseSelectedAnyDate':'الرجاء إختيار تاريخ',
 'ErrorDate':'الرجاء التأكد من التاريخ',
-'Count':'عدد القبولات'
+'Count':'عدد المرضى',
+'CountLab':'عدد التحاليل',
+'countPatient':'عدد المرضى'
 };
 
 

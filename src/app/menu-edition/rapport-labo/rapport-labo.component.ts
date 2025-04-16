@@ -1,6 +1,6 @@
 
-import { Component, OnInit } from '@angular/core';
 
+import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 import { LoadingComponent } from '../../Shared/loading/loading.component';
 import { ControlServiceAlertify } from '../../Shared/Control/ControlRow';
 import { I18nService } from '../../Shared/i18n/i18n.service';
@@ -8,8 +8,9 @@ import { DatePipe } from '@angular/common';
 import { CalanderTransService } from '../../Shared/CalanderService/CalanderTransService';
 import { RapportService } from '../../Shared/service/ServiceClientRapport/rapport.service';
 import { ThemeOption } from 'ngx-echarts';
-import { color, EChartsCoreOption, EChartsOption } from 'echarts';
-import * as echarts from 'echarts';
+import { EChartsCoreOption } from 'echarts';
+import { Router } from '@angular/router';
+
 
 
 
@@ -40,7 +41,7 @@ interface DataItem {
   providers: [CalanderTransService]
 })
 export class RapportLaboComponent implements OnInit {
-  constructor(private rapportService: RapportService, private loadingComponent: LoadingComponent,
+  constructor(private router: Router, private rapportService: RapportService, private loadingComponent: LoadingComponent,
     public i18nService: I18nService, private datePipe: DatePipe, private CtrlAlertify: ControlServiceAlertify
     , private calandTrans: CalanderTransService) { this.calandTrans.setLangAR(); }
 
@@ -48,6 +49,7 @@ export class RapportLaboComponent implements OnInit {
   IsLoading = false;
   Blocked: any = false;
   cols!: any[];
+  colsMedecin!: any[];
   dateDeb: any = null;;
   dateFin: any = null;
   first = 0;
@@ -55,22 +57,37 @@ export class RapportLaboComponent implements OnInit {
 
     this.createChartOptions();
     this.GetColumns();
+    this.GetColumnsMedecin();
 
 
 
+  }
+
+  @Output() closed: EventEmitter<string> = new EventEmitter();
+  closeThisComponent() {
+    const parentUrl = this.router.url.split('/').slice(0, -1).join('/');
+    this.closed.emit(parentUrl);
+    this.router.navigate([parentUrl]);
   }
 
   GetColumns() {
     this.cols = [
-      { field: 'designationArPres', header: this.i18nService.getString('Cabinet') || 'عيادة', type: 'text', width: '16%' },
-      { field: 'designationLtPres', header: this.i18nService.getString('DesignationLt') || 'DesignationLt', type: 'text', width: '16%' },
-      { field: 'countPatient', header: this.i18nService.getString('countPatient') || ' عدد المرضى', type: 'text', width: '16%' },// patient Count
+      { field: 'designationArPres', header: this.i18nService.getString('DesignationAr') || 'DesignationAr', type: 'text', width: '35%' },
+      { field: 'designationLtPres', header: this.i18nService.getString('DesignationLt') || 'DesignationLt', type: 'text', width: '35%' },
+      { field: 'countPatient', header: this.i18nService.getString('countPatient') || ' countPatient', type: 'text', width: '15%' },// patient Count
 
-      { field: 'count', header: this.i18nService.getString('Count') || 'عدد التحاليل', type: 'text', width: '16%' }, // exam Count
+      { field: 'count', header: this.i18nService.getString('CountLab') || 'CountLab', type: 'text', width: '15%' }, // exam Count
     ];
   }
 
 
+  GetColumnsMedecin() {
+    this.colsMedecin = [
+      { field: 'nomIntervAr', header: this.i18nService.getString('NomMedecin') || 'NomMedecin', type: 'text', width: '70%' },
+
+      { field: 'count', header: this.i18nService.getString('CountLab') || 'CountLab', type: 'text', width: '30%' }, // exam Count
+    ];
+  }
   DateTempNew: any;
   formatInputNew(event: any) {  // Use any because of p-calendar event type
     let inputValue = event.target.value.replace(/\D/g, ''); // Remove non-digits
@@ -157,12 +174,12 @@ export class RapportLaboComponent implements OnInit {
   theme: string | ThemeOption = 'dark';
   options11: EChartsCoreOption | null = null;
 
-  createChartOptions(valeur1: any = 0, valeur2: any = 0, valeur3: any = 0, valeur4: any = 0,totalAdmission:any=0): void {  // void return type
+  createChartOptions(valeur1: any = 0, valeur2: any = 0, valeur3: any = 0, valeur4: any = 0, totalAdmission: any = 0): void {  // void return type
     this.options11 = {
       title: {
         left: '50%',
         text: ' عدد الحالات حسب الجهة ',
-        subtext: 'مجموع الحالات : ' +  totalAdmission,
+        subtext: 'مجموع الحالات : ' + totalAdmission,
         textAlign: 'center',
         textStyle: { // Use textStyle for title font settings
           fontSize: 16, // Adjust as needed
@@ -206,42 +223,6 @@ export class RapportLaboComponent implements OnInit {
       ],
     };
   }
-
-
-  // newEcharts() {
-
-  //   this.option33 = {
-  //     title: [
-  //       {
-  //         text: 'Tangential Polar Bar Label Position (middle)'
-  //       }
-  //     ],
-  //     polar: {
-  //       radius: [30, '80%']
-  //     },
-  //     angleAxis: {
-  //       max: 4,
-  //       startAngle: 75
-  //     },
-  //     radiusAxis: {
-  //       type: 'category',
-  //       data: ['a', 'b', 'c', 'd']
-  //     },
-  //     tooltip: {},
-  //     series: {
-  //       type: 'bar',
-  //       data: [2, 1.2, 2.4, 3.6],
-  //       coordinateSystem: 'polar',
-  //       label: {
-  //         show: true,
-  //         position: 'middle', // or 'start', 'insideStart', 'end', 'insideEnd'
-  //         formatter: '{b}: {c}'
-  //       }
-  //     }
-  //   };
-
-  //   // this.option33 && myChart.setOption(this.option33);
-  // }
 
   dataDdeExamenLab = new Array<any>();
   dataGroupedBySociete = new Array<any>();
@@ -384,24 +365,39 @@ export class RapportLaboComponent implements OnInit {
   calculateTotal(): number {
     return this.dataDdeExamenLab.reduce((sum, item) => sum + item.count, 0);
   }
-
+  calculateTotalMedecin(): number {
+    return this.dataMedecin.reduce((sum, item) => sum + item.count, 0);
+  }
   selectedExamen!: any;
+  selectedMedecin!: any;
 
-  onRowSelect(event: any) { }
+  onRowSelect(event: any) {
+
+    this.GetAllDdeForMedecin(event.data.codePrestation);
+
+
+   }
 
   onRowUnselect(event: any) {
     // this.createChartOptions()
     this.selectedExamen = event.data = null;
   }
 
+  onRowSelectMedecin(event: any) { }
 
-  option33: EChartsCoreOption | null = null; 
+  onRowUnselectMedecin(event: any) {
+    // this.createChartOptions()
+    this.selectedMedecin = event.data = null;
+  }
+
+
+  option33: EChartsCoreOption | null = null;
 
 
   GetChartRoundParFamille() {
     const familyCounts: { [family: string]: number } = {};
     this.dataDdeExamenLab.forEach(item => {
-      const family = item.desigtionArFam; 
+      const family = item.desigtionArFam;
       familyCounts[family] = (familyCounts[family] || 0) + item.count;
     });
 
@@ -544,11 +540,11 @@ export class RapportLaboComponent implements OnInit {
   GetChartRoundParSousFamille() {
     const SousfamilyCounts: { [Sousfamily: string]: number } = {};
     this.dataDdeExamenLab.forEach(item => {
-      const Sousfamily = item.designationArSousFam; 
-      
+      const Sousfamily = item.designationArSousFam;
+
       SousfamilyCounts[Sousfamily] = (SousfamilyCounts[Sousfamily] || 0) + item.count;
     });
-   
+
 
     // Aggregate family counts, grouping those under 20 into "Other"
     const aggregatedSousFamilyCounts: { [Sousfamily: string]: number } = {};
@@ -605,7 +601,7 @@ export class RapportLaboComponent implements OnInit {
 
     this.option33 = {
 
-            title: {
+      title: {
         text: 'حسب الفئة',
         // subtext: '纯属虚构',
         left: 'center'
@@ -622,7 +618,7 @@ export class RapportLaboComponent implements OnInit {
         top: 20,
         data: Object.keys(aggregatedSousFamilyCounts) //Dynamic legend from data
       },
-      series: [ 
+      series: [
         {
           name: 'فئة الاختبارات', //More descriptive name
           type: 'pie',
@@ -675,79 +671,6 @@ export class RapportLaboComponent implements OnInit {
   }
 
   optionsChartComplex: EChartsCoreOption | null = null;
-  // GetDataComplex() {
-  //   const data = genData(50);
-
-  //   this.optionsChartComplex = {
-  //     title: {
-  //       text: 'List Examen',
-  //       subtext: '纯属虚构',
-  //       left: 'center'
-  //     },
-  //     tooltip: {
-  //       trigger: 'item',
-  //       formatter: '{a} <br/>{b} : {c} ({d}%)'
-  //     },
-  //     legend: {
-  //       type: 'scroll',
-  //       orient: 'vertical',
-  //       right: 10,
-  //       top: 20,
-  //       bottom: 20,
-  //       data: data.legendData
-  //     },
-  //     series: [
-  //       {
-  //         name: '姓名',
-  //         type: 'pie',
-  //         radius: '55%',
-  //         center: ['40%', '50%'],
-  //         data: data.seriesData,
-  //         emphasis: {
-  //           itemStyle: {
-  //             shadowBlur: 10,
-  //             shadowOffsetX: 0,
-  //             shadowColor: 'rgba(0, 0, 0, 0.5)'
-  //           }
-  //         }
-  //       }
-  //     ]
-  //   };
-
-  //   function genData(count: number) {
-  //     // prettier-ignore
-  //     const nameList = [
-  //       '赵', '钱', '孙', '李', '周', '吴', '郑', '王', '冯', '陈', '褚', '卫', '蒋', '沈', '韩', '杨', '朱', '秦', '尤', '许', '何', '吕', '施', '张', '孔', '曹', '严', '华', '金', '魏', '陶', '姜', '戚', '谢', '邹', '喻', '柏', '水', '窦', '章', '云', '苏', '潘', '葛', '奚', '范', '彭', '郎', '鲁', '韦', '昌', '马', '苗', '凤', '花', '方', '俞', '任', '袁', '柳', '酆', '鲍', '史', '唐', '费', '廉', '岑', '薛', '雷', '贺', '倪', '汤', '滕', '殷', '罗', '毕', '郝', '邬', '安', '常', '乐', '于', '时', '傅', '皮', '卞', '齐', '康', '伍', '余', '元', '卜', '顾', '孟', '平', '黄', '和', '穆', '萧', '尹', '姚', '邵', '湛', '汪', '祁', '毛', '禹', '狄', '米', '贝', '明', '臧', '计', '伏', '成', '戴', '谈', '宋', '茅', '庞', '熊', '纪', '舒', '屈', '项', '祝', '董', '梁', '杜', '阮', '蓝', '闵', '席', '季', '麻', '强', '贾', '路', '娄', '危'
-  //     ];
-  //     const legendData = [];
-  //     const seriesData = [];
-  //     for (var i = 0; i < count; i++) {
-  //       var name =
-  //         Math.random() > 0.65
-  //           ? makeWord(4, 1) + '·' + makeWord(3, 0)
-  //           : makeWord(2, 1);
-  //       legendData.push(name);
-  //       seriesData.push({
-  //         name: name,
-  //         value: Math.round(Math.random() * 100000)
-  //       });
-  //     }
-
-  //     return {
-  //       legendData: legendData,
-  //       seriesData: seriesData
-  //     };
-
-  //     function makeWord(max: number, min: number) {
-  //       const nameLen = Math.ceil(Math.random() * max + min);
-  //       const name = [];
-  //       for (var i = 0; i < nameLen; i++) {
-  //         name.push(nameList[Math.round(Math.random() * nameList.length - 1)]);
-  //       }
-  //       return name.join('');
-  //     }
-  //   }
-
   GetDataComplex(data: any[]) {
     const nameList: string[] = [];
     const seriesData: { name: string; value: number }[] = [];
@@ -755,36 +678,28 @@ export class RapportLaboComponent implements OnInit {
     const prestationCounts = new Map<number, { designation: string; count: number }>();
 
     // Extract unique designations and counts
-   
+
     data.forEach(item => {
       if (item && typeof item.designationArPres === 'string' && typeof item.codePrestation === 'number') {
-          const designation = item.designationArPres;
-          const codePrestation = item.codePrestation;
+        const designation = item.designationArPres;
+        const codePrestation = item.codePrestation;
 
-          //Check if codePrestation already exists in the map
-          if(prestationCounts.has(codePrestation)){
-              prestationCounts.get(codePrestation)!.count++;
-          } else {
-              prestationCounts.set(codePrestation, { designation: designation, count: 1 });
-          }
+        //Check if codePrestation already exists in the map
+        if (prestationCounts.has(codePrestation)) {
+          prestationCounts.get(codePrestation)!.count++;
+        } else {
+          prestationCounts.set(codePrestation, { designation: designation, count: 1 });
+        }
 
-          nameList.push(designation); // Add to nameList
+        nameList.push(designation); // Add to nameList
 
       } else {
-          console.warn("Missing or invalid data item or 'designationArPres' or 'codePrestation':", item);
+        console.warn("Missing or invalid data item or 'designationArPres' or 'codePrestation':", item);
       }
-  });
-    
-    //   if (item && typeof item.designationArPres === 'string') {  //Check if item exists
-    //     const designation = item.designationArPres;
-    //     // const codePrestation = item.codePrestation;
-    //     nameList.push(designation);
-    //     // prestationCounts[codePrestation] = (prestationCounts[codePrestation] || 0) + 1;
-    // } else {
-    //     console.warn("Missing or invalid data item or 'designationArPres':", item);
-    // }
+    });
 
- 
+
+
     const uniqueCodePrest = [...prestationCounts.keys()];
     uniqueCodePrest.forEach(code => {
       const { designation, count } = prestationCounts.get(code)!;
@@ -793,14 +708,6 @@ export class RapportLaboComponent implements OnInit {
     //Remove duplicates from nameList
     const uniqueNameList = [...new Set(nameList)];
 
-
-    // Create seriesData from the counts
-    // uniqueNameList.forEach(designation => {
-    //   seriesData.push({
-    //     name: designation,
-    //     value: prestationCounts[designation]
-    //   });
-    // });
 
 
     this.optionsChartComplex = {
@@ -841,8 +748,37 @@ export class RapportLaboComponent implements OnInit {
   }
 
 
- 
+  dataMedecin = new Array<any>();
 
+
+  GroupedDataByMedecin(data: any[]): any[] {
+    return data.reduce((accumulator: any[], currentValue: any) => {
+      const existingIndex = accumulator.findIndex(item => item.nomIntervAr === currentValue.nomIntervAr);
+
+      if (existingIndex !== -1) {
+        accumulator[existingIndex].count++;
+      } else {
+        accumulator.push({
+          nomIntervAr: currentValue.nomIntervAr,
+          count: 1,
+
+        });
+      }
+      return accumulator;
+    }, []);
+
+
+  }
+
+  GetAllDdeForMedecin(codePrestation:number) {
+    this.rapportService.GetAllDdeExamenLabByDateAndCodePrestation(this.dateDeb, this.dateFin,codePrestation).subscribe((data: any) => {
+      this.loadingComponent.IsLoading = false;
+      this.IsLoading = false;
+      this.dataMedecin = this.GroupedDataByMedecin(data);
+
+    }
+    )
+  }
 
 }
 

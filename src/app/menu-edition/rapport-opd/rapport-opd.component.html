@@ -1,141 +1,152 @@
-<!-- <app-loading [IsLoading]="IsLoading">
-</app-loading> -->
+<body class="card" [ngClass]="{ 'disabled': IsLoading }">
+    <app-loading [IsLoading]="IsLoading">
+    </app-loading>
+    <header>
 
-<!-- /// row filter date  -->
-<!-- [ngClass]="{ 'disabled': IsLoading }" -->
+        <label class="header_name">{{'OutPatient' | i18n:i18nService.currentLanguage}} </label>
+        <button class="close-button btn btn-default" (click)="closeThisComponent()">X</button>
+    </header>
+    <section id="main-container">
+
+        <div class="row">
+
+            <div class="col-12 col-lg-12 d-flex">
+                <div class="card radius-10 w-100">
+
+                    <div class="card-body">
+
+                        <div class="col">
+                            <div class="card radius-10 border-start border-0 border-4 border-danger">
+                                <div class="card-body" style="    white-space: break-spaces;">
+                                    <div class="flex-row-start   FloatRight flex-12">
+                                        <label class="control-label flex-20" style="font-weight: 700;"> الفترة </label>
+                                        <label class="control-label flex-20" style="font-weight: 700;"> من </label>
+
+                                        <div class="dop control-input " style="display: flex;">
+
+                                            <p-calendar (keyup.enter)="transformDateFormat()" (onInput)="formatInputNew($event)" (onBlur)="transformDateFormat()" (onChange)="transformDateFormat()" (onSelect)="transformDateFormat()" [(ngModel)]="dateDeb" [ngStyle]="{'width':'100%' , 'margin-right': '15px'}"
+                                                [showButtonBar]="true" appendTo="body" [iconDisplay]="'input'" #calendar dateFormat="yy-mm-dd" [readonlyInput]="false" [showIcon]="true" inputId="icondisplay"></p-calendar>
 
 
-<div class="row">
+                                        </div>
 
-    <div class="col-12 col-lg-12 d-flex">
-        <div class="card radius-10 w-100">
+                                        <label class="control-label flex-20" style="font-weight: 700;"> إلى </label>
 
-            <div class="card-body">
+                                        <div class="dop control-input " style="display: flex;">
 
-                <div class="col">
-                    <div class="card radius-10 border-start border-0 border-4 border-danger">
-                        <div class="card-body" style="    white-space: break-spaces;">
-                            <div class="flex-row-start   FloatRight flex-12">
-                                <label class="control-label flex-20" style="font-weight: 700;"> الفترة </label>
-                                <label class="control-label flex-20" style="font-weight: 700;"> من </label>
+                                            <p-calendar (keyup.enter)="transformDateFormatFin()" (onInput)="formatInputNewFin($event)" (onBlur)="transformDateFormatFin()" (onChange)="transformDateFormatFin()" (onSelect)="transformDateFormatFin()" [(ngModel)]="dateFin" [ngStyle]="{'width':'100%' , 'margin-right': '15px'}"
+                                                [showButtonBar]="true" appendTo="body" [iconDisplay]="'input'" #calendar dateFormat="yy-mm-dd" [readonlyInput]="false" [showIcon]="true" inputId="icondisplay"></p-calendar>
 
-                                <div class="dop control-input " style="display: flex;">
+                                        </div>
 
-                                    <p-calendar (keyup.enter)="transformDateFormat()" (onInput)="formatInputNew($event)" (onBlur)="transformDateFormat()" (onChange)="transformDateFormat()" (onSelect)="transformDateFormat()" [(ngModel)]="dateDeb" [ngStyle]="{'width':'100%' , 'margin-right': '15px'}"
-                                        [showButtonBar]="true" appendTo="body" [iconDisplay]="'input'" #calendar dateFormat="yy-mm-dd" [readonlyInput]="false" [showIcon]="true" inputId="icondisplay"></p-calendar>
 
+                                    </div>
+
+                                    <div class="flex-row-start flex-8 FloatLeft" style="margin-top: 10px;">
+
+
+                                        <button data-backdrop="false" type="button" class="Bouton-add-new1 btn  btn-default " data-original-title="Add" data-toggle="modal" data-target="#Modal" (click)="GetData()">
+                                            <div class="bouton_style-2"> {{'Voir' | i18n:i18nService.currentLanguage}}</div>
+                                            <i class="fa-solid fa-magnifying-glass iconPDF"></i>
+                                        </button>
+
+
+                                    </div>
 
                                 </div>
+                            </div>
+                        </div>
 
-                                <label class="control-label flex-20" style="font-weight: 700;"> إلى </label>
+                    </div>
 
-                                <div class="dop control-input " style="display: flex;">
+                </div>
+            </div>
+        </div>
+        <div class="row">
 
-                                    <p-calendar (keyup.enter)="transformDateFormatFin()" (onInput)="formatInputNewFin($event)" (onBlur)="transformDateFormatFin()" (onChange)="transformDateFormatFin()" (onSelect)="transformDateFormatFin()" [(ngModel)]="dateFin" [ngStyle]="{'width':'100%' , 'margin-right': '15px'}"
-                                        [showButtonBar]="true" appendTo="body" [iconDisplay]="'input'" #calendar dateFormat="yy-mm-dd" [readonlyInput]="false" [showIcon]="true" inputId="icondisplay"></p-calendar>
+            <div class="col-12 col-lg-12 d-flex">
+                <div class="card radius-10 w-50">
 
+                    <div class="card-body">
+
+                        <section id="main-container">
+                            <div class="material-table">
+                                <div class="card">
+                                    <p-table [paginator]="true" [rows]="20" [rows]="20" [rowsPerPageOptions]="[20, 40,80,100]" [showCurrentPageReport]="true" [first]="first" currentPageReportTemplate="{{'Page' | i18n:i18nService.currentLanguage}} {first} {{'To' | i18n:i18nService.currentLanguage}} {last} {{'of' | i18n:i18nService.currentLanguage}} {totalRecords} {{'entiers' | i18n:i18nService.currentLanguage}}"
+                                        #dt1 [columns]="cols" sortField="count" [sortOrder]="-1" sortMode="single" [value]="dataCabinet" [globalFilterFields]="['designationAr', 'designationLt']" selectionMode="single" [metaKeySelection]="false" [(selection)]="selectedCabinet"
+                                        (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)" dataKey="codeSaisieCabinet" [tableStyle]="{'min-width': '35rem', 'width': '100%' , 'padding': '1px 1px 1px 1px'}">
+
+                                        <ng-template pTemplate="colgroup" let-col>
+                                            <colgroup>
+                                                <col *ngFor="let col of col" [style.width]="col.width">
+                                            </colgroup>
+                                        </ng-template>
+                                        <ng-template pTemplate="header" let-columns>
+                                            <tr>
+                                                <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                                    {{ col.header }}
+                                                    <p-sortIcon [field]="col.field" />
+                                                </th>
+                                            </tr>
+
+                                            <!-- <tr class="filter-row">
+                                                <th *ngFor="let col of columns let i = index">
+                                                    <p-columnFilter *ngIf="i !== 0 " [hideOnClear]="true" [showMenu]="false" [showAddButton]="false" [showOperator]="false" [matchMode]="'contains'" [showMatchModes]="false" type={{col.type}} field={{col.field}} placeholder=" " ariaLabel="Filter Country"></p-columnFilter>
+                                                </th>
+                                            </tr> -->
+                                        </ng-template>
+                                        <ng-template pTemplate="body" let-domaine>
+                                            <tr [pSelectableRow]="domaine">
+
+                                                <td style="font-size: 15px !important;">{{domaine.designationArCabinet}}</td>
+                                                <td style="font-size: 15px !important;">{{domaine.designationLtCabinet}}</td>
+                                                <!-- <td style="font-size: 15px !important;">{{domaine.codeSaisieCabinet}}</td> -->
+                                                <td style="font-size: 15px !important;">{{domaine.count}}</td>
+
+
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="footer">
+                                            <tr>
+                                                <td colspan="2"><strong>المجموع:</strong></td>
+                                                <td>{{ calculateTotal() }}</td>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="emptymessage">
+                                            <tr>
+                                                <td colspan="4">لا توجد بيانات</td>
+                                            </tr>
+                                        </ng-template>
+                                    </p-table>
                                 </div>
 
 
                             </div>
+                        </section>
 
-                            <div class="flex-row-start flex-8 FloatLeft" style="margin-top: 10px;">
+                    </div>
 
+                </div>
+                <div class="card radius-10 w-50">
+                    <div class="row row-cols-1 row-cols-lg-9" [ngClass]="{ 'disabled': IsLoading }">
+                        <div class="col d-flex">
+                            <div class="card radius-10 w-100">
+                                <div class="card-body">
 
-                                <button data-backdrop="false" type="button" class="Bouton-add-new1 btn  btn-default " data-original-title="Add" data-toggle="modal" data-target="#Modal" (click)="GetData()">
-                                    <div class="bouton_style-2"> {{'Voir' | i18n:i18nService.currentLanguage}}</div>
-                                    <i class="fa-solid fa-magnifying-glass iconPDF"></i>
-                                </button>
+                                    <div id="options11" echarts [options]="options11" [theme]="theme" class="demo-chart"></div>
 
+                                </div>
 
                             </div>
-
                         </div>
                     </div>
                 </div>
-
-            </div>
-
-        </div>
-    </div>
-</div>
-<div class="row">
-
-    <div class="col-12 col-lg-12 d-flex">
-        <div class="card radius-10 w-50">
-
-            <div class="card-body">
-
-                <section id="main-container">
-                    <div class="material-table">
-                        <div class="card">
-                            <p-table [paginator]="true" [rows]="20" [rows]="20" [rowsPerPageOptions]="[20, 40,80,100]" [showCurrentPageReport]="true" [first]="first" currentPageReportTemplate="{{'Page' | i18n:i18nService.currentLanguage}} {first} {{'To' | i18n:i18nService.currentLanguage}} {last} {{'of' | i18n:i18nService.currentLanguage}} {totalRecords} {{'entiers' | i18n:i18nService.currentLanguage}}"
-                                #dt1 [columns]="cols" [value]="dataCabinet" [globalFilterFields]="['designationAr', 'designationLt']" selectionMode="single" [metaKeySelection]="false" [(selection)]="selectedCabinet" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)"
-                                dataKey="codeSaisieCabinet" [tableStyle]="{'min-width': '35rem', 'width': '100%' , 'padding': '1px 1px 1px 1px'}">
-
-                                <ng-template pTemplate="colgroup" let-col>
-                                    <colgroup>
-                                        <col *ngFor="let col of col" [style.width]="col.width">
-                                    </colgroup>
-                                </ng-template>
-                                <ng-template pTemplate="header" let-columns>
-                                    <tr>
-                                        <th *ngFor="let col of columns">
-                                            {{ col.header }}
-                                        </th>
-                                    </tr>
-
-                                    <!-- <tr class="filter-row">
-                                        <th *ngFor="let col of columns let i = index">
-                                            <p-columnFilter *ngIf="i !== 0 " [hideOnClear]="true" [showMenu]="false" [showAddButton]="false" [showOperator]="false" [matchMode]="'contains'" [showMatchModes]="false" type={{col.type}} field={{col.field}} placeholder=" " ariaLabel="Filter Country"></p-columnFilter>
-                                        </th>
-                                    </tr> -->
-                                </ng-template>
-                                <ng-template pTemplate="body" let-domaine>
-                                    <tr [pSelectableRow]="domaine">
-
-                                        <td style="font-size: 15px !important;">{{domaine.designationArCabinet}}</td>
-                                        <td style="font-size: 15px !important;">{{domaine.designationLtCabinet}}</td>
-                                        <!-- <td style="font-size: 15px !important;">{{domaine.codeSaisieCabinet}}</td> -->
-                                        <td style="font-size: 15px !important;">{{domaine.count}}</td>
-
-
-                                    </tr>
-                                </ng-template>
-                                <ng-template pTemplate="footer">
-                                    <tr>
-                                        <td colspan="2"><strong>المجموع:</strong></td>
-                                        <td>{{ calculateTotal() }}</td>
-                                    </tr>
-                                </ng-template>
-                                <ng-template pTemplate="emptymessage">
-                                    <tr>
-                                        <td colspan="4">لا توجد بيانات</td>
-                                    </tr>
-                                </ng-template>
-                            </p-table>
-                        </div>
-
-
-                    </div>
-                </section>
-
-            </div>
-
-        </div>
-        <div class="card radius-10 w-50">
-            <div class="row row-cols-1 row-cols-lg-9" [ngClass]="{ 'disabled': IsLoading }">
-                <div class="col d-flex">
-                    <div class="card radius-10 w-100">
-                        <div class="card-body">
-
-                            <div id="options11" echarts [options]="options11" [theme]="theme" class="demo-chart"></div>
-
-                        </div>
-
-                    </div>
-                </div>
             </div>
         </div>
-    </div>
-</div>
+
+
+
+
+
+    </section>
+</body>

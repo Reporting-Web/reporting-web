@@ -1,22 +1,22 @@
-
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 
 import { LoadingComponent } from '../../Shared/loading/loading.component';
 import { ControlServiceAlertify } from '../../Shared/Control/ControlRow';
 import { I18nService } from '../../Shared/i18n/i18n.service';
 import { DatePipe } from '@angular/common';
 import { CalanderTransService } from '../../Shared/CalanderService/CalanderTransService';
- 
+
 import { ThemeOption } from 'ngx-echarts';
 import { EChartsCoreOption } from 'echarts';
 import { RapportService } from '../../Shared/service/ServiceClientRapport/rapport.service';
+import { Router } from '@angular/router';
 
 
 interface GroupedCabinetData {
   designationArCabinet: string;
   admissionCount: number;
 }
- 
+
 
 @Component({
   selector: 'app-rapport-opd',
@@ -25,7 +25,7 @@ interface GroupedCabinetData {
   providers: [CalanderTransService]
 })
 export class RapportOPDComponent implements OnInit {
-  constructor(private rapportService: RapportService, private loadingComponent: LoadingComponent,
+  constructor(private router: Router, private rapportService: RapportService, private loadingComponent: LoadingComponent,
     public i18nService: I18nService, private datePipe: DatePipe, private CtrlAlertify: ControlServiceAlertify
     , private calandTrans: CalanderTransService) { this.calandTrans.setLangAR(); }
 
@@ -50,12 +50,22 @@ export class RapportOPDComponent implements OnInit {
 
   }
 
+
+
+
+  @Output() closed: EventEmitter<string> = new EventEmitter();
+  closeThisComponent() {
+    const parentUrl = this.router.url.split('/').slice(0, -1).join('/');
+    this.closed.emit(parentUrl);
+    this.router.navigate([parentUrl]);
+  }
+
   GetColumns() {
-    this.cols = [ 
-      { field: 'designationArCabinet', header:  this.i18nService.getString('Cabinet') || 'عيادة' },
+    this.cols = [
+      { field: 'designationArCabinet', header: this.i18nService.getString('Cabinet') || 'عيادة' },
       { field: 'designationLtCabinet', header: this.i18nService.getString('DesignationLt') || 'DesignationLt' },
-  
-      { field: 'count', header: this.i18nService.getString('Count') || 'عدد القبولات'   } // Admission Count
+
+      { field: 'count', header: this.i18nService.getString('Count') || 'عدد القبولات' } // Admission Count
     ];
   }
 
@@ -128,7 +138,7 @@ export class RapportOPDComponent implements OnInit {
     this.dateFin = this.datePipe.transform(this.dateFin, "yyyy-MM-dd")
   };
 
-  GetData() { 
+  GetData() {
     if (this.dateDeb == null || this.dateFin == null) {
       this.CtrlAlertify.PostionLabelNotification();
       this.CtrlAlertify.showNotificationِCustom('PleaseSelectedAnyDate');
@@ -210,7 +220,7 @@ export class RapportOPDComponent implements OnInit {
       this.loadingComponent.IsLoading = false;
       this.IsLoading = false;
 
-      this.dataCabinet = this.aggregateData(data); 
+      this.dataCabinet = this.aggregateData(data);
     });
   }
 

@@ -1,1 +1,17 @@
-<p>rapport-pharmacie-chronique works!</p>
+<body class="card" [ngClass]="{ 'disabled': IsLoading }">
+    <app-loading [IsLoading]="IsLoading">
+    </app-loading>
+    <header>
+
+        <label class="header_name">{{'PrescriptionChronique' | i18n:i18nService.currentLanguage}} </label>
+        <button class="close-button btn btn-default" (click)="closeThisComponent()">X</button>
+    </header>
+    <section id="main-container">
+
+
+
+
+
+
+    </section>
+</body>

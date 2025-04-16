@@ -53,6 +53,11 @@ export class RapportService {
       return this.http.get(`${environment.API_RECEPTION}dde_examen_lab/findAllByDateAndSociete?dateDebut=`+ dateDebut + `&dateFin=`+dateFin +`&codeSociete=`+codeSociete  )
     }
 
+    GetAllDdeExamenLabByDateAndCodePrestation(dateDebut : any , dateFin : any , codePrestation : any ){
+      return this.http.get(`${environment.API_RECEPTION}dde_examen_lab/findAllByDateAndPrestation?dateDebut=`+ dateDebut + `&dateFin=`+dateFin +`&codePrestation=`+codePrestation  )
+    }
+
+
     GetAllDdeExamenLabByDateAndCodeInterv(dateDebut : any , dateFin : any , codeInterv : any ){
       return this.http.get(`${environment.API_RECEPTION}dde_examen_lab/findAllByDateAndIntervenant?dateDebut=`+ dateDebut + `&dateFin=`+dateFin +`&codeInterv=`+codeInterv  )
     }
