@@ -28,6 +28,13 @@ export class ControlServiceAlertify {
       fieldRequiredMessage
     );
   }
+  showNotificationِCustomOK(LabelMessage:string) {
+    const fieldRequiredMessage = this.i18nService.getString(LabelMessage);  // Default to English if not found
+    alertifyjs.notify(
+      `<img  style="width: 30px; height: 30px; margin: 0px 0px 0px 15px" src="/assets/images/images/OkSaved.gif" alt="image" >` +
+      fieldRequiredMessage
+    );
+  }
   PostionLabelNotification(){
     const currentTime = Date.now();
     if (currentTime - this.lastNotificationTime > 2000) { // Only notify every 2 seconds

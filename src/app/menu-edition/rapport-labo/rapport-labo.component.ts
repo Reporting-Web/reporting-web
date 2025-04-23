@@ -10,11 +10,9 @@ import { RapportService } from '../../Shared/service/ServiceClientRapport/rappor
 import { ThemeOption } from 'ngx-echarts';
 import { EChartsCoreOption } from 'echarts';
 import { Router } from '@angular/router';
-import { LazyLoadEvent } from 'primeng/api';
 
 
-
-interface DataItem {
+interface LabDataItem {
   code: number;
   codePrestation: number;
   designationArPres: string;
@@ -32,7 +30,12 @@ interface DataItem {
   codeFamPres: number;
   desigtionArFam: string;
   designationLtFam: string;
+  codeAdmission: string;
+  coutFacture: number;
+  count: any;
+  coutFactureTotal: any;
 }
+
 @Component({
   selector: 'app-rapport-labo',
   templateUrl: './rapport-labo.component.html',
@@ -52,15 +55,14 @@ export class RapportLaboComponent implements OnInit {
   dateDeb: any = null;;
   dateFin: any = null;
   first = 0;
-  ngOnInit(): void {
+  valeurUnderTestLabo = "";
 
+  ngOnInit(): void {
     this.createChartOptions11();
     this.createChartOptions12(this.dataMedecin);
     this.GetColumns();
     this.GetColumnsMedecin();
-    this.GetChartRoundParFamille();
-
-
+    this.valeurUnderTestLabo = sessionStorage.getItem("underLab") ?? "100";
 
   }
 
@@ -73,11 +75,12 @@ export class RapportLaboComponent implements OnInit {
 
   GetColumns() {
     this.cols = [
-      { field: 'designationArPres', header: this.i18nService.getString('DesignationAr') || 'DesignationAr', type: 'text', width: '35%' },
-      { field: 'designationLtPres', header: this.i18nService.getString('DesignationLt') || 'DesignationLt', type: 'text', width: '35%' },
-      { field: 'countPatient', header: this.i18nService.getString('countPatient') || ' countPatient', type: 'text', width: '15%' },// patient Count
+      { field: 'designationArPres', header: this.i18nService.getString('DesignationAr') || 'DesignationAr', type: 'text', width: '22%' },
+      { field: 'designationLtPres', header: this.i18nService.getString('DesignationLt') || 'DesignationLt', type: 'text', width: '16%' },
+      { field: 'countPatient', header: this.i18nService.getString('countPatient') || ' countPatient', type: 'text', width: '10%' },// patient Count
+      { field: 'count', header: this.i18nService.getString('CountLab') || 'CountLab', type: 'text', width: '10%' }, // exam Count
+      { field: 'coutFactureTotal', header: this.i18nService.getString('Cout') || 'التكلفة', type: 'text', width: '10%' } // Admission Count
 
-      { field: 'count', header: this.i18nService.getString('CountLab') || 'CountLab', type: 'text', width: '15%' }, // exam Count
     ];
   }
 
@@ -85,7 +88,6 @@ export class RapportLaboComponent implements OnInit {
   GetColumnsMedecin() {
     this.colsMedecin = [
       { field: 'nomIntervAr', header: this.i18nService.getString('NomMedecin') || 'NomMedecin', type: 'text', width: '70%' },
-
       { field: 'count', header: this.i18nService.getString('CountLab') || 'CountLab', type: 'text', width: '30%' }, // exam Count
     ];
   }
@@ -106,7 +108,6 @@ export class RapportLaboComponent implements OnInit {
       let day = parseInt(parts[0], 10);
       let month = parseInt(parts[1], 10) - 1; // Month is 0-indexed
       let year = parseInt(parts[2], 10);
-
       if (!isNaN(day) && !isNaN(month) && !isNaN(year)) {
         let dateObject = new Date(year, month, day); // Create Date object
         this.dateDeb = dateObject; // Assign to your dateDeb property (might be a different type, handle accordingly)
@@ -132,7 +133,6 @@ export class RapportLaboComponent implements OnInit {
       let day = parseInt(parts[0], 10);
       let month = parseInt(parts[1], 10) - 1; // Month is 0-indexed
       let year = parseInt(parts[2], 10);
-
       if (!isNaN(day) && !isNaN(month) && !isNaN(year)) {
         let dateObject = new Date(year, month, day); // Create Date object
         this.dateFin = dateObject; // Assign to your dateDeb property (might be a different type, handle accordingly)
@@ -166,21 +166,16 @@ export class RapportLaboComponent implements OnInit {
       this.CtrlAlertify.showNotificationِCustom('ErrorDate');
     } else {
       this.GetAllDdeExamenLab();
-      // this.createChartOptions();
-
     }
   }
-
-
-  theme: string | ThemeOption = 'dark';
+  theme: string | ThemeOption = 'light';
   options11: EChartsCoreOption | null = null;
-  options12: EChartsCoreOption | null = null;
 
-  createChartOptions11(valeur1: any = 0, valeur2: any = 0, valeur3: any = 0, valeur4: any = 0, totalAdmission: any = 0): void {  // void return type
+  createChartOptions11(valeur1: any = 0, valeur2: any = 0, valeur3: any = 0, valeur4: any = 0, totalAdmission: any = 0, valeur5: any = 0): void {  // void return type
     this.options11 = {
       title: {
         left: '50%',
-        text: ' عدد الحالات حسب الجهة ',
+        text: ' عدد التحاليل حسب الجهة ',
         subtext: 'مجموع الحالات : ' + totalAdmission,
         textAlign: 'center',
         textStyle: { // Use textStyle for title font settings
@@ -201,7 +196,6 @@ export class RapportLaboComponent implements OnInit {
           fontSize: 14, // Adjust as needed
           fontWeight: 'bold',
         },
-
       },
       calculable: true,
       series: [
@@ -220,26 +214,25 @@ export class RapportLaboComponent implements OnInit {
             { value: valeur2, name: "الهيئات القضائية", },
             { value: valeur3, name: 'الخدمات ', },
             { value: valeur4, name: 'الطوارئ', },
+            { value: valeur5, name: 'آخرى', },
           ],
         },
       ],
     };
   }
-
-  createChartOptions12(data: Array<any> ): void {  // void return type
-    
-    
+  GroupedParMedecin: EChartsCoreOption | null = null;
+  createChartOptions12(data: Array<any>): void {  // void return type
+    let varUnderTest = parseInt(localStorage.getItem("underLab") ?? "100");
     const familyCounts: { [family: string]: number } = {};
-     data.forEach(item => {
+    data.forEach(item => {
       const family = item.nomIntervAr;
       familyCounts[family] = (familyCounts[family] || 0) + item.count;
     });
-
     // Aggregate family counts, grouping those under 20 into "Other"
     const aggregatedFamilyCounts: { [family: string]: number } = {};
     let otherCount = 0;
     for (const family in familyCounts) {
-      if (familyCounts[family] >= 200) {
+      if (familyCounts[family] >= varUnderTest) {
         aggregatedFamilyCounts[family] = familyCounts[family];
       } else {
         otherCount += familyCounts[family];
@@ -248,8 +241,6 @@ export class RapportLaboComponent implements OnInit {
     if (otherCount > 0) {
       aggregatedFamilyCounts["Other"] = otherCount;
     }
-
-
     // Find the most frequent family (from aggregated data)
     let mostFrequentFamily = '';
     let maxFamilyCount = 0;
@@ -259,7 +250,6 @@ export class RapportLaboComponent implements OnInit {
         mostFrequentFamily = family;
       }
     }
-
     //prepare data for the inner ring
     const detailsCounts: { [prestation: string]: number } = {};
     data.forEach(item => {
@@ -267,32 +257,25 @@ export class RapportLaboComponent implements OnInit {
         detailsCounts[item.designationArPres] = (detailsCounts[item.designationArPres] || 0) + item.count;
       }
     });
-
     //Limit details to top 10, or all if fewer than 10 exist, and then add "Other"
     const sortedDetails = Object.entries(detailsCounts).sort(([, a], [, b]) => b - a);
-    let topDetails = sortedDetails.slice(0, Math.min(200, sortedDetails.length)); //Take top 10 or all available
+    let topDetails = sortedDetails.slice(0, Math.min(varUnderTest, sortedDetails.length)); //Take top 10 or all available
     let otherDetailsCount = 0;
-    if (sortedDetails.length > 200) { //Only add "other" if there are more than 10 items.
-      for (let i = 200; i < sortedDetails.length; i++) {
+    if (sortedDetails.length > varUnderTest) { //Only add "other" if there are more than 10 items.
+      for (let i = varUnderTest; i < sortedDetails.length; i++) {
         otherDetailsCount += sortedDetails[i][1];
       }
     }
-
     let detailsData = topDetails.map(([name, value]) => ({ name, value }));
     if (otherDetailsCount > 0) {
       detailsData.push({ name: "Other", value: otherDetailsCount });
     }
-
-
     // Prepare data for outer ring
     const familyData = Object.entries(aggregatedFamilyCounts).map(([name, value]) => ({ name, value }));
-
-
-    
-    this.options12 = {
+    this.GroupedParMedecin = {
       title: {
         left: '50%',
-        text: ' عدد الحالات حسب الطبيب ',
+        text: ' مجموع الحالات حسب الطبيب ',
         // subtext: 'مجموع الحالات : ' ,
         textAlign: 'center',
         textStyle: { // Use textStyle for title font settings
@@ -309,12 +292,11 @@ export class RapportLaboComponent implements OnInit {
         align: 'auto',
         alignItems: 'center',
         bottom: 10,
-        data:   Object.keys(aggregatedFamilyCounts), // ["النيابات ", "الهيئات القضائية", 'الخدمات ', 'الطوارئ'],
+        data: Object.keys(aggregatedFamilyCounts), // ["النيابات ", "الهيئات القضائية", 'الخدمات ', 'الطوارئ'],
         textStyle: { //Use textStyle for legend font settings
           fontSize: 14, // Adjust as needed
           fontWeight: 'bold',
         },
-
       },
       calculable: true,
       series: [
@@ -336,15 +318,12 @@ export class RapportLaboComponent implements OnInit {
 
   dataDdeExamenLab = new Array<any>();
   dataGroupedBySociete = new Array<any>();
-  countPatientPerCabAndSociete374: any;
-  countPatientPerCabAndSociete375: any;
-  countPatientPerCabAndSociete379: any;
-  countPatientPerCabAndSociete376: any;
+  countPatientPerCabAndSociete374hayet: any = 0;
+  countPatientPerCabAndSociete375niyebet: any = 0;
+  countPatientPerCabAndSociete379er: any = 0;
+  countPatientPerCabAndSociete376khadamet: any = 0;
+  countPatientPerCabAndSocieteOther: any = 0;
 
-  countPatientPerCabAndSociete374Medecin: any;
-  countPatientPerCabAndSociete375Medecin: any;
-  countPatientPerCabAndSociete379Medecin: any;
-  countPatientPerCabAndSociete376Medecin: any;
   PatientCounted: any;
   dataGroupedByMedecin = new Array<any>();
 
@@ -352,87 +331,86 @@ export class RapportLaboComponent implements OnInit {
     this.rapportService.GetAllDdeExamenLabByDate(this.dateDeb, this.dateFin).subscribe((data: any) => {
       this.loadingComponent.IsLoading = false;
       this.IsLoading = false;
-
       this.dataDdeExamenLab = this.aggregateData(data);
+      // this.ChartBarCout(this.dataDdeExamenLab);
+      this.ChartBarCout(data);
       this.dataGroupedBySociete = this.GroupedDataBySociete(data);
       this.dataGroupedByMedecin = this.GroupedDataByMedecin(data);
-
       const patientCountMap = this.createPatientCountMap(this.aggregateDataPatient(data));
-
       this.dataDdeExamenLab.forEach(group => {
         group.countPatient = patientCountMap[group.designationArPres] || 0; // Handle cases where a prestation might not have patients
-
-
       });
- //// par societe chart
-      this.dataGroupedBySociete.forEach((dataGrouped: any) => {
-        if (dataGrouped.codeSociete == 374) {
-          this.countPatientPerCabAndSociete374 = dataGrouped.count; 
-        } else if (dataGrouped.codeSociete == 375) {
-          this.countPatientPerCabAndSociete375 = dataGrouped.count; 
-        } else if (dataGrouped.codeSociete == 376) {
-          this.countPatientPerCabAndSociete376 = dataGrouped.count; 
-        } else if (dataGrouped.codeSociete == 379) {
-          this.countPatientPerCabAndSociete379 = dataGrouped.count;
-        }  
-      })
-      this.createChartOptions11(this.countPatientPerCabAndSociete374, this.countPatientPerCabAndSociete375, this.countPatientPerCabAndSociete376, this.countPatientPerCabAndSociete379,
 
-        (this.countPatientPerCabAndSociete374 + +this.countPatientPerCabAndSociete375 + +this.countPatientPerCabAndSociete376 + +this.countPatientPerCabAndSociete379)
+      this.dataGroupedBySociete.forEach((dataGrouped: any) => {
+        switch (dataGrouped.codeSociete) {
+          case 374:
+            this.countPatientPerCabAndSociete374hayet = dataGrouped.count;
+            break;
+          case 375:
+            this.countPatientPerCabAndSociete375niyebet = dataGrouped.count;
+            break;
+          case 376:
+            this.countPatientPerCabAndSociete376khadamet = dataGrouped.count;
+            break;
+          case 377:
+            this.countPatientPerCabAndSociete379er = dataGrouped.count; //Corrected to 377
+            break;
+          case 379:
+            this.countPatientPerCabAndSociete379er = dataGrouped.count; //Added this case
+            break;
+          case 99:
+            this.countPatientPerCabAndSocieteOther = dataGrouped.count;
+            break;
+        }
+      });
+
+
+      this.createChartOptions11(this.countPatientPerCabAndSociete374hayet, this.countPatientPerCabAndSociete375niyebet,
+        this.countPatientPerCabAndSociete376khadamet, this.countPatientPerCabAndSociete379er,
+        (this.countPatientPerCabAndSociete374hayet +
+          this.countPatientPerCabAndSociete375niyebet +
+          this.countPatientPerCabAndSociete376khadamet +
+          this.countPatientPerCabAndSociete379er +
+          this.countPatientPerCabAndSocieteOther)
+        , this.countPatientPerCabAndSocieteOther
       );
 
- /// par medecin chart
-      // this.dataGroupedByMedecin.forEach((dataGrouped: any) => {
-      //   if (dataGrouped.codeSociete == 374) {
-      //     this.countPatientPerCabAndSociete374Medecin = dataGrouped.count; 
-      //   } else if (dataGrouped.codeSociete == 375) {
-      //     this.countPatientPerCabAndSociete375Medecin = dataGrouped.count; 
-      //   } else if (dataGrouped.codeSociete == 376) {
-      //     this.countPatientPerCabAndSociete376Medecin = dataGrouped.count; 
-      //   } else if (dataGrouped.codeSociete == 379) {
-      //     this.countPatientPerCabAndSociete379Medecin = dataGrouped.count;
-      //   }  
-      // })
       this.createChartOptions12(this.dataGroupedByMedecin);
-      
       this.GetChartRoundParSousFamille();
       this.GetDataComplex(data);
+
     });
   }
 
   aggregateData(data: any[]): any[] {
     return data.reduce((accumulator: any[], currentValue: any) => {
       const existingIndex = accumulator.findIndex(item => item.designationArPres === currentValue.designationArPres);
-
       if (existingIndex !== -1) {
         accumulator[existingIndex].count++;
+        accumulator[existingIndex].coutFactureTotal = parseFloat((accumulator[existingIndex].coutFactureTotal + currentValue.coutFacture).toFixed(3));
+
       } else {
         accumulator.push({
           designationArPres: currentValue.designationArPres,
           designationLtPres: currentValue.designationLtPres,
-          // codeSaisieCabinet: currentValue.codeSaisieCabinet,  
           count: 1,
-          // Add other fields if needed from currentValue
-
           codeSociete: currentValue.codeSociete,
           codeFamPres: currentValue.codeFamPres,
           desigtionArFam: currentValue.desigtionArFam,
           designationArSousFam: currentValue.designationArSousFam,
           codePrestation: currentValue.codePrestation,
-
-
+          designationArSoc: currentValue.designationArSoc,
+          designationLtSoc: currentValue.designationLtSoc,
+          coutFactureTotal: parseFloat((currentValue.coutFacture).toFixed(3)),
         });
       }
       return accumulator;
     }, []);
-
-
   }
 
   GroupedDataBySociete(data: any[]): any[] {
     return data.reduce((accumulator: any[], currentValue: any) => {
       const existingIndex = accumulator.findIndex(item => item.designationArSoc === currentValue.designationArSoc);
-
       if (existingIndex !== -1) {
         accumulator[existingIndex].count++;
       } else {
@@ -441,16 +419,13 @@ export class RapportLaboComponent implements OnInit {
           designationLtSoc: currentValue.designationLtSoc,
           codeSociete: currentValue.codeSociete, //You might want to keep one, choose wisely
           count: 1,
-
         });
       }
       return accumulator;
     }, []);
-
-
   }
 
-   
+
 
   createPatientCountMap(patientData: any[]): { [key: string]: number } {
     const patientCountMap: { [key: string]: number } = {};
@@ -461,7 +436,6 @@ export class RapportLaboComponent implements OnInit {
   }
   aggregateDataPatient(data: any[]): any[] {
     const patientsPerPres: { [key: string]: Set<string> } = {}; // Use a dictionary of Sets
-
     //First pass: Build the dictionary of patients per prestation
     data.forEach(item => {
       const presKey = item.designationArPres;
@@ -470,7 +444,6 @@ export class RapportLaboComponent implements OnInit {
       }
       patientsPerPres[presKey].add(item.codePatient);
     });
-
     //Second pass: Create the resulting array
     const result: any[] = [];
     for (const presKey in patientsPerPres) {
@@ -485,12 +458,16 @@ export class RapportLaboComponent implements OnInit {
     return result;
   }
   calculateTotal(): number {
-    return this.dataDdeExamenLab.reduce((sum, item) => sum + item. countPatient , 0);
+    return this.dataDdeExamenLab.reduce((sum, item) => sum + item.countPatient, 0);
   }
   calculateTotalExam(): number {
     return this.dataDdeExamenLab.reduce((sum, item) => sum + item.count, 0);
   }
- 
+  calculateTotalCout(): number {
+    return this.dataDdeExamenLab.reduce((sum, item) => sum + item.coutFactureTotal, 0);
+  }
+
+
   calculateTotalMedecin(): number {
     return this.dataMedecin.reduce((sum, item) => sum + item.count, 0);
   }
@@ -499,185 +476,167 @@ export class RapportLaboComponent implements OnInit {
 
   onRowSelect(event: any) {
     this.designationArExam = event.data.designationArPres;
-
     this.GetAllDdeForMedecin(event.data.codePrestation);
-
-
   }
 
   onRowUnselect(event: any) {
-    // this.createChartOptions()
     this.selectedExamen = event.data = null;
     this.designationArExam = "";
-    this.dataMedecin= new Array<any>();
+    this.dataMedecin = new Array<any>();
   }
 
   onRowSelectMedecin(event: any) { }
 
   onRowUnselectMedecin(event: any) {
-    // this.createChartOptions()
     this.selectedMedecin = event.data = null;
   }
 
 
-  option33: EChartsCoreOption | null = null;
+  ChartParFamille: EChartsCoreOption | null = null;
 
 
-  GetChartRoundParFamille() {
-    const familyCounts: { [family: string]: number } = {};
-    this.dataDdeExamenLab.forEach(item => {
-      const family = item.desigtionArFam;
-      familyCounts[family] = (familyCounts[family] || 0) + item.count;
-    });
-
-    // Aggregate family counts, grouping those under 20 into "Other"
-    const aggregatedFamilyCounts: { [family: string]: number } = {};
-    let otherCount = 0;
-    for (const family in familyCounts) {
-      if (familyCounts[family] >= 1) {
-        aggregatedFamilyCounts[family] = familyCounts[family];
-      } else {
-        otherCount += familyCounts[family];
-      }
-    }
-    if (otherCount > 0) {
-      aggregatedFamilyCounts["Other"] = otherCount;
-    }
-
-
-    // Find the most frequent family (from aggregated data)
-    let mostFrequentFamily = '';
-    let maxFamilyCount = 0;
-    for (const family in aggregatedFamilyCounts) {
-      if (aggregatedFamilyCounts[family] > maxFamilyCount) {
-        maxFamilyCount = aggregatedFamilyCounts[family];
-        mostFrequentFamily = family;
-      }
-    }
-
-    //prepare data for the inner ring
-    const detailsCounts: { [prestation: string]: number } = {};
-    this.dataDdeExamenLab.forEach(item => {
-      if (item.desigtionArFam === mostFrequentFamily) {
-        detailsCounts[item.designationArPres] = (detailsCounts[item.designationArPres] || 0) + item.count;
-      }
-    });
-
-    //Limit details to top 10, or all if fewer than 10 exist, and then add "Other"
-    const sortedDetails = Object.entries(detailsCounts).sort(([, a], [, b]) => b - a);
-    let topDetails = sortedDetails.slice(0, Math.min(7, sortedDetails.length)); //Take top 10 or all available
-    let otherDetailsCount = 0;
-    if (sortedDetails.length > 7) { //Only add "other" if there are more than 10 items.
-      for (let i = 7; i < sortedDetails.length; i++) {
-        otherDetailsCount += sortedDetails[i][1];
-      }
-    }
-
-    let detailsData = topDetails.map(([name, value]) => ({ name, value }));
-    if (otherDetailsCount > 0) {
-      detailsData.push({ name: "Other", value: otherDetailsCount });
-    }
-
-
-    // Prepare data for outer ring
-    const familyData = Object.entries(aggregatedFamilyCounts).map(([name, value]) => ({ name, value }));
-
-
-    this.option33 = {
-      tooltip: {
-        trigger: 'item',
-        formatter: '{a} <br/>{b}: {c} ({d}%)'
-      },
-      legend: {
-        // name: 'Family List',
-        // type: 'scroll',
-        // orient: 'horizontal',  
-        // bottom: 10,       
-        // left: 'center', 
-        align: 'auto',
-        bottom: 10,
-        data: Object.keys(aggregatedFamilyCounts) //Dynamic legend from data
-      },
-      series: [
-        {
-          name: 'Family of Tests', // More descriptive name
-          type: 'pie',
-          selectedMode: 'single',
-          radius: [0, '40%'],
-          label: {
-            position: 'inner',
-            fontSize: 12,
-            borderColor: '#ffffff',
-            color: '#000000',
-            fontWeight: 'bold'
-          },
-          labelLine: {
-            show: false
-          },
-          data: familyData //Use dynamic data here
-        },
-        {
-          name: 'Individual Tests', //More descriptive name
-          type: 'pie',
-          radius: ['45%', '60%'],
-          labelLine: {
-            length: 20
-          },
-          width: '20',
-          fontSize: 12,
-          label: {
-            formatter: '{a|{a}}{abg|}\n{hr|}\n  {b|{b}}  {c} :  {per|{d}%}  ',
-            backgroundColor: '#F6F8FC',
-            borderColor: '#8C8D8E',
-            borderWidth: 1,
-            borderRadius: 4,
-            fontSize:13,
-            rich: {
-              a: {
-                color: '#6E7079',
-                lineHeight: 22,
-                align: 'center'
-              },
-              c: {
-                color: '#000000',
-                align: 'center'
-              },
-              hr: {
-                borderColor: '#8C8D8E',
-                width: '100%',
-                borderWidth: 1,
-                height: 0
-              },
-              b: {
-                color: '#000000',
-                fontSize: 16,
-                fontWeight: 'bold',
-                lineHeight: 33
-              },
-              per: {
-                color: '#00ff00',
-                backgroundColor: '#4C5058',
-                padding: [3, 4],
-                borderRadius: 4
-              }
-            }
-          },
-          data: detailsData //Use dynamic data here
-        }
-      ]
-    };
-  }
+  // GetChartRoundParFamille() {
+  //   const familyCounts: { [family: string]: number } = {};
+  //   this.dataDdeExamenLab.forEach(item => {
+  //     const family = item.desigtionArFam;
+  //     familyCounts[family] = (familyCounts[family] || 0) + item.count;
+  //   });
+  //   // Aggregate family counts, grouping those under 20 into "Other"
+  //   const aggregatedFamilyCounts: { [family: string]: number } = {};
+  //   let otherCount = 0;
+  //   for (const family in familyCounts) {
+  //     if (familyCounts[family] >= 1) {
+  //       aggregatedFamilyCounts[family] = familyCounts[family];
+  //     } else {
+  //       otherCount += familyCounts[family];
+  //     }
+  //   }
+  //   if (otherCount > 0) {
+  //     aggregatedFamilyCounts["Other"] = otherCount;
+  //   }
+  //   // Find the most frequent family (from aggregated data)
+  //   let mostFrequentFamily = '';
+  //   let maxFamilyCount = 0;
+  //   for (const family in aggregatedFamilyCounts) {
+  //     if (aggregatedFamilyCounts[family] > maxFamilyCount) {
+  //       maxFamilyCount = aggregatedFamilyCounts[family];
+  //       mostFrequentFamily = family;
+  //     }
+  //   }
+  //   //prepare data for the inner ring
+  //   const detailsCounts: { [prestation: string]: number } = {};
+  //   this.dataDdeExamenLab.forEach(item => {
+  //     if (item.desigtionArFam === mostFrequentFamily) {
+  //       detailsCounts[item.designationArPres] = (detailsCounts[item.designationArPres] || 0) + item.count;
+  //     }
+  //   });
+  //   //Limit details to top 10, or all if fewer than 10 exist, and then add "Other"
+  //   const sortedDetails = Object.entries(detailsCounts).sort(([, a], [, b]) => b - a);
+  //   let topDetails = sortedDetails.slice(0, Math.min(7, sortedDetails.length)); //Take top 10 or all available
+  //   let otherDetailsCount = 0;
+  //   if (sortedDetails.length > 7) { //Only add "other" if there are more than 10 items.
+  //     for (let i = 7; i < sortedDetails.length; i++) {
+  //       otherDetailsCount += sortedDetails[i][1];
+  //     }
+  //   }
+  //   let detailsData = topDetails.map(([name, value]) => ({ name, value }));
+  //   if (otherDetailsCount > 0) {
+  //     detailsData.push({ name: "Other", value: otherDetailsCount });
+  //   }
+  //   // Prepare data for outer ring
+  //   const familyData = Object.entries(aggregatedFamilyCounts).map(([name, value]) => ({ name, value }));
+  //   this.ChartParFamille = {
+  //     tooltip: {
+  //       trigger: 'item',
+  //       formatter: '{a} <br/>{b}: {c} ({d}%)'
+  //     },
+  //     legend: {
+  //       // name: 'Family List',
+  //       // type: 'scroll',
+  //       // orient: 'horizontal',  
+  //       // bottom: 10,       
+  //       // left: 'center', 
+  //       align: 'auto',
+  //       bottom: 10,
+  //       data: Object.keys(aggregatedFamilyCounts) //Dynamic legend from data
+  //     },
+  //     series: [
+  //       {
+  //         name: 'Family of Tests', // More descriptive name
+  //         type: 'pie',
+  //         selectedMode: 'single',
+  //         radius: [0, '40%'],
+  //         label: {
+  //           position: 'inner',
+  //           fontSize: 12,
+  //           borderColor: '#ffffff',
+  //           color: '#000000',
+  //           fontWeight: 'bold'
+  //         },
+  //         labelLine: {
+  //           show: false
+  //         },
+  //         data: familyData //Use dynamic data here
+  //       },
+  //       {
+  //         name: 'Individual Tests', //More descriptive name
+  //         type: 'pie',
+  //         radius: ['45%', '60%'],
+  //         labelLine: {
+  //           length: 20
+  //         },
+  //         width: '20',
+  //         fontSize: 12,
+  //         label: {
+  //           formatter: '   {a|{a}}{abg|}\n{hr|}\n   {per|{d}%} : {c} {b|{b}}  ',
+  //           backgroundColor: '#F6F8FC',
+  //           borderColor: '#8C8D8E',
+  //           borderWidth: 1,
+  //           borderRadius: 4,
+  //           fontSize: 13,
+  //           rich: {
+  //             a: {
+  //               color: '#6E7079',
+  //               lineHeight: 22,
+  //               align: 'center'
+  //             },
+  //             c: {
+  //               color: '#000000',
+  //               align: 'center'
+  //             },
+  //             hr: {
+  //               borderColor: '#8C8D8E',
+  //               width: '100%',
+  //               borderWidth: 1,
+  //               height: 0
+  //             },
+  //             b: {
+  //               color: '#000000',
+  //               fontSize: 16,
+  //               fontWeight: 'bold',
+  //               lineHeight: 33
+  //             },
+  //             per: {
+  //               color: '#00ff00',
+  //               backgroundColor: '#4C5058',
+  //               padding: [3, 4],
+  //               borderRadius: 4
+  //             }
+  //           }
+  //         },
+  //         data: detailsData //Use dynamic data here
+  //       }
+  //     ]
+  //   };
+  // }
 
 
   GetChartRoundParSousFamille() {
     const SousfamilyCounts: { [Sousfamily: string]: number } = {};
     this.dataDdeExamenLab.forEach(item => {
       const Sousfamily = item.designationArSousFam;
-
       SousfamilyCounts[Sousfamily] = (SousfamilyCounts[Sousfamily] || 0) + item.count;
     });
-
-
     // Aggregate family counts, grouping those under 20 into "Other"
     const aggregatedSousFamilyCounts: { [Sousfamily: string]: number } = {};
     let otherCount = 0;
@@ -691,8 +650,6 @@ export class RapportLaboComponent implements OnInit {
     if (otherCount > 0) {
       aggregatedSousFamilyCounts["Other"] = otherCount;
     }
-
-
     // Find the most frequent family (from aggregated data)
     let mostFrequentSousFamily = '';
     let maxSousFamilyCount = 0;
@@ -702,7 +659,6 @@ export class RapportLaboComponent implements OnInit {
         mostFrequentSousFamily = Sousfamily;
       }
     }
-
     //prepare data for the inner ring
     const detailsCounts: { [prestation: string]: number } = {};
     this.dataDdeExamenLab.forEach(item => {
@@ -710,7 +666,6 @@ export class RapportLaboComponent implements OnInit {
         detailsCounts[item.designationArSousFam] = (detailsCounts[item.designationArSousFam] || 0) + item.count;
       }
     });
-
     //Limit details to top 10, or all if fewer than 10 exist, and then add "Other"
     const sortedDetails = Object.entries(detailsCounts).sort(([, a], [, b]) => b - a);
     let topDetails = sortedDetails.slice(0, Math.min(7, sortedDetails.length)); //Take top 10 or all available
@@ -720,19 +675,13 @@ export class RapportLaboComponent implements OnInit {
         otherDetailsCount += sortedDetails[i][1];
       }
     }
-
     let detailsData = topDetails.map(([name, value]) => ({ name, value }));
     if (otherDetailsCount > 0) {
       detailsData.push({ name: "Other", value: otherDetailsCount });
     }
-
-
     // Prepare data for outer ring
     const SousfamilyData = Object.entries(aggregatedSousFamilyCounts).map(([name, value]) => ({ name, value }));
-
-
-    this.option33 = {
-
+    this.ChartParFamille = {
       title: {
         text: 'حسب الفئة',
         // subtext: '纯属虚构',
@@ -761,7 +710,7 @@ export class RapportLaboComponent implements OnInit {
           // width: '20',
           fontSize: 12,
           label: {
-            formatter: '{a|{a}}{abg|}\n{hr|}\n  {b|{b}}  {c} :  {per|{d}%}  ',
+            formatter: '{a|{a}}{abg|}\n{hr|}\n  {per|{d}%} :  {c} {b|{b}}   ',
             backgroundColor: '#F6F8FC',
             borderColor: '#8C8D8E',
             borderWidth: 1,
@@ -808,30 +757,22 @@ export class RapportLaboComponent implements OnInit {
     const seriesData: { name: string; value: number }[] = [];
     // const prestationCounts: { [key: string]: number } = {};
     const prestationCounts = new Map<number, { designation: string; count: number }>();
-
     // Extract unique designations and counts
-
     data.forEach(item => {
       if (item && typeof item.designationArPres === 'string' && typeof item.codePrestation === 'number') {
         const designation = item.designationArPres;
         const codePrestation = item.codePrestation;
-
         //Check if codePrestation already exists in the map
         if (prestationCounts.has(codePrestation)) {
           prestationCounts.get(codePrestation)!.count++;
         } else {
           prestationCounts.set(codePrestation, { designation: designation, count: 1 });
         }
-
         nameList.push(designation); // Add to nameList
-
       } else {
         console.warn("Missing or invalid data item or 'designationArPres' or 'codePrestation':", item);
       }
     });
-
-
-
     const uniqueCodePrest = [...prestationCounts.keys()];
     uniqueCodePrest.forEach(code => {
       const { designation, count } = prestationCounts.get(code)!;
@@ -839,9 +780,6 @@ export class RapportLaboComponent implements OnInit {
     });
     //Remove duplicates from nameList
     const uniqueNameList = [...new Set(nameList)];
-
-
-
     this.optionsChartComplex = {
       title: {
         text: 'List Examen',
@@ -881,41 +819,151 @@ export class RapportLaboComponent implements OnInit {
 
 
   dataMedecin = new Array<any>();
-
-
   GroupedDataByMedecin(data: any[]): any[] {
     return data.reduce((accumulator: any[], currentValue: any) => {
       const existingIndex = accumulator.findIndex(item => item.nomIntervAr === currentValue.nomIntervAr);
-
       if (existingIndex !== -1) {
         accumulator[existingIndex].count++;
       } else {
         accumulator.push({
           nomIntervAr: currentValue.nomIntervAr,
           count: 1,
-
         });
       }
       return accumulator;
     }, []);
-
-
   }
 
   GetAllDdeForMedecin(codePrestation: number) {
     this.loadingData = true;
     this.rapportService.GetAllDdeExamenLabByDateAndCodePrestation(this.dateDeb, this.dateFin, codePrestation).subscribe((data: any) => {
-  
-   
-
       this.dataMedecin = this.GroupedDataByMedecin(data);
       this.loadingData = false;
     }
     )
   }
 
-  designationArExam = ""; 
-  loadingData=false;
+  designationArExam = "";
+  loadingData = false;
+
+
+  PostLocalSotrageValeur() {
+    localStorage.setItem("underLab", this.valeurUnderTestLabo.toString());
+    this.CtrlAlertify.PostionLabelNotification();
+    this.CtrlAlertify.showNotificationِCustomOK("ReloadPage");
+  }
+
+  chartBar: EChartsCoreOption | null = null; 
+  ChartBarCout(data: any) { 
+    const groupedData: { [society: string]: { [subfamily: string]: number } } = {};
+    data.forEach((item: any) => {
+      const society = item.designationArSoc;
+      const subfamily = item.designationArSousFam;
+      const cost = item.coutFacture;
+
+      if (!groupedData[society]) {
+        groupedData[society] = {};
+      }
+      if (!groupedData[society][subfamily]) {
+        groupedData[society][subfamily] = 0;
+      }
+      groupedData[society][subfamily] += cost;
+    });
+    // 2. Prepare data for ECharts
+    const legendData = Object.keys(groupedData); // Society names
+    let xAxisData: string[] = []; // Explicit type declaration!
+    const seriesData: any[] = []; // Added explicit type for seriesData
+
+    for (const society in groupedData) {
+      const subfamilyCosts = groupedData[society];
+      const seriesItem: any = {
+        name: society, // Society name
+        type: 'bar',
+        data: []
+      };
+
+
+      for (const subfamily in subfamilyCosts) {
+        if (!xAxisData.includes(subfamily)) {
+          xAxisData.push(subfamily);
+        }
+        const cost = subfamilyCosts[subfamily] || 0;
+        seriesItem.data.push(cost);
+      }
+      seriesData.push(seriesItem);
+    }
+
+
+    type BarLabelOption = NonNullable<echarts.BarSeriesOption['label']>;
+    const labelOption: BarLabelOption = {
+      show: true,
+      position: 'insideBottom',
+      distance: 15,
+      align: 'left',
+      verticalAlign: 'middle',
+      rotate: 90,
+      formatter: '{c}  {name|{a}}',
+      fontSize: 12,
+      rich: {
+        name: {}
+      }
+    };
+
+    this.chartBar = {
+      title: {
+        text: 'التكلفة حسب الجهة وفئة التحليل',
+        subtext: 'Based on Provided Data',
+        left: 'center'
+      },
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'shadow'
+        }
+      },
+      legend: {
+        orient: 'vertical',
+        right: 10,
+        top: 20,
+        bottom: 20,
+        data: legendData // Society names
+      },
+      toolbox: {
+        show: true,
+        orient: 'vertical',
+        left: 'right',
+        top: 'center',
+        feature: {
+          mark: { show: true },
+          dataView: { show: true, readOnly: false },
+          magicType: { show: true, type: ['line', 'bar', 'stack'] },
+          restore: { show: true },
+          saveAsImage: { show: true }
+        }
+      },
+      xAxis: [
+        {
+          type: 'category',
+          axisTick: { show: false },
+          data: xAxisData, // Subfamily names
+          scrollMarginRight: 20, // Adjust as needed
+          axisLabel: {
+            interval: 0, // Show all labels (might need adjustment for very long labels)
+            // rotate: 45 // Rotate labels to save space
+          }
+        }
+      ],
+      yAxis: [
+        {
+          type: 'value'
+        }
+      ],
+      series: seriesData // Data for each society
+    };
+
+  }
+
+
 }
 
 

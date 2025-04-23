@@ -51,7 +51,7 @@
                                         <button data-backdrop="false" type="button" class="Bouton-add-new1 btn  btn-default " data-original-title="Add" data-toggle="modal" data-target="#Modal" (click)="GetData()">
                                             <div class="bouton_style-2"> {{'Voir' | i18n:i18nService.currentLanguage}}
                                             </div>
-                                            <i class="fa-solid fa-file-pdf iconPDF"></i>
+                                            <i class="fa-solid fa-magnifying-glass iconPDF"></i>
                                         </button>
 
 
@@ -115,7 +115,7 @@
                                     </td>
                                     <td style="font-size: 15px !important;">{{domaine.countPatient}}</td>
                                     <td style="font-size: 15px !important;">{{domaine.count}}</td>
-
+                                    <td style="font-size: 15px !important;">{{domaine.coutFactureTotal}}</td>
 
 
                                 </tr>
@@ -125,11 +125,12 @@
                                     <td colspan="2"><strong>المجموع:</strong></td>
                                     <td>{{ calculateTotal() }}</td>
                                     <td>{{ calculateTotalExam() }}</td>
+                                    <td>{{ calculateTotalCout() }}</td>
                                 </tr>
                             </ng-template>
                             <ng-template pTemplate="emptymessage">
                                 <tr>
-                                    <td colspan="4">لا توجد بيانات</td>
+                                    <td colspan="5">لا توجد بيانات</td>
                                 </tr>
                             </ng-template>
                         </p-table>
@@ -214,9 +215,28 @@
             <div class="row row-cols-1 row-cols-lg-9" [ngClass]="{ 'disabled': IsLoading }">
                 <div class="col d-flex">
                     <div class="card radius-10 w-60" style="margin: 5px;">
+                        <div class="card-header flex-12" style="display: flex; justify-content: space-between;">
+                            <div class="flex-row-start  FloatRight ">
+                                <label class="control-label  "> {{'valeurUnderTest' |
+                                    i18n:i18nService.currentLanguage}} : <i
+                                        class="fa-lg fa-fw fa fa-times iconRequired"></i></label>
+                                <div class="control-input   " style="padding-top: 10px;">
+                                    <input id="valeurUnderTest" maxlength="3" name="valeurUnderTest" min="50" type="number" class=" form-control-dev input-xs" #codeSaisieInput required [(ngModel)]="valeurUnderTestLabo">
+
+                                </div>
+                            </div>
+                            <div class="flex-row-start  FloatLeft  ">
+                                <button data-backdrop="false" type="button" class="Bouton-add-new1 btn  btn-default " data-original-title="Add" data-toggle="modal" data-target="#Modal" (click)="PostLocalSotrageValeur()">
+                                    <div class="bouton_style-2"> {{'Save' | i18n:i18nService.currentLanguage  }}
+                                    </div>
+                                           <i class="fa-solid fa-circle-check IconBtnModal" style="color: #065c00;font-size: 16px; "></i>
+                                </button>
+                            </div>
+
+                        </div>
                         <div class="card-body">
 
-                            <div id="options11" echarts [options]="options12" [theme]="theme" class="demo-chart"></div>
+                            <div id="options11" echarts [options]="GroupedParMedecin" [theme]="theme" class="demo-chart"></div>
 
                         </div>
 
@@ -240,8 +260,7 @@
                     <div class="card radius-10 w-100" style="margin: 5px;">
                         <div class="card-body">
 
-                            <div id="options11" echarts [options]="option33" darkMode="auto" class="demo-chart33"></div>
-                            <!-- <div echarts [options]="option33" class="chart-container"></div> -->
+                            <div id="options11" echarts [options]="ChartParFamille" [theme]="theme" class="demo-chart33"></div>
                         </div>
 
                     </div>
@@ -260,7 +279,23 @@
                     <div class="card radius-10 w-100" style="margin: 5px;">
                         <div class="card-body">
 
-                            <div id="optionsChartComplex" echarts [options]="optionsChartComplex" darkMode="auto" class="demo-chartComplex"></div>
+                            <div id="optionsChartComplex" echarts [options]="optionsChartComplex" [theme]="theme" class="demo-chartComplex"></div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="card radius-10 w-100">
+            <div class="row row-cols-1 row-cols-lg-9" [ngClass]="{ 'disabled': IsLoading }">
+                <div class="col d-flex">
+                    <div class="card radius-10 w-100" style="margin: 5px;">
+                        <div class="card-body">
+
+                            <div id="optionsChartComplex" echarts [options]="chartBar" [theme]="theme" class="demo-chartComplex"></div>
                         </div>
 
                     </div>

@@ -128,26 +128,20 @@ export class AuthInterceptor implements HttpInterceptor {
   private handleBackendError500(error: HttpErrorResponse) {
 
     console.log("error  ", error)
-    if (error.error === null) {
-
-
+    if (error.error === null  || error.message.startsWith('Http failure response') ) {
       const currentTime = Date.now();
       if (currentTime - this.lastNotificationTime > 2000) {
         this.lastNotificationTime = currentTime;
-        alertifyjs.set('notifier', 'position', 'top-right');
+        alertifyjs.set('notifier', 'position', 'top-left');
         alertifyjs.notify(
           '<img  style="width: 30px; height: 30px; margin: 0px 0px 0px 15px" src="./assets/images/images/backend.gif" alt="image" >' +
           ` Error Backend`
         );
       }
-
-
-
     } else {
       alertifyjs.set('notifier', 'position', 'top-left');
       alertifyjs.notify('<img  style="width: 30px; height: 30px; margin: 0px 0px 0px 15px" src="./assets/images/images/error.gif" alt="image" >' + error.error.description);
     }
-
   }
 
   private handleBackendError403(error: HttpErrorResponse) {
@@ -156,6 +150,7 @@ export class AuthInterceptor implements HttpInterceptor {
       this.lastNotificationTime = currentTime;
       alertifyjs.set('notifier', 'position', 'top-left');
       alertifyjs.notify('<img  style="width: 30px; height: 30px; margin: 0px 0px 0px 15px" src="./assets/images/images/error.gif" alt="image" >   Token has expired');
+      sessionStorage.removeItem("auth-user");
       this.openModalComponent();
     }
   }

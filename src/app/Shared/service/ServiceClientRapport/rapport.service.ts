@@ -61,6 +61,53 @@ export class RapportService {
     GetAllDdeExamenLabByDateAndCodeInterv(dateDebut : any , dateFin : any , codeInterv : any ){
       return this.http.get(`${environment.API_RECEPTION}dde_examen_lab/findAllByDateAndIntervenant?dateDebut=`+ dateDebut + `&dateFin=`+dateFin +`&codeInterv=`+codeInterv  )
     }
+
+
+    /// detailsAdmission
+
+    GetAllDetailsAdmission(  ){
+      return this.http.get(`${environment.API_RECEPTION}details_adm/all`  )
+    }
+
+    GetAllDetailsAdmissionByDate(dateDebut : any , dateFin : any ,  ){
+      return this.http.get(`${environment.API_RECEPTION}details_adm/findAllByDate?dateDebut=`+ dateDebut + `&dateFin=`+dateFin  )
+    }
+ 
+    GetAllDetailsAdmissionByDateAndCodeCabinet(dateDebut : any , dateFin : any , codeCabinet : any ){
+      return this.http.get(`${environment.API_RECEPTION}details_adm/findAllByDateAndCabinet?dateDebut=`+ dateDebut + `&dateFin=`+dateFin +`&codeCabinet=`+codeCabinet  )
+    }
+  
+    GetAllDetailsAdmissionByCabinet(codeCabinet : number ){
+      return this.http.get(`${environment.API_RECEPTION}details_adm/findByCabinet?codeCabinet=`+ codeCabinet  )
+    }
+
+
+
+
+    
+    //// examen Radio 
+
+    GetAllDdeExamenRadio(  ){
+      return this.http.get(`${environment.API_RECEPTION}dde_examen_radio/all`  )
+    }
+
+    GetAllDdeExamenRadioByDate(dateDebut : any , dateFin : any ,  ){
+      return this.http.get(`${environment.API_RECEPTION}dde_examen_radio/findAllByDate?dateDebut=`+ dateDebut + `&dateFin=`+dateFin  )
+    }
+ 
+    GetAllDdeExamenRadioByDateAndCodeSociete(dateDebut : any , dateFin : any , codeSociete : any ){
+      return this.http.get(`${environment.API_RECEPTION}dde_examen_radio/findAllByDateAndSociete?dateDebut=`+ dateDebut + `&dateFin=`+dateFin +`&codeSociete=`+codeSociete  )
+    }
+
+    GetAllDdeExamenRadioByDateAndCodePrestation(dateDebut : any , dateFin : any , codePrestation : any ){
+      return this.http.get(`${environment.API_RECEPTION}dde_examen_radio/findAllByDateAndPrestation?dateDebut=`+ dateDebut + `&dateFin=`+dateFin +`&codePrestation=`+codePrestation  )
+    }
+
+
+    GetAllDdeExamenRadioByDateAndCodeInterv(dateDebut : any , dateFin : any , codeInterv : any ){
+      return this.http.get(`${environment.API_RECEPTION}dde_examen_radio/findAllByDateAndIntervenant?dateDebut=`+ dateDebut + `&dateFin=`+dateFin +`&codeInterv=`+codeInterv  )
+    }
+
    
 }
 

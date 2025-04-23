@@ -191,7 +191,11 @@ const arI18n = {
 'ErrorDate':'الرجاء التأكد من التاريخ',
 'Count':'عدد المرضى',
 'CountLab':'عدد التحاليل',
-'countPatient':'عدد المرضى'
+'countPatient':'عدد المرضى',
+'valeurUnderTest':' تجميع الأطباء تحت'  ,
+ 'ReloadPage':'  الرجاء إعادة تحميل البيانات',
+ 'CountRadio':'عدد الأشعة',
+ 'CountPharmacie':'عدد الأدوية',
 };
 
 
