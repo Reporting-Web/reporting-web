@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { TagModule } from 'primeng/tag';
 import { ChartModule } from 'primeng/chart';
+import { CoutAdmissionComponent } from './cout-admission/cout-admission.component';
   
 @NgModule({
   declarations: [

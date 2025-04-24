@@ -196,6 +196,12 @@ const arI18n = {
  'ReloadPage':'  الرجاء إعادة تحميل البيانات',
  'CountRadio':'عدد الأشعة',
  'CountPharmacie':'عدد الأدوية',
+ 'CoutAdmission':'تكاليف المرضى',
+ 'sumLab':'مجموع التحاليل',
+ 'sumRadio':'مجموع الأشعة',
+ 'sumPharmacie':'مجموع الأدوية',
+ 'sumPrestation':'مجموع الخدمات',
+ 'codeAdmission':'رقم الدخول',
 };
 
 

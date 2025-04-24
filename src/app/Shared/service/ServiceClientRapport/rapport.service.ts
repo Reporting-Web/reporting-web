@@ -108,6 +108,24 @@ export class RapportService {
       return this.http.get(`${environment.API_RECEPTION}dde_examen_radio/findAllByDateAndIntervenant?dateDebut=`+ dateDebut + `&dateFin=`+dateFin +`&codeInterv=`+codeInterv  )
     }
 
+
+     
+    //// cout admission 
+
+    GetAllCoutAdmission(  ){
+      return this.http.get(`${environment.API_RECEPTION}cout_admission/all`  )
+    }
+
+    GetAllCoutAdmissionByDate(dateDebut : any , dateFin : any ,  ){
+      return this.http.get(`${environment.API_RECEPTION}cout_admission/findAllByDate?dateDebut=`+ dateDebut + `&dateFin=`+dateFin  )
+    }
+ 
+    GetAllCoutAdmissionByDateAndCodeSociete(dateDebut : any , dateFin : any , codeSociete : any ){
+      return this.http.get(`${environment.API_RECEPTION}cout_admission/findAllByDateAndSociete?dateDebut=`+ dateDebut + `&dateFin=`+dateFin +`&codeSociete=`+codeSociete  )
+    }
+
+     
+
    
 }
 

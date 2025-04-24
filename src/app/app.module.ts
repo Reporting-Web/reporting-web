@@ -90,6 +90,7 @@ import { RapportPharmacieNormalComponent } from './menu-edition/rapport-pharmaci
 import { SkeletonModule } from 'primeng/skeleton';
 import { RapportDoctorPerformanceComponent } from './menu-edition/rapport-doctor-performance/rapport-doctor-performance.component';
 import { RapportRadioComponent } from './menu-edition/rapport-radio/rapport-radio.component';
+import { CoutAdmissionComponent } from './menu-edition/cout-admission/cout-admission.component';
  
 const languages = [
   { lang: 'عربي', flag: 'assets/images/county/ar.png', file: arI18n, valeur: 'ar' },
@@ -129,7 +130,7 @@ const languages = [
     /////// rapport edition
 
     RapportOPDComponent,RapportDoctorPerformanceComponent,RapportEmployeeComponent,RapportLaboComponent,
-    RapportPharmacieChroniqueComponent,RapportPharmacieNormalComponent,RapportRadioComponent
+    RapportPharmacieChroniqueComponent,RapportPharmacieNormalComponent,RapportRadioComponent,CoutAdmissionComponent,
     
   ],
   imports: [   
@@ -145,7 +146,8 @@ const languages = [
     I18nModule.forRoot(languages), TagModule, RippleModule, RatingModule, InputTextareaModule,
     CommonModule, ContextMenuModule, ToolbarModule, ConfirmDialogModule,
      TableModule, InputTextModule, FileUploadModule,
-     ButtonModule, InputNumberModule, NoopAnimationsModule,
+     ButtonModule, InputNumberModule, NoopAnimationsModule, // Needed for PrimeNG animations
+       
     FormsModule, DialogModule, RadioButtonModule, 
     CalendarModule, CheckboxModule, TabViewModule,MenubarModule 
 

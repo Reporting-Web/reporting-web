@@ -9,6 +9,7 @@ import { RapportPharmacieNormalComponent } from './rapport-pharmacie-normal/rapp
 import { RapportRadioComponent } from './rapport-radio/rapport-radio.component';
 import { RapportDoctorPerformanceComponent } from './rapport-doctor-performance/rapport-doctor-performance.component';
 import { I18nService } from '../Shared/i18n/i18n.service';
+import { CoutAdmissionComponent } from './cout-admission/cout-admission.component';
 
 const routes: Routes = [ 
     { path: '', component: MenuEditionComponent }
@@ -42,6 +43,11 @@ const routes: Routes = [
       path: 'rapport_radio',
       component: RapportRadioComponent ,
       data:{title:'Radiologie' , icon :'fas  fa-lungs'}
+    } 
+    , {
+      path: 'cout_admission',
+      component: CoutAdmissionComponent ,
+      data:{title:'CoutAdmission' , icon :'fas  fa-money-bill-1'}
     } 
 ];
 
