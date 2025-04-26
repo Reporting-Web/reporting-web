@@ -98,7 +98,7 @@ export class DashboardComponent implements OnInit {
     this.options11 = {
       title: {
         left: '50%',
-        text: 'عدد الحالات حسب الجهة',
+        text: 'عدد المرضى المسجلة حسب الجهة',
         // subtext: 'Data',
         textAlign: 'center',
         textStyle: { // Use textStyle for title font settings

@@ -13,7 +13,7 @@
         "changeOrigin": true,
         "timeout": 360000
     },
-    "/dashbords": {
+    "/dashbord": {
         "target": "http://localhost:5051/api",
         "secure": false,
         "logLevel": "debug",

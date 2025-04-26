@@ -34,15 +34,18 @@ export class RapportRadioComponent  implements OnInit {
   dateDeb: any = null;;
   dateFin: any = null;
   first = 0;
-valeurUnderTestRadio ="";
+valeurUnderTestRadio =100;
 
   ngOnInit(): void {
     this.chartGroupedBySociete();
     this.ChartGroupedByMedecin(this.dataGroupedMedecin);
     this.GetColumns();
     this.GetColumnsMedecin();
-    this.GetChartRoundParFamille();
-    this.valeurUnderTestRadio = sessionStorage.getItem("underRadio") ?? "100";
+    this.GetChartRoundParFamille(); 
+    const storedValue = localStorage.getItem("underRadio");
+    if (storedValue) {
+      this.valeurUnderTestRadio = parseInt(storedValue, 10);
+    }
   }
 
   @Output() closed: EventEmitter<string> = new EventEmitter();
@@ -200,7 +203,7 @@ valeurUnderTestRadio ="";
     };
   }
   GroupedParMedecin: EChartsCoreOption | null = null;
-  ChartGroupedByMedecin(data: Array<any>): void {  // void return type
+  ChartGroupedByMedecin(data: Array<any>, totalReq :number = 0 ): void {  // void return type
     let varUnderTest = parseInt(localStorage.getItem("underRadio") ?? "100");
     const familyCounts: { [family: string]: number } = {};
     data.forEach(item => {
@@ -254,8 +257,8 @@ valeurUnderTestRadio ="";
     this.GroupedParMedecin = {
       title: {
         left: '50%',
-        text: ' مجموع الحالات حسب الطبيب ',
-        // subtext: 'مجموع الحالات : ' ,
+        text: ' إجمالي صور الأشعة حسب الطبيب ',
+        subtext: 'المجموع : ' + totalReq ,
         textAlign: 'center',
         textStyle: { // Use textStyle for title font settings
           fontSize: 16, // Adjust as needed
@@ -307,9 +310,13 @@ valeurUnderTestRadio ="";
   dataGroupedByMedecin = new Array<any>();
 
   GetAllDdeExamenRadio() {
+    this.loadingData = true;
+    this.IsLoading = true;
     this.rapportService.GetAllDdeExamenRadioByDate(this.dateDeb, this.dateFin).subscribe((data: any) => {
       this.loadingComponent.IsLoading = false;
       this.IsLoading = false;
+    this.loadingData = false;
+
       this.dataDdeExamenRadio = this.aggregateData(data);
       this.dataGroupedBySociete = this.GroupedDataBySociete(data);
       this.dataGroupedByMedecin = this.GroupedDataByMedecin(data);
@@ -352,7 +359,7 @@ valeurUnderTestRadio ="";
         , this.countPatientPerCabAndSocieteOther
       );
    
-      this.ChartGroupedByMedecin(this.dataGroupedByMedecin);
+      this.ChartGroupedByMedecin(this.dataGroupedByMedecin ,this.dataDdeExamenRadio.reduce((sum, item) => sum + item.count, 0) );
       this.GetChartRoundParSousFamille();
       this.GetDataComplex(data);
       this.ChartBarCout(data,this.dataDdeExamenRadio.reduce((sum, item) => sum + item.coutFactureTotal, 0));
@@ -657,7 +664,7 @@ valeurUnderTestRadio ="";
     const SousfamilyData = Object.entries(aggregatedSousFamilyCounts).map(([name, value]) => ({ name, value }));
     this.option33 = {
       title: {
-        text: 'حسب الفئة',
+        text: 'إجمالي صور الأشعة حسب الفئة',
         // subtext: '纯属虚构',
         left: 'center'
       },

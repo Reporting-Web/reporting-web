@@ -37,11 +37,9 @@ export class CoutAdmissionComponent implements OnInit {
 
 
   ngOnInit(): void {
-
     this.GetColumns();
     this.GetColumnsGroupedCoutAdmissionTable(); 
     this.GetColumnsDetailsTable();
-
   }
 
 
@@ -60,7 +58,6 @@ export class CoutAdmissionComponent implements OnInit {
     this.cols = [
       { field: 'designationArCabinet', header: this.i18nService.getString('Cabinet') || 'عيادة', width: '25%' },
       { field: 'designationLtCabinet', header: this.i18nService.getString('DesignationLt') || 'DesignationLt', width: '25%' },
-
       { field: 'count', header: this.i18nService.getString('Count') || 'عدد القبولات', width: '15%' }, // Admission Count
       { field: 'coutFactureTotal', header: this.i18nService.getString('Cout') || 'التكلفة', width: '15%' } // Admission Count
     ];
@@ -84,7 +81,6 @@ export class CoutAdmissionComponent implements OnInit {
       let day = parseInt(parts[0], 10);
       let month = parseInt(parts[1], 10) - 1; // Month is 0-indexed
       let year = parseInt(parts[2], 10);
-
       if (!isNaN(day) && !isNaN(month) && !isNaN(year)) {
         let dateObject = new Date(year, month, day); // Create Date object
         this.dateDeb = dateObject; // Assign to your dateDeb property (might be a different type, handle accordingly)
@@ -190,8 +186,8 @@ export class CoutAdmissionComponent implements OnInit {
   GetColumnsGroupedCoutAdmissionTable() {
     this.ColumnsGroupedCoutAdmission = [
       { field: '', header: '', width: '1%', filter: "true" },
-      { field: 'patientCode', header: this.i18nService.getString('CodePatient') || 'CodePatient', width: '19%', filter: "true" },
-      { field: 'patientNameAr', header: this.i18nService.getString('NomFullAr') || 'Designation', width: '20%', filter: "true" },
+      { field: 'patientCode', header: this.i18nService.getString('CodePatient') || 'CodePatient', width: '10%', filter: "true" },
+      { field: 'patientNameAr', header: this.i18nService.getString('NomFullAr') || 'Designation', width: '15%', filter: "true" },
       { field: 'codeAdmisson', header: this.i18nService.getString('codeAdmission') || 'codeAdmission', width: '20%', filter: "true" },
       { field: 'sumLab', header: this.i18nService.getString('sumLab') || 'sumLab', width: '15%', filter: "true" },
       { field: 'sumPharmacie', header: this.i18nService.getString('sumPharmacie') || 'sumPharmacie', width: '15%', filter: "true" },
@@ -254,31 +250,7 @@ export class CoutAdmissionComponent implements OnInit {
       totalSumRadio: items.reduce((sum, item) => sum + item.sumRadio, 0),
       totalSumPharmacie: items.reduce((sum, item) => sum + item.sumPharmacie, 0),
     }));
-  }
-
-  // aggregateDataByCabinet(data: any[]): any[] {
-  //   return data.reduce((accumulator: any[], currentValue: any) => {
-  //     const existingIndex = accumulator.findIndex(item => item.patientCategoryCode === currentValue.patientCategoryCode);
-
-  //     if (existingIndex !== -1) {
-  //       accumulator[existingIndex].count++;
-  //     } else {
-  //       accumulator.push({
-  //         designationArSoc: currentValue.designationArSoc,
-  //         designationLtSoc: currentValue.designationLtSoc,
-  //         codeSociete: currentValue.codeSociete, //You might want to keep one, choose wisely
-  //         patientCode: currentValue.patientCode,
-  //         patientCategoryCode: currentValue.patientCategoryCode,
-  //         sumLab: currentValue.sumLab,
-  //         sumPharmacie: currentValue.sumPharmacie,
-  //         sumRadio: currentValue.sumRadio,
-  //         sumPrestation: currentValue.sumPrestation,
-  //       });
-  //     }
-  //     return accumulator;
-  //   }, []);
-  // }
-
+  } 
   groupPrestationsByFamille(data: any[]): any[] {
     const grouped: { [key: string]: any } = {};
     data.forEach(prestation => {

@@ -36,7 +36,8 @@ export class AuthInterceptor implements HttpInterceptor {
     req = req.clone({ headers: req.headers.delete("cookie" ) });
     if (this.tokens != null) {
       const currentUrl = window.location.pathname;
-      if (currentUrl != '/login') {
+      const urlProd = window.location.hostname;
+      if (currentUrl != '/login' || urlProd!= '/login') {
         req = req.clone({ headers: req.headers.set('Authorization', 'Bearer ' + tk) });
       } 
      

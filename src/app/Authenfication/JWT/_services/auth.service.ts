@@ -40,22 +40,22 @@ export class AuthService {
 
 
 
-  // GetImageProfil() {
+  GetImageProfil() {
 
-
-  //   return this.http.get(`${environment.API_AUTH}` + 'accessUser/imageProfil?userName=' + username);
-
-  // }
-
-
-
-  GetImageProfil(): Observable<Blob> {
     const username = JSON.parse(sessionStorage.getItem("auth-user") ?? '{}')?.userName?.toLowerCase();
-    const apiUrl = environment.production 
-        ? `http://localhost:5051/api/auth/accessUser/imageProfil?userName=${username}`
-        : `${environment.API_AUTH}accessUser/imageProfil?userName=${username}`; // Use environment variables
+    return this.http.get(`${environment.API_AUTH}` + 'accessUser/imageProfil?userName=' + username);
 
-    return this.http.get(apiUrl, { responseType: 'blob' });
-}
+  }
+
+
+
+//   GetImageProfil(): Observable<Blob> {
+//     const username = JSON.parse(sessionStorage.getItem("auth-user") ?? '{}')?.userName?.toLowerCase();
+//     const apiUrl = environment.production 
+//         ? `http://localhost:5051/api/auth/accessUser/imageProfil?userName=${username}`
+//         : `${environment.API_AUTH}accessUser/imageProfil?userName=${username}`; // Use environment variables
+
+//     return this.http.get(apiUrl, { responseType: 'blob' });
+// }
 
 }

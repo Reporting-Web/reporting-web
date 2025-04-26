@@ -55,15 +55,17 @@ export class RapportLaboComponent implements OnInit {
   dateDeb: any = null;;
   dateFin: any = null;
   first = 0;
-  valeurUnderTestLabo = "";
+  valeurUnderTestLabo = 100;
 
   ngOnInit(): void {
     this.createChartOptions11();
     this.createChartOptions12(this.dataMedecin);
     this.GetColumns();
-    this.GetColumnsMedecin();
-    this.valeurUnderTestLabo = sessionStorage.getItem("underLab") ?? "100";
-
+    this.GetColumnsMedecin(); 
+    const storedValue = localStorage.getItem("underLab");
+    if (storedValue) {
+      this.valeurUnderTestLabo = parseInt(storedValue, 10);
+    }
   }
 
   @Output() closed: EventEmitter<string> = new EventEmitter();
@@ -221,7 +223,7 @@ export class RapportLaboComponent implements OnInit {
     };
   }
   GroupedParMedecin: EChartsCoreOption | null = null;
-  createChartOptions12(data: Array<any>): void {  // void return type
+  createChartOptions12(data: Array<any> , totalReq : number = 0 ): void {  // void return type
     let varUnderTest = parseInt(localStorage.getItem("underLab") ?? "100");
     const familyCounts: { [family: string]: number } = {};
     data.forEach(item => {
@@ -275,8 +277,8 @@ export class RapportLaboComponent implements OnInit {
     this.GroupedParMedecin = {
       title: {
         left: '50%',
-        text: ' مجموع الحالات حسب الطبيب ',
-        // subtext: 'مجموع الحالات : ' ,
+        text: ' إجمالي التحاليل حسب الطبيب ',
+        subtext: 'المجموع : ' + totalReq ,
         textAlign: 'center',
         textStyle: { // Use textStyle for title font settings
           fontSize: 16, // Adjust as needed
@@ -328,9 +330,12 @@ export class RapportLaboComponent implements OnInit {
   dataGroupedByMedecin = new Array<any>();
 
   GetAllDdeExamenLab() {
+    this.loadingData = true;
+    this.IsLoading = true;
     this.rapportService.GetAllDdeExamenLabByDate(this.dateDeb, this.dateFin).subscribe((data: any) => {
       this.loadingComponent.IsLoading = false;
       this.IsLoading = false;
+      this.loadingData = false;
       this.dataDdeExamenLab = this.aggregateData(data);
       // this.ChartBarCout(this.dataDdeExamenLab);
       this.ChartBarCout(data);
@@ -375,7 +380,7 @@ export class RapportLaboComponent implements OnInit {
         , this.countPatientPerCabAndSocieteOther
       );
 
-      this.createChartOptions12(this.dataGroupedByMedecin);
+      this.createChartOptions12(this.dataGroupedByMedecin ,this.dataDdeExamenLab.reduce((sum, item) => sum + item.count, 0) );
       this.GetChartRoundParSousFamille();
       this.GetDataComplex(data);
 
@@ -493,144 +498,7 @@ export class RapportLaboComponent implements OnInit {
 
 
   ChartParFamille: EChartsCoreOption | null = null;
-
-
-  // GetChartRoundParFamille() {
-  //   const familyCounts: { [family: string]: number } = {};
-  //   this.dataDdeExamenLab.forEach(item => {
-  //     const family = item.desigtionArFam;
-  //     familyCounts[family] = (familyCounts[family] || 0) + item.count;
-  //   });
-  //   // Aggregate family counts, grouping those under 20 into "Other"
-  //   const aggregatedFamilyCounts: { [family: string]: number } = {};
-  //   let otherCount = 0;
-  //   for (const family in familyCounts) {
-  //     if (familyCounts[family] >= 1) {
-  //       aggregatedFamilyCounts[family] = familyCounts[family];
-  //     } else {
-  //       otherCount += familyCounts[family];
-  //     }
-  //   }
-  //   if (otherCount > 0) {
-  //     aggregatedFamilyCounts["Other"] = otherCount;
-  //   }
-  //   // Find the most frequent family (from aggregated data)
-  //   let mostFrequentFamily = '';
-  //   let maxFamilyCount = 0;
-  //   for (const family in aggregatedFamilyCounts) {
-  //     if (aggregatedFamilyCounts[family] > maxFamilyCount) {
-  //       maxFamilyCount = aggregatedFamilyCounts[family];
-  //       mostFrequentFamily = family;
-  //     }
-  //   }
-  //   //prepare data for the inner ring
-  //   const detailsCounts: { [prestation: string]: number } = {};
-  //   this.dataDdeExamenLab.forEach(item => {
-  //     if (item.desigtionArFam === mostFrequentFamily) {
-  //       detailsCounts[item.designationArPres] = (detailsCounts[item.designationArPres] || 0) + item.count;
-  //     }
-  //   });
-  //   //Limit details to top 10, or all if fewer than 10 exist, and then add "Other"
-  //   const sortedDetails = Object.entries(detailsCounts).sort(([, a], [, b]) => b - a);
-  //   let topDetails = sortedDetails.slice(0, Math.min(7, sortedDetails.length)); //Take top 10 or all available
-  //   let otherDetailsCount = 0;
-  //   if (sortedDetails.length > 7) { //Only add "other" if there are more than 10 items.
-  //     for (let i = 7; i < sortedDetails.length; i++) {
-  //       otherDetailsCount += sortedDetails[i][1];
-  //     }
-  //   }
-  //   let detailsData = topDetails.map(([name, value]) => ({ name, value }));
-  //   if (otherDetailsCount > 0) {
-  //     detailsData.push({ name: "Other", value: otherDetailsCount });
-  //   }
-  //   // Prepare data for outer ring
-  //   const familyData = Object.entries(aggregatedFamilyCounts).map(([name, value]) => ({ name, value }));
-  //   this.ChartParFamille = {
-  //     tooltip: {
-  //       trigger: 'item',
-  //       formatter: '{a} <br/>{b}: {c} ({d}%)'
-  //     },
-  //     legend: {
-  //       // name: 'Family List',
-  //       // type: 'scroll',
-  //       // orient: 'horizontal',  
-  //       // bottom: 10,       
-  //       // left: 'center', 
-  //       align: 'auto',
-  //       bottom: 10,
-  //       data: Object.keys(aggregatedFamilyCounts) //Dynamic legend from data
-  //     },
-  //     series: [
-  //       {
-  //         name: 'Family of Tests', // More descriptive name
-  //         type: 'pie',
-  //         selectedMode: 'single',
-  //         radius: [0, '40%'],
-  //         label: {
-  //           position: 'inner',
-  //           fontSize: 12,
-  //           borderColor: '#ffffff',
-  //           color: '#000000',
-  //           fontWeight: 'bold'
-  //         },
-  //         labelLine: {
-  //           show: false
-  //         },
-  //         data: familyData //Use dynamic data here
-  //       },
-  //       {
-  //         name: 'Individual Tests', //More descriptive name
-  //         type: 'pie',
-  //         radius: ['45%', '60%'],
-  //         labelLine: {
-  //           length: 20
-  //         },
-  //         width: '20',
-  //         fontSize: 12,
-  //         label: {
-  //           formatter: '   {a|{a}}{abg|}\n{hr|}\n   {per|{d}%} : {c} {b|{b}}  ',
-  //           backgroundColor: '#F6F8FC',
-  //           borderColor: '#8C8D8E',
-  //           borderWidth: 1,
-  //           borderRadius: 4,
-  //           fontSize: 13,
-  //           rich: {
-  //             a: {
-  //               color: '#6E7079',
-  //               lineHeight: 22,
-  //               align: 'center'
-  //             },
-  //             c: {
-  //               color: '#000000',
-  //               align: 'center'
-  //             },
-  //             hr: {
-  //               borderColor: '#8C8D8E',
-  //               width: '100%',
-  //               borderWidth: 1,
-  //               height: 0
-  //             },
-  //             b: {
-  //               color: '#000000',
-  //               fontSize: 16,
-  //               fontWeight: 'bold',
-  //               lineHeight: 33
-  //             },
-  //             per: {
-  //               color: '#00ff00',
-  //               backgroundColor: '#4C5058',
-  //               padding: [3, 4],
-  //               borderRadius: 4
-  //             }
-  //           }
-  //         },
-  //         data: detailsData //Use dynamic data here
-  //       }
-  //     ]
-  //   };
-  // }
-
-
+ 
   GetChartRoundParSousFamille() {
     const SousfamilyCounts: { [Sousfamily: string]: number } = {};
     this.dataDdeExamenLab.forEach(item => {
@@ -683,13 +551,13 @@ export class RapportLaboComponent implements OnInit {
     const SousfamilyData = Object.entries(aggregatedSousFamilyCounts).map(([name, value]) => ({ name, value }));
     this.ChartParFamille = {
       title: {
-        text: 'حسب الفئة',
+        text: 'إجمالي التحاليل حسب الفئة',
         // subtext: '纯属虚构',
         left: 'center'
       },
       tooltip: {
         trigger: 'item',
-        formatter: '{a} <br/>{b}: {c} ({d}%)'
+        formatter: '{a} <br/>{b} : {c} ({d}%)'
       },
       legend: {
         //removed hardcoded legend data.
@@ -710,7 +578,7 @@ export class RapportLaboComponent implements OnInit {
           // width: '20',
           fontSize: 12,
           label: {
-            formatter: '{a|{a}}{abg|}\n{hr|}\n  {per|{d}%} :  {c} {b|{b}}   ',
+            formatter: '{a|{a}}{abg|}\n{hr|}\n  {per|{d}%} :  {c}  {b|{b}} ',
             backgroundColor: '#F6F8FC',
             borderColor: '#8C8D8E',
             borderWidth: 1,
