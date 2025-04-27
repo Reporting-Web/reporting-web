@@ -3,7 +3,7 @@
     </app-loading>
     <header>
 
-        <label class="header_name">{{'OutPatient' | i18n:i18nService.currentLanguage}} </label>
+        <label class="header_name">{{'CoutAdmission' | i18n:i18nService.currentLanguage}} </label>
         <button class="close-button btn btn-default" (click)="closeThisComponent()">X</button>
     </header>
     <section id="main-container">
@@ -19,6 +19,13 @@
                             <div class="card radius-10 border-start border-0 border-4 border-danger">
                                 <div class="card-body" style="    white-space: break-spaces;">
                                     <div class="flex-row-start   FloatRight flex-12">
+                                        <label class="control-label flex-20" style="font-weight: 700;"> الرقم الوظيفي : </label>
+
+                                        <div class="control-input flex-5-45 " style="max-width: 140px;">
+                                            <input id="codeSaisie" maxlength="10" name="codeSaisie" type="text" class=" form-control-dev input-xs" required [(ngModel)]="numProfessionel">
+
+                                        </div>
+
                                         <label class="control-label flex-20" style="font-weight: 700;"> الفترة </label>
                                         <label class="control-label flex-20" style="font-weight: 700;"> من </label>
 
@@ -74,8 +81,72 @@
                             <div class="material-table">
                                 <div class="card">
 
+                                    <p-table [loading]="loadingData" [paginator]="true" sortField="count" [sortOrder]="-1" sortMode="single" [rows]="20" [rows]="20" [rowsPerPageOptions]="[20, 40,80,100]" [showCurrentPageReport]="true" [first]="first" currentPageReportTemplate="{{'Page' | i18n:i18nService.currentLanguage}} {first} {{'To' | i18n:i18nService.currentLanguage}} {last} {{'of' | i18n:i18nService.currentLanguage}} {totalRecords} {{'entiers' | i18n:i18nService.currentLanguage}}"
+                                        #dt1 [columns]="ColumnsGroupedCoutAdmission" [value]="dataAdmission" [globalFilterFields]="['designationAr', 'designationLt']" selectionMode="single" [metaKeySelection]="false" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)"
+                                        dataKey="patientCode" [expandedRowKeys]="expandedRows" [tableStyle]="{'min-width': '35rem', 'width': '100%' , 'padding': '1px 1px 1px 1px'}">
 
-                                    <p-table [value]="groupedData" [columns]="ColumnsGroupedCoutAdmission" tableStyleClass="TabFamilleFact" [globalFilterFields]="['designationAr', 'designationLt']" dataKey="familleCodePatient" [tableStyle]="{ 'min-width': '1030px' }" [expandedRowKeys]="expandedRows">
+                                        <ng-template pTemplate="caption">
+                                            <div class="flex align-items-center justify-content-between">
+                                                عدد التحاليل حسب حالات الدخول
+
+                                            </div>
+                                        </ng-template>
+
+                                        <ng-template pTemplate="colgroup" let-col>
+                                            <colgroup>
+                                                <col *ngFor="let col of col" [style.width]="col.width">
+                                            </colgroup>
+                                        </ng-template>
+                                        <ng-template pTemplate="header" let-columns>
+                                            <tr>
+                                                <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                                    {{ col.header }}
+                                                    <p-sortIcon [field]="col.field" />
+                                                </th>
+                                            </tr>
+
+                                            <tr class="filter-row">
+                                                <th *ngFor="let col of columns  ">
+                                                    <p-columnFilter [hideOnClear]="true" [showMenu]="false" [showAddButton]="false" [showOperator]="false" [matchMode]="'contains'" [showMatchModes]="false" type={{col.type}} field={{col.field}} placeholder=" " ariaLabel="Filter Country"></p-columnFilter>
+                                                </th>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="body" let-domaine let-expanded="expanded">
+                                            <tr [pSelectableRow]="domaine">
+                                                <td>
+                                                    <p-button type="button" pRipple [pRowToggler]="domaine" [text]="true" [rounded]="true" [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-left'" />
+                                                </td>
+
+                                                <td>{{ domaine.patientCode }}</td>
+                                                <td>{{ domaine.patientNameAr }}</td>
+                                                <td>{{ domaine.desigCategPatient }}</td>
+                                                <td>{{ domaine.totalSumPrestation }}</td>
+                                                <td>{{ domaine.totalSumLab}}</td>
+                                                <td>{{ domaine.totalSumRadio }}</td>
+                                                <td>{{ domaine.totalSumPharmacie }}</td>
+                                                <td>{{ domaine.totalLigne }}</td>
+
+
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="footer">
+                                            <tr>
+                                                <td colspan="2"><strong>المجموع:</strong></td>
+                                                <!-- <td>{{ calculateTotal() }}</td>
+                                    <td>{{ calculateTotalExam() }}</td>
+                                    <td>{{ calculateTotalCout() }}</td> -->
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="emptymessage">
+                                            <tr>
+                                                <td colspan="5">لا توجد بيانات</td>
+                                            </tr>
+                                        </ng-template>
+                                    </p-table>
+
+
+                                    <!-- <p-table [value]="groupedData" sortField="dateCreate" [sortOrder]="-1" sortMode="single" [columns]="ColumnsGroupedCoutAdmission" tableStyleClass="TabFamilleFact" [globalFilterFields]="['designationAr', 'designationLt']" dataKey="familleCodePatient" [tableStyle]="{ 'min-width': '1030px' }"
+                                        [expandedRowKeys]="expandedRows">
                                         <ng-template pTemplate="caption">
 
 
@@ -87,16 +158,17 @@
                                         </ng-template>
                                         <ng-template pTemplate="header" let-col>
                                             <tr>
-                                                <th *ngFor="let col of col ; let i = index" pResizableColumn>
+                                                <th *ngFor="let col of col ; let i = index" [pSortableColumn]="col.field">
                                                     <span>
                                                         {{col.header}}
+                                                        <p-sortIcon [field]="col.field" />
                                                     </span>
                                                 </th>
                                             </tr>
 
                                             <tr class="filter-row">
-                                                <th *ngFor="let col of col ; let i = index">
-                                                    <p-columnFilter *ngIf="i === 1 || i === 2 || i===3" [hideOnClear]="true" [showMenu]="false" [showAddButton]="false" [showOperator]="false" [matchMode]="'contains'" [showMatchModes]="false" type="text" field={{col.field}} placeholder=" " ariaLabel="Filter Country"></p-columnFilter>
+                                                <th *ngFor="let col of col  ">
+                                                    <p-columnFilter [hideOnClear]="true" [showMenu]="false" [showAddButton]="false" [showOperator]="false" [matchMode]="'contains'" [showMatchModes]="false" [type]="col.type" field={{col.field}} placeholder=" " ariaLabel="Filter Country"></p-columnFilter>
                                                 </th>
                                             </tr>
                                         </ng-template>
@@ -106,9 +178,7 @@
                                                     <p-button type="button" pRipple [pRowToggler]="group" [text]="true" [rounded]="true" [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-left'" />
                                                 </td>
                                                 <td>{{ group.patientCode }}</td>
-                                                <td>{{ group.patientNameAr }}</td>
-                                                <td>{{ group.codeAdmisson }}</td>
-
+                                                <td>{{ group.patientNameAr }}</td>   
                                                 <td>{{ group.sumLab }}</td>
                                                 <td>{{ group.sumPharmacie }}</td>
                                                 <td>{{ group.sumPrestation}}</td>
@@ -128,7 +198,7 @@
                                                     <div class="p-3">
 
                                                         <div class="table3-container">
-                                                            <p-table [value]="group.details" [columns]="ColumnsDetAdmission" dataKey="code">
+                                                            <p-table sortField="dateCreate" [sortOrder]="-1" sortMode="single" [value]="group.details" [columns]="ColumnsDetAdmission" dataKey="code">
                                                                 <ng-template pTemplate="colgroup" let-ColumnsPrestation>
                                                                     <colgroup>
                                                                         <col *ngFor="let col of ColumnsPrestation" [style.width]="col.width">
@@ -136,16 +206,17 @@
                                                                 </ng-template>
                                                                 <ng-template pTemplate="header" let-col>
                                                                     <tr>
-                                                                        <th *ngFor="let col of col ; let i = index" pResizableColumn>
+                                                                        <th *ngFor="let col of col ; let i = index" [pSortableColumn]="col.field">
                                                                             <span>
                                                         {{col.header}}
+                                                        <p-sortIcon [field]="col.field" />
                                                     </span>
                                                                         </th>
                                                                     </tr>
 
                                                                     <tr class="filter-row">
-                                                                        <th *ngFor="let col of col ; let i = index">
-                                                                            <p-columnFilter *ngIf="i !== 5" [hideOnClear]="true" [showMenu]="false" [showAddButton]="false" [showOperator]="false" [matchMode]="'contains'" [showMatchModes]="false" type="text" field={{col.field}} placeholder=" " ariaLabel="Filter Country"></p-columnFilter>
+                                                                        <th *ngFor="let col of col  ">
+                                                                            <p-columnFilter [hideOnClear]="true" [showMenu]="false" [showAddButton]="false" [showOperator]="false" [matchMode]="'contains'" [showMatchModes]="false" [type]="col.type" field={{col.field}} placeholder=" " ariaLabel="Filter Country"></p-columnFilter>
                                                                         </th>
                                                                     </tr>
                                                                 </ng-template>
@@ -154,7 +225,7 @@
                                                                         <td>{{ details.patientCode }}</td>
                                                                         <td>{{ details.patientNameAr }}</td>
                                                                         <td>{{ details.codeAdmisson }}</td>
-
+                                                                        <td>{{ details.dateCreate }}</td>
                                                                         <td>{{ details.sumLab }}</td>
                                                                         <td>{{ details.sumPharmacie }}</td>
                                                                         <td>{{ details.sumPrestation}}</td>
@@ -175,7 +246,7 @@
                                                 </td>
                                             </tr>
                                         </ng-template>
-                                    </p-table>
+                                    </p-table> -->
 
 
                                 </div>

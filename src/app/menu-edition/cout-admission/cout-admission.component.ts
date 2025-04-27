@@ -6,13 +6,13 @@ import { I18nService } from '../../Shared/i18n/i18n.service';
 import { DatePipe } from '@angular/common';
 import { CalanderTransService } from '../../Shared/CalanderService/CalanderTransService';
 import { RapportService } from '../../Shared/service/ServiceClientRapport/rapport.service';
-import { Router } from '@angular/router'; 
+import { Router } from '@angular/router';
 import { sum } from 'lodash';
 
 @Component({
   selector: 'app-cout-admission',
   templateUrl: './cout-admission.component.html',
-  styleUrls: ['./cout-admission.component.css', 
+  styleUrls: ['./cout-admission.component.css',
     '.../../../src/assets/css/newStyle.css', '.../../../src/assets/css/StyleApplication.css'],
 
 })
@@ -32,13 +32,13 @@ export class CoutAdmissionComponent implements OnInit {
   code!: number | null;
   codeCabinet!: number | null;
   selectedCabinet!: any;
-  select!: any; 
+  select!: any;
 
 
 
   ngOnInit(): void {
     this.GetColumns();
-    this.GetColumnsGroupedCoutAdmissionTable(); 
+    this.GetColumnsGroupedCoutAdmissionTable();
     this.GetColumnsDetailsTable();
   }
 
@@ -133,9 +133,9 @@ export class CoutAdmissionComponent implements OnInit {
 
 
   GetData() {
-    if (this.dateDeb == null || this.dateFin == null) {
+    if (this.dateDeb == null || this.dateFin == null || this.numProfessionel == null) {
       this.CtrlAlertify.PostionLabelNotification();
-      this.CtrlAlertify.showNotificationِCustom('PleaseSelectedAnyDate');
+      this.CtrlAlertify.showNotificationِCustom('PleaseSelectedAnyDateOrNum');
     } else if (this.dateFin < this.dateDeb) {
       this.CtrlAlertify.PostionLabelNotification();
       this.CtrlAlertify.showNotificationِCustom('ErrorDate');
@@ -161,7 +161,7 @@ export class CoutAdmissionComponent implements OnInit {
   onRowUnselect(event: any) {
     this.selectedCabinet = event.data = null;
   }
- 
+
 
   ///// new compoenent cout admission : 
 
@@ -172,27 +172,29 @@ export class CoutAdmissionComponent implements OnInit {
   ColumnsGroupedCoutAdmission!: any[];
   GetColumnsDetailsTable() {
     this.ColumnsDetAdmission = [
-      { field: 'patientCode', header: this.i18nService.getString('CodePatient') || 'CodePatient', width: '19%', filter: "true" },
-      { field: 'patientNameAr', header: this.i18nService.getString('NomFullAr') || 'NomFullAr', width: '20%', filter: "true" },
-      { field: 'codeAdmisson', header: this.i18nService.getString('codeAdmission') || 'codeAdmission', width: '20%', filter: "true" },
-     
-      { field: 'sumLab', header: this.i18nService.getString('sumLab') || 'sumLab', width: '15%', filter: "true" },
-      { field: 'sumPharmacie', header: this.i18nService.getString('sumPharmacie') || 'sumPharmacie', width: '15%', filter: "true" },
-      { field: 'sumPrestation', header: this.i18nService.getString('sumPrestation') || 'sumPrestation', width: '15%', filter: "true" },
-      { field: 'sumRadio', header: this.i18nService.getString('sumRadio') || 'sumRadio', width: '15%', filter: "true" },
-     ];
+      { field: 'patientCode', header: this.i18nService.getString('CodePatient') || 'CodePatient', width: '10%', filter: "true", type: "text" },
+      { field: 'patientNameAr', header: this.i18nService.getString('NomFullAr') || 'NomFullAr', width: '18%', filter: "true", type: "text" },
+      { field: 'codeAdmisson', header: this.i18nService.getString('codeAdmission') || 'codeAdmission', width: '15%', filter: "true", type: "text" },
+      { field: 'dateCreate', header: this.i18nService.getString('DateArriver') || 'DateArriver', width: '12%', filter: "true", type: "text" },
+
+      { field: 'sumLab', header: this.i18nService.getString('sumLab') || 'sumLab', width: '10%', filter: "true", type: "text" },
+      { field: 'sumPharmacie', header: this.i18nService.getString('sumPharmacie') || 'sumPharmacie', width: '10%', filter: "true", type: "text" },
+      { field: 'sumPrestation', header: this.i18nService.getString('sumPrestation') || 'sumPrestation', width: '10%', filter: "true", type: "text" },
+      { field: 'sumRadio', header: this.i18nService.getString('sumRadio') || 'sumRadio', width: '10%', filter: "true", type: "text" },
+    ];
   }
 
   GetColumnsGroupedCoutAdmissionTable() {
     this.ColumnsGroupedCoutAdmission = [
       { field: '', header: '', width: '1%', filter: "true" },
-      { field: 'patientCode', header: this.i18nService.getString('CodePatient') || 'CodePatient', width: '10%', filter: "true" },
-      { field: 'patientNameAr', header: this.i18nService.getString('NomFullAr') || 'Designation', width: '15%', filter: "true" },
-      { field: 'codeAdmisson', header: this.i18nService.getString('codeAdmission') || 'codeAdmission', width: '20%', filter: "true" },
-      { field: 'sumLab', header: this.i18nService.getString('sumLab') || 'sumLab', width: '15%', filter: "true" },
-      { field: 'sumPharmacie', header: this.i18nService.getString('sumPharmacie') || 'sumPharmacie', width: '15%', filter: "true" },
-      { field: 'sumPrestation', header: this.i18nService.getString('sumPrestation') || 'sumPrestation', width: '15%', filter: "true" },
-      { field: 'sumRadio', header: this.i18nService.getString('sumRadio') || 'sumRadio', width: '15%', filter: "true" },
+      { field: 'patientCode', header: this.i18nService.getString('CodePatient') || 'CodePatient', width: '10%', filter: "true", type: "text" },
+      { field: 'patientNameAr', header: this.i18nService.getString('NomFullAr') || 'NomFullAr', width: '18%', filter: "true", type: "text" },
+      { field: 'codeAdmisson', header: this.i18nService.getString('Sifa') || 'SIFA', width: '15%', filter: "true", type: "text" },
+      { field: 'dateCreate', header: this.i18nService.getString('sumPrestation') || 'sumPrestation', width: '12%', filter: "true", type: "text" },
+      { field: 'sumLab', header: this.i18nService.getString('sumLab') || 'sumLab', width: '10%', filter: "true", type: "text" },
+      { field: 'sumRadio', header: this.i18nService.getString('sumRadio') || 'sumRadio', width: '10%', filter: "true", type: "text" },
+      { field: 'sumPharmacie', header: this.i18nService.getString('sumPharmacie') || 'sumPharmacie', width: '10%', filter: "true", type: "text" },
+      { field: 'TOTAL', header: this.i18nService.getString('montantTotal') || 'montantTotal', width: '10%', filter: "true", type: "text" },
 
     ];
 
@@ -213,71 +215,109 @@ export class CoutAdmissionComponent implements OnInit {
 
   dataAdmission: any[] = [];
   groupedData = new Array<any>();
+  loadingData = false;
+  grandTotals: any = {}; // Add this line
   GetAllAdmission() {
-    this.IsLoading = true;
-    this.rapportService.GetAllCoutAdmissionByDate(this.dateDeb, this.dateFin).subscribe((data: any) => {
+    this.loadingData = true;
+    this.rapportService.GetAllDetailsAdmissionByDateAndNumProf(this.dateDeb, this.dateFin, this.numProfessionel).subscribe((data: any) => {
       this.loadingComponent.IsLoading = false;
       this.IsLoading = false;
-      this.dataAdmission = data;
-      this.groupedData = this.groupPrestationsByFamille(data);
-
+      const result = this.groupAndSumPatientData(data);
+      this.dataAdmission = result.patientData;
+      this.grandTotals = result.grandTotals; // Add grandTotals to component
+      this.loadingData = false;
     });
   }
 
-  groupAdmissionByNumProfessional(data: any[]): any[] {
-    const grouped: { [key: number]: any[] } = {};
-
+  groupAndSumPatientData(data: any[]): { patientData: any[]; grandTotals: any } {
+    const groupedData: { [key: string]: any } = {};
+    let grandTotalPrestation = 0;
+    let grandTotalLab = 0;
+    let grandTotalRadio = 0;
+    let grandTotalPharmacie = 0;
     data.forEach((item) => {
-      const numprofession = item.code; // Assuming 'code' field represents numprofession
-      if (!grouped[numprofession]) {
-        grouped[numprofession] = [];
+      const patientCode = item.patientCode;
+      if (!groupedData[patientCode]) {
+        groupedData[patientCode] = {
+          patientCode: patientCode,
+          patientNameAr: item.patientNameAr,
+          patientCategoryCode: item.patientCategoryCode,
+          desigCategPatient: item.desigCategPatient,
+          totalSumLab: 0,
+          totalSumPharmacie: 0,
+          totalSumRadio: 0,
+          totalSumPrestation: 0,
+          admissions: [],
+        };
+         
       }
-      grouped[numprofession].push(item);
-      // console.log("itemss ", item);
-      
+ 
+      switch (item.codeFamilleFacturation) {
+        case 52:
+          parseFloat(groupedData[patientCode].totalSumLab += item.montantMasterPL).toFixed(3);
+          grandTotalLab += item.montantMasterPL;
+          break;
+        case 58:
+          parseFloat(groupedData[patientCode].totalSumPrestation += item.montantMasterPL).toFixed(3);
+          grandTotalPrestation += item.montantMasterPL;
+          break;
+        case 98:
+          parseFloat(groupedData[patientCode].totalSumPharmacie += item.montantMasterPL).toFixed(3);
+          grandTotalPharmacie += item.montantMasterPL;
+          break;
+        case 53:
+          parseFloat(groupedData[patientCode].totalSumRadio += item.montantMasterPL).toFixed(3);
+          grandTotalRadio += item.montantMasterPL;
+          break;
+      }
+      parseFloat(groupedData[patientCode].totalLigne  = groupedData[patientCode].totalSumLab + 
+        +groupedData[patientCode].totalSumPrestation + +groupedData[patientCode].totalSumPharmacie  + +groupedData[patientCode].totalSumRadio).toFixed(3);
+      groupedData[patientCode].admissions.push({
+        codeAdmisson: item.codeAdmisson,
+        dateCreate: item.dateCreate,
+      });
     });
 
-    // Convert the grouped object back into an array of objects
-    return Object.entries(grouped).map(([numprofession, items]) =>
-       ( 
-        {
-      numprofession: parseInt(numprofession, 10), //Convert string key to integer
-      admissions: items,
-      patientCategoryCode :items.reduce((patientCategoryCode) => patientCategoryCode),
-      patientCode:items.reduce((patientCode) => patientCode),
-      totalSumLab: items.reduce((sum, item) => sum + item.sumLab, 0),
-      totalSumPrestation: items.reduce((sum, item) => sum + item.sumPrestation, 0),
-      totalSumRadio: items.reduce((sum, item) => sum + item.sumRadio, 0),
-      totalSumPharmacie: items.reduce((sum, item) => sum + item.sumPharmacie, 0),
-    }));
-  } 
+    return {patientData :Object.values(groupedData),
+      grandTotals: {
+        totalSumPrestation: grandTotalPrestation,
+        totalSumLab: grandTotalLab,
+        totalSumRadio: grandTotalRadio,
+        totalSumPharmacie: grandTotalPharmacie,
+      },
+    }
+  }
+ 
   groupPrestationsByFamille(data: any[]): any[] {
     const grouped: { [key: string]: any } = {};
-    data.forEach(prestation => {
-      const familleCode = prestation.familleCodePatient; // Correct way to access code
+    data.forEach(cout => {
+      const familleCode = cout.familleCodePatient; // Correct way to access code
       if (!grouped[familleCode]) {
         grouped[familleCode] = {
           familleCode,
-          patientNameAr:prestation.patientNameAr,
-          codeAdmisson:prestation.codeAdmisson,
-          sumLab:prestation.sumLab,
-          sumPharmacie:prestation.sumPharmacie,
-          sumPrestation:prestation.sumPrestation,
-          sumRadio:prestation.sumRadio,
-         
-          
-          patientCode:prestation.patientCode,
-          familleCodePatient: prestation.familleCodePatient,
+          patientNameAr: cout.patientNameAr,
+          codeAdmisson: cout.codeAdmisson,
+          sumLab: cout.sumLab,
+          sumPharmacie: cout.sumPharmacie,
+          sumPrestation: cout.sumPrestation,
+          sumRadio: cout.sumRadio,
+          dateCreate: cout.dateCreate,
+
+
+          patientCode: cout.patientCode,
+          familleCodePatient: cout.familleCodePatient,
           details: []
         };
       }
-      grouped[familleCode].details.push(prestation);
+      grouped[familleCode].details.push(cout);
     });
     console.log("grouped", grouped);
     return Object.values(grouped);
   }
 
-   
+
+
+  numProfessionel: any = null;
 
 
 }

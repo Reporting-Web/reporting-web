@@ -1,309 +1,318 @@
-<!-- <app-loading [IsLoading]="IsLoading">
-</app-loading> -->
+<body class="card" [ngClass]="{ 'disabled': IsLoading }">
+    <app-loading [IsLoading]="IsLoading">
+    </app-loading>
+    <!-- <header>
 
-<!-- /// row filter date  -->
-<!-- [ngClass]="{ 'disabled': IsLoading }" -->
-<div class="row">
+        <label class="header_name">{{'CoutAdmission' | i18n:i18nService.currentLanguage}} </label>
+        <button class="close-button btn btn-default" (click)="closeThisComponent()">X</button>
+    </header> -->
+    <section id="main-container">
 
-    <div class="col-12 col-lg-12 d-flex">
-        <div class="card radius-10 w-100">
+        <div class="row">
 
-            <div class="card-body">
+            <div class="col-12 col-lg-12 d-flex">
+                <div class="card radius-10 w-100">
 
-                <div class="col">
-                    <div class="card radius-10 border-start border-0 border-4 border-danger">
-                        <div class="card-body" style="    white-space: break-spaces;">
-                            <div class="flex-row-start   FloatRight flex-12">
-                                <label class="control-label flex-20" style="font-weight: 700;"> الفترة </label>
-                                <label class="control-label flex-20" style="font-weight: 700;"> من </label>
+                    <div class="card-body">
 
-                                <div class="dop control-input " style="display: flex;">
+                        <div class="col">
+                            <div class="card radius-10 border-start border-0 border-4 border-danger">
+                                <div class="card-body" style="    white-space: break-spaces;">
+                                    <div class="flex-row-start   FloatRight flex-12">
+                                        <label class="control-label flex-20" style="font-weight: 700;"> الفترة </label>
+                                        <label class="control-label flex-20" style="font-weight: 700; display: none;"> من </label>
 
-                                    <p-calendar (keyup.enter)="transformDateFormat()" (onInput)="formatInputNew($event)" (onBlur)="transformDateFormat()" (onChange)="transformDateFormat()" (onSelect)="transformDateFormat()" [(ngModel)]="dateDeb" [ngStyle]="{'width':'100%' , 'margin-right': '15px'}"
-                                        [showButtonBar]="true" appendTo="body" [iconDisplay]="'input'" #calendar dateFormat="yy-mm-dd" [readonlyInput]="false" [showIcon]="true" inputId="icondisplay"></p-calendar>
+                                        <div class="dop control-input " style="display: flex;  display: none;">
 
-
-                                </div>
-
-                                <label class="control-label flex-20" style="font-weight: 700;"> إلى </label>
-
-                                <div class="dop control-input " style="display: flex;">
-
-                                    <p-calendar (keyup.enter)="transformDateFormatFin()" (onInput)="formatInputNewFin($event)" (onBlur)="transformDateFormatFin()" (onChange)="transformDateFormatFin()" (onSelect)="transformDateFormatFin()" [(ngModel)]="dateFin" [ngStyle]="{'width':'100%' , 'margin-right': '15px'}"
-                                        [showButtonBar]="true" appendTo="body" [iconDisplay]="'input'" #calendar dateFormat="yy-mm-dd" [readonlyInput]="false" [showIcon]="true" inputId="icondisplay"></p-calendar>
-
-                                </div>
+                                            <p-calendar (keyup.enter)="transformDateFormat()" (onInput)="formatInputNew($event)" (onBlur)="transformDateFormat()" (onChange)="transformDateFormat()" (onSelect)="transformDateFormat()" [(ngModel)]="dateDeb" [ngStyle]="{'width':'100%' , 'margin-right': '15px'}"
+                                                [showButtonBar]="true" appendTo="body" [iconDisplay]="'input'" #calendar dateFormat="yy-mm-dd" [readonlyInput]="false" [showIcon]="true" inputId="icondisplay"></p-calendar>
 
 
-                            </div>
+                                        </div>
 
-                            <div class="flex-row-start flex-8 FloatLeft" style="margin-top: 10px;">
+                                        <label class="control-label flex-20" style="font-weight: 700;"> إلى </label>
 
+                                        <div class="dop control-input " style="display: flex;">
 
-                                <button data-backdrop="false" type="button" class="Bouton-add-new1 btn  btn-default " data-original-title="Add" data-toggle="modal" data-target="#Modal" (click)="GetData()">
-                                        <div class="bouton_style-2"> {{'Voir' | i18n:i18nService.currentLanguage}}</div>
-                                        <i class="fa-solid fa-magnifying-glass iconPDF"
-                                             ></i>
-                                    </button>
+                                            <p-calendar (keyup.enter)="transformDateFormatFin()" (onInput)="formatInputNewFin($event)" (onBlur)="transformDateFormatFin()" (onChange)="transformDateFormatFin()" (onSelect)="transformDateFormatFin()" [(ngModel)]="dateFin" [ngStyle]="{'width':'100%' , 'margin-right': '15px'}"
+                                                [showButtonBar]="true" appendTo="body" [iconDisplay]="'input'" #calendar dateFormat="yy-mm-dd" [readonlyInput]="false" [showIcon]="true" inputId="icondisplay"></p-calendar>
 
-
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-    </div>
-</div>
+                                        </div>
 
 
-<!-- ///// second row  -->
-<div class="card row row-cols-1 row-cols-md-2 row-cols-xl-5" [ngClass]="{ 'disabled': IsLoading }" style="border: 1px solid #cdcdcda1;height: 105px;padding: 4px;margin:5px">
-    <div class="col">
-        <div class="card radius-10 border-start border-0 border-4 border-primary">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div>
-                        <p class="mb-0 text-secondary name-card code-375"> النيابات </p>
-                        <h4 *ngIf="!IsLoading" class="my-1 text-primary" style="font-weight: bold;"> {{totalNiyebet}}</h4>
-                        <p-skeleton *ngIf="IsLoading" width="5rem" styleClass="mb-2" />
+                                    </div>
 
-                    </div>
-                    <div class="widgets-icons-2 rounded-circle   bg-body text-white ms-auto">
-                        <img [src]="logoNiyebet" id="preview" height="60" alt="Image preview" />
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card radius-10 border-start border-0 border-4 border-secondary">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div>
-                        <p class="mb-0 text-secondary name-card code-374"> الهيئات القضائية </p>
-                        <h4 *ngIf="!IsLoading" class="my-1 text-secondary" style="font-weight: bold;"> {{total9othat}}</h4>
-                        <p-skeleton *ngIf="IsLoading" width="5rem" styleClass="mb-2" />
-
-                    </div>
-                    <div class="widgets-icons-2 rounded-circle bg-body text-white ms-auto">
-                        <img [src]="logo9othat" id="preview" height="60" alt="Image preview" />
-                        <!-- <i class='bx bxs-wallet'></i> -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card radius-10 border-start border-0 border-4 border-success">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div>
-                        <p class="mb-0 text-secondary name-card code-376"> الخدمات </p>
-                        <h4 *ngIf="!IsLoading" class="my-1 text-success" style="font-weight: bold;">{{total5adamet}}</h4>
-                        <p-skeleton *ngIf="IsLoading" width="5rem" styleClass="mb-2" />
-
-                    </div>
-                    <div class="widgets-icons-2 rounded-circle bg-body text-white ms-auto">
-                        <img [src]="logoService" id="preview" height="60" alt="Image preview" />
-                        <!-- <i class='bx bxs-bar-chart-alt-2'></i> -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card radius-10 border-start border-0 border-4 border-warning">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div>
-                        <p class="mb-0 text-secondary name-card code-377"> الطوارئ </p>
-                        <h4 *ngIf="!IsLoading" class="my-1 text-warning" style="font-weight: bold;">{{totalEr}}</h4>
-                        <p-skeleton *ngIf="IsLoading" width="5rem" styleClass="mb-2" />
+                                    <div class="flex-row-start flex-8 FloatLeft" style="margin-top: 10px;">
 
 
-                    </div>
-                    <div class="widgets-icons-2 rounded-circle bg-body text-white ms-auto">
-                        <img [src]="logoER" id="preview" height="60" alt="Image preview" />
-                        <!-- <i class='bx bxs-group'></i> -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card radius-10 border-start border-0 border-4 border-info">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div>
-                        <p class="mb-0 text-secondary name-card"> إجمالي الأعضاء </p>
-                        <h4 *ngIf="!IsLoading" class="my-1 text-info" style="font-weight: bold;">{{totalPatient}}</h4>
-                        <p-skeleton *ngIf="IsLoading" width="5rem" styleClass="mb-2" />
+                                        <button data-backdrop="false" type="button" class="Bouton-add-new1 btn  btn-default " data-original-title="Add" data-toggle="modal" data-target="#Modal" (click)="GetData()">
+                                                <div class="bouton_style-2"> {{'Voir' | i18n:i18nService.currentLanguage}}</div>
+                                                <i class="fa-solid fa-magnifying-glass iconPDF"
+                                                     ></i>
+                                            </button>
 
 
-
-                    </div>
-                    <div class="widgets-icons-2 rounded-circle bg-gradient-total text-white ms-auto"><i class='bx bxs-group'></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<!--end row-->
-
-
-<!-- 3rd row  -->
-
-<div class="card row row-cols-1 row-cols-md-2 row-cols-xl-5" [ngClass]="{ 'disabled': IsLoading }" style="border: 1px solid #cdcdcda1;height: 105px;padding: 4px;margin:5px">
-    <div class="col">
-        <div class="card radius-10 border-start border-0 border-4 border-primary">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div>
-                        <p class="mb-0 text-danger name-card"> أعضاء النيابات المجمدة </p>
-                        <h4 *ngIf="!Blocked" class="my-1 text-primary" style="font-weight: bold;">{{totalNiyebetBloquer}}</h4>
-                        <p-skeleton *ngIf="Blocked" width="5rem" styleClass="mb-2" />
-                    </div>
-                    <div class="widgets-icons-2 rounded-circle bg-body-blocked   text-white ms-auto">
-                        <img [src]="logoNiyebet" id="preview" height="50" alt="Image preview" />
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card radius-10 border-start border-0 border-4 border-secondary">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div>
-                        <p class="mb-0 text-danger name-card"> أعضاء القضائية المجمدة</p>
-                        <h4 *ngIf="!Blocked" class="my-1 text-secondary" style="font-weight: bold;">{{total9othatBloquer}}</h4>
-                        <p-skeleton *ngIf="Blocked" width="5rem" styleClass="mb-2" />
-
-                    </div>
-                    <div class="widgets-icons-2 rounded-circle bg-body-blocked  text-white ms-auto">
-                        <img [src]="logo9othat" id="preview" height="50" alt="Image preview" />
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card radius-10 border-start border-0 border-4 border-success">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div>
-                        <p class="mb-0 text-danger name-card"> أعضاء الخدمات المجمدة</p>
-                        <h4 class="my-1 text-success" *ngIf="!Blocked" style="font-weight: bold;">{{total5adametBloquer}}</h4>
-                        <p-skeleton *ngIf="Blocked" width="5rem" styleClass="mb-2" />
-
-                    </div>
-                    <div class="widgets-icons-2 rounded-circle bg-body-blocked  text-white ms-auto">
-                        <img [src]="logoService" id="preview" height="50" alt="Image preview" />
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card radius-10 border-start border-0 border-4 border-warning">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div>
-                        <p class="mb-0 text-danger name-card"> أعضاء الطوارئ المجمدة</p>
-                        <h4 class="my-1 text-warning" *ngIf="!Blocked" style="font-weight: bold;">{{totalErBloquer}}</h4>
-                        <p-skeleton *ngIf="Blocked" width="5rem" styleClass="mb-2" />
-
-                    </div>
-                    <div class="widgets-icons-2 rounded-circle bg-body-blocked  text-white ms-auto">
-                        <img [src]="logoER" id="preview" height="45" alt="Image preview" />
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card radius-10 border-start border-0 border-4 border-danger">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div>
-                        <p class="mb-0 text-secondary name-card"> إجمالي الأعضاء المجمدة</p>
-                        <h4 class="my-1 text-danger" *ngIf="!Blocked" style="font-weight: bold;">{{totalPatientBloquer}}</h4>
-                        <p-skeleton *ngIf="Blocked" width="5rem" styleClass="mb-2" />
-
-                    </div>
-                    <div class="widgets-icons-2 rounded-circle bg-gradient-total-blocked text-white ms-auto">
-                        <img [src]="logoStoped" id="preview" height="50" alt="Image preview" />
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- end seconde row  -->
-
-
-<div class="row" [ngClass]="{ 'disabled': IsLoading }">
-
-    <div class="col-12 col-lg-12 d-flex">
-        <div class="card radius-10 w-100">
-            <div class="card-header">
-                <div class="d-flex align-items-center">
-                    <div>
-                        <!-- <h6 class="mb-0">إجمالي الدخول</h6> -->
-                    </div>
-
-                </div>
-            </div>
-            <div class="card-body">
-
-                <div class="col">
-                    <div class="card radius-10 border-start border-0 border-4 border-danger">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div>
-                                    <p class="mb-0 text-secondary name-card"> إجمالي الدخول </p>
-                                    <h4 class="my-1  text-danger" *ngIf="!IsLoading" style="font-weight: bold;">{{totalAdmission}}</h4>
-                                    <p-skeleton *ngIf="IsLoading" width="5rem" styleClass="mb-2" />
-
-                                </div>
-                                <div class="widgets-icons-2 rounded-circle bg-gradient-total-blocked text-white ms-auto">
-                                    <img [src]="logoPatient" id="preview" height="57" alt="Image preview" />
+                                    </div>
 
                                 </div>
                             </div>
                         </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ///// second row  -->
+        <div class="card row row-cols-1 row-cols-md-2 row-cols-xl-5" style="border: 1px solid #cdcdcda1;height: 105px;padding: 4px;margin:5px">
+            <div class="col">
+                <div class="card radius-10 border-start border-0 border-4 border-primary">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <p class="mb-0 text-secondary name-card code-375"> النيابات </p>
+                                <h4 *ngIf="!IsLoading" class="my-1 text-primary" style="font-weight: bold;"> {{totalNiyebet}}</h4>
+                                <p-skeleton *ngIf="IsLoading" width="5rem" styleClass="mb-2" />
+
+                            </div>
+                            <div class="widgets-icons-2 rounded-circle   bg-body text-white ms-auto">
+                                <img [src]="logoNiyebet" id="preview" height="60" alt="Image preview" />
+
+                            </div>
+                        </div>
                     </div>
                 </div>
-
             </div>
+            <div class="col">
+                <div class="card radius-10 border-start border-0 border-4 border-secondary">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <p class="mb-0 text-secondary name-card code-374"> الهيئات القضائية </p>
+                                <h4 *ngIf="!IsLoading" class="my-1 text-secondary" style="font-weight: bold;"> {{total9othat}}</h4>
+                                <p-skeleton *ngIf="IsLoading" width="5rem" styleClass="mb-2" />
 
-        </div>
-    </div>
-</div>
-<!--end row-->
-
-<div class="row row-cols-1 row-cols-lg-9" [ngClass]="{ 'disabled': IsLoading }">
-    <div class="col d-flex">
-        <div class="card radius-10 w-100">
-            <div class="card-body">
-
-                <div id="options11" echarts [options]="options11" [theme]="theme" class="demo-chart"></div>
-
+                            </div>
+                            <div class="widgets-icons-2 rounded-circle bg-body text-white ms-auto">
+                                <img [src]="logo9othat" id="preview" height="60" alt="Image preview" />
+                                <!-- <i class='bx bxs-wallet'></i> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+            <div class="col">
+                <div class="card radius-10 border-start border-0 border-4 border-success">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <p class="mb-0 text-secondary name-card code-376"> الخدمات </p>
+                                <h4 *ngIf="!IsLoading" class="my-1 text-success" style="font-weight: bold;">{{total5adamet}}</h4>
+                                <p-skeleton *ngIf="IsLoading" width="5rem" styleClass="mb-2" />
 
+                            </div>
+                            <div class="widgets-icons-2 rounded-circle bg-body text-white ms-auto">
+                                <img [src]="logoService" id="preview" height="60" alt="Image preview" />
+                                <!-- <i class='bx bxs-bar-chart-alt-2'></i> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card radius-10 border-start border-0 border-4 border-warning">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <p class="mb-0 text-secondary name-card code-377"> الطوارئ </p>
+                                <h4 *ngIf="!IsLoading" class="my-1 text-warning" style="font-weight: bold;">{{totalEr}}</h4>
+                                <p-skeleton *ngIf="IsLoading" width="5rem" styleClass="mb-2" />
+
+
+                            </div>
+                            <div class="widgets-icons-2 rounded-circle bg-body text-white ms-auto">
+                                <img [src]="logoER" id="preview" height="60" alt="Image preview" />
+                                <!-- <i class='bx bxs-group'></i> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card radius-10 border-start border-0 border-4 border-info">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <p class="mb-0 text-secondary name-card"> إجمالي الأعضاء </p>
+                                <h4 *ngIf="!IsLoading" class="my-1 text-info" style="font-weight: bold;">{{totalPatient}}</h4>
+                                <p-skeleton *ngIf="IsLoading" width="5rem" styleClass="mb-2" />
+
+
+
+                            </div>
+                            <div class="widgets-icons-2 rounded-circle bg-gradient-total text-white ms-auto"><i class='bx bxs-group'></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
+
+
+        <!--end row-->
+
+
+        <!-- 3rd row  -->
+
+        <div class="card row row-cols-1 row-cols-md-2 row-cols-xl-5" style="border: 1px solid #cdcdcda1;height: 105px;padding: 4px;margin:5px">
+            <div class="col">
+                <div class="card radius-10 border-start border-0 border-4 border-primary">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <p class="mb-0 text-danger name-card"> أعضاء النيابات المجمدة </p>
+                                <h4 *ngIf="!Blocked" class="my-1 text-primary" style="font-weight: bold;">{{totalNiyebetBloquer}}</h4>
+                                <p-skeleton *ngIf="Blocked" width="5rem" styleClass="mb-2" />
+                            </div>
+                            <div class="widgets-icons-2 rounded-circle bg-body-blocked   text-white ms-auto">
+                                <img [src]="logoNiyebet" id="preview" height="50" alt="Image preview" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card radius-10 border-start border-0 border-4 border-secondary">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <p class="mb-0 text-danger name-card"> أعضاء القضائية المجمدة</p>
+                                <h4 *ngIf="!Blocked" class="my-1 text-secondary" style="font-weight: bold;">{{total9othatBloquer}}</h4>
+                                <p-skeleton *ngIf="Blocked" width="5rem" styleClass="mb-2" />
+
+                            </div>
+                            <div class="widgets-icons-2 rounded-circle bg-body-blocked  text-white ms-auto">
+                                <img [src]="logo9othat" id="preview" height="50" alt="Image preview" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card radius-10 border-start border-0 border-4 border-success">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <p class="mb-0 text-danger name-card"> أعضاء الخدمات المجمدة</p>
+                                <h4 class="my-1 text-success" *ngIf="!Blocked" style="font-weight: bold;">{{total5adametBloquer}}</h4>
+                                <p-skeleton *ngIf="Blocked" width="5rem" styleClass="mb-2" />
+
+                            </div>
+                            <div class="widgets-icons-2 rounded-circle bg-body-blocked  text-white ms-auto">
+                                <img [src]="logoService" id="preview" height="50" alt="Image preview" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card radius-10 border-start border-0 border-4 border-warning">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <p class="mb-0 text-danger name-card"> أعضاء الطوارئ المجمدة</p>
+                                <h4 class="my-1 text-warning" *ngIf="!Blocked" style="font-weight: bold;">{{totalErBloquer}}</h4>
+                                <p-skeleton *ngIf="Blocked" width="5rem" styleClass="mb-2" />
+
+                            </div>
+                            <div class="widgets-icons-2 rounded-circle bg-body-blocked  text-white ms-auto">
+                                <img [src]="logoER" id="preview" height="45" alt="Image preview" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card radius-10 border-start border-0 border-4 border-danger">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <p class="mb-0 text-secondary name-card"> إجمالي الأعضاء المجمدة</p>
+                                <h4 class="my-1 text-danger" *ngIf="!Blocked" style="font-weight: bold;">{{totalPatientBloquer}}</h4>
+                                <p-skeleton *ngIf="Blocked" width="5rem" styleClass="mb-2" />
+
+                            </div>
+                            <div class="widgets-icons-2 rounded-circle bg-gradient-total-blocked text-white ms-auto">
+                                <img [src]="logoStoped" id="preview" height="50" alt="Image preview" />
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- end seconde row  -->
+
+
+        <div class="row">
+
+            <div class="col-12 col-lg-12 d-flex">
+                <div class="card radius-10 w-100">
+                    <div class="card-header">
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <!-- <h6 class="mb-0">إجمالي الدخول</h6> -->
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="card-body">
+
+                        <div class="col">
+                            <div class="card radius-10 border-start border-0 border-4 border-danger">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <div>
+                                            <p class="mb-0 text-secondary name-card"> إجمالي الدخول </p>
+                                            <h4 class="my-1  text-danger" *ngIf="!IsLoadingTotalAdmission" style="font-weight: bold;">{{totalAdmission}}</h4>
+                                            <p-skeleton *ngIf="IsLoadingTotalAdmission" width="5rem" styleClass="mb-2" />
+
+                                        </div>
+                                        <div class="widgets-icons-2 rounded-circle bg-gradient-total-blocked text-white ms-auto">
+                                            <img [src]="logoPatient" id="preview" height="57" alt="Image preview" />
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!--end row-->
+
+        <div class="row row-cols-1 row-cols-lg-9">
+            <div class="col d-flex">
+                <div class="card radius-10 w-100">
+                    <div class="card-body">
+
+                        <div id="options11" echarts [options]="options11" [theme]="theme" class="demo-chart"></div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+    </section>
+</body>
 
 
 <!--end row-->

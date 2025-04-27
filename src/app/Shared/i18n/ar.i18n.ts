@@ -188,6 +188,7 @@ const arI18n = {
  'Mois':'الشهر',
  'Annee':'السنة',
 'PleaseSelectedAnyDate':'الرجاء إختيار تاريخ',
+'PleaseSelectedAnyDateOrNum':'الرجاء إختيار تاريخ أو الرقم الوظيفي',
 'ErrorDate':'الرجاء التأكد من التاريخ',
 'Count':'عدد المرضى',
 'CountLab':'عدد التحاليل',
@@ -197,11 +198,13 @@ const arI18n = {
  'CountRadio':'عدد الأشعة',
  'CountPharmacie':'عدد الأدوية',
  'CoutAdmission':'تكاليف المرضى',
- 'sumLab':'مجموع التحاليل',
- 'sumRadio':'مجموع الأشعة',
- 'sumPharmacie':'مجموع الأدوية',
- 'sumPrestation':'مجموع الخدمات',
+ 'sumLab':'تكلفة التحاليل',
+ 'sumRadio':'تكلفة الأشعة',
+ 'sumPharmacie':'تكلفة الأدوية',
+ 'sumPrestation':'تكلفة الخدمات',
  'codeAdmission':'رقم الدخول',
+ 'Sifa':'الصفة',
+ 'montantTotal':'المجموع',
 };
 
 

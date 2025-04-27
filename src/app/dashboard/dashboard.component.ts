@@ -33,7 +33,7 @@ export class DashboardComponent implements OnInit {
   logoService: SafeResourceUrl | string | null = null;
   logoStoped: SafeResourceUrl | string | null = null;
   logoPatient: SafeResourceUrl | string | null = null;
-
+  
   ngOnInit(): void {
     // this.createChartOptions(); 
 
@@ -60,6 +60,7 @@ export class DashboardComponent implements OnInit {
 
   }
   IsLoading = false;
+  IsLoadingTotalAdmission = false;
 
 
   GetLogoPatient() {
@@ -186,10 +187,10 @@ export class DashboardComponent implements OnInit {
         this.totalNiyebet = this.sumPatients(dataNiyebet);
         this.total5adamet = this.sumPatients(data5adamet);
         this.totalEr = this.sumPatients(dataEr);
-        this.totalPatient = this.total9othat + this.totalNiyebet + this.total5adamet + this.totalEr;
+        this.totalPatient = this.total9othat + this.totalNiyebet + this.total5adamet ;
         this.createChartOptions(this.totalNiyebet,this.total9othat,this.total5adamet,this.totalEr);
         
-
+       
       })
     ).subscribe({
       complete: () => (this.IsLoading = false, this.loadingComponent.IsLoading = false), // Reset loading state
@@ -200,6 +201,7 @@ export class DashboardComponent implements OnInit {
         this.loadingComponent.IsLoading = false;
       }
     });
+
   }
 
 
@@ -213,9 +215,10 @@ export class DashboardComponent implements OnInit {
 
   totalAdmission:any = 0 ;
   GetTotalAdmissionByDate(){
+    this.IsLoadingTotalAdmission = true;
     this.rapportService.GetAllAdmissionByDate(this.dateDeb, this.dateFin).subscribe((data: any) => {
       this.loadingComponent.IsLoading = false;
-      this.IsLoading = false;
+      this.IsLoadingTotalAdmission = false;
       this.totalAdmission = data.length;
     
     });
@@ -227,7 +230,7 @@ export class DashboardComponent implements OnInit {
   Blocked: any = false;
   getTotalPatientsBloquer(): void {
 
-    
+    this.IsLoading=true;
     const observables: Observable<any>[] = [
       this.dashbordService.GetAllListPatientByDateAndCodeSocieteAndBloquer(this.dateDeb,this.dateFin ,374, true),
       this.dashbordService.GetAllListPatientByDateAndCodeSocieteAndBloquer(this.dateDeb,this.dateFin ,375, true),
@@ -245,7 +248,7 @@ export class DashboardComponent implements OnInit {
         this.totalPatientBloquer = this.total9othatBloquer + this.totalNiyebetBloquer + this.total5adametBloquer + this.totalErBloquer;
       })
     ).subscribe({
-      complete: () => (this.Blocked = false), // Reset loading state
+      complete: () => (this.Blocked = false ,this.IsLoading=false), // Reset loading state
       error: (error) => {
         console.error("Error fetching patient data:", error);
 
@@ -288,7 +291,7 @@ export class DashboardComponent implements OnInit {
       }
     }
   } 
-  dateDeb: any = null;;
+  dateDeb: any = '2023-08-01';;
   dateFin: any = null;
 
   DateTempNewFin: any;

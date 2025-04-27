@@ -482,7 +482,7 @@ export class RapportOPDComponent implements OnInit {
     this.option33 = {
 
       title: {
-        text: ' تصنيف ' + nbrePatient + ' ملف دخول لعيادة ' + designationCabinet + '  حسب نوع الخدمة',   // تصنيف 45 ملف دخول للعيادة رقم 1 حسب نوع الخدمة
+        text: ' تكلفة ' + nbrePatient + ' ملف دخول لعيادة ' + designationCabinet + '  حسب نوع الخدمة',   // تصنيف 45 ملف دخول للعيادة رقم 1 حسب نوع الخدمة
         // subtext: '纯属虚构',
         left: 'center'
       },

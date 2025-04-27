@@ -81,7 +81,10 @@ export class RapportService {
       return this.http.get(`${environment.API_RECEPTION}details_adm/findByCabinet?codeCabinet=`+ codeCabinet  )
     }
 
-
+    GetAllDetailsAdmissionByDateAndNumProf(dateDebut : any , dateFin : any , numProfess:any ){
+      return this.http.get(`${environment.API_RECEPTION}details_adm/findAllByDateAndNumProf?dateDebut=`+ dateDebut + `&dateFin=`+dateFin  +`&numProfess=`+numProfess  )
+    }
+     
 
 
     
@@ -124,6 +127,10 @@ export class RapportService {
       return this.http.get(`${environment.API_RECEPTION}cout_admission/findAllByDateAndSociete?dateDebut=`+ dateDebut + `&dateFin=`+dateFin +`&codeSociete=`+codeSociete  )
     }
 
+
+    GetAllCoutAdmissionByDateAndNumProf(dateDebut : any , dateFin : any , numProfess:any ){
+      return this.http.get(`${environment.API_RECEPTION}cout_admission/findAllByDateAndNumProf?dateDebut=`+ dateDebut + `&dateFin=`+dateFin  +`&numProfess=`+numProfess  )
+    }
      
 
    
