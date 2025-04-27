@@ -133,7 +133,7 @@ export class CoutAdmissionComponent implements OnInit {
 
 
   GetData() {
-    if (this.dateDeb == null || this.dateFin == null || this.numProfessionel == null) {
+    if (this.dateDeb == null || this.dateFin == null || this.numProfessionel == null || this.numProfessionel == "") {
       this.CtrlAlertify.PostionLabelNotification();
       this.CtrlAlertify.showNotificationِCustom('PleaseSelectedAnyDateOrNum');
     } else if (this.dateFin < this.dateDeb) {
@@ -172,15 +172,17 @@ export class CoutAdmissionComponent implements OnInit {
   ColumnsGroupedCoutAdmission!: any[];
   GetColumnsDetailsTable() {
     this.ColumnsDetAdmission = [
-      { field: 'patientCode', header: this.i18nService.getString('CodePatient') || 'CodePatient', width: '10%', filter: "true", type: "text" },
-      { field: 'patientNameAr', header: this.i18nService.getString('NomFullAr') || 'NomFullAr', width: '18%', filter: "true", type: "text" },
+      // { field: 'patientCode', header: this.i18nService.getString('CodePatient') || 'CodePatient', width: '10%', filter: "true", type: "text" },
+      // { field: 'patientNameAr', header: this.i18nService.getString('NomFullAr') || 'NomFullAr', width: '18%', filter: "true", type: "text" },
       { field: 'codeAdmisson', header: this.i18nService.getString('codeAdmission') || 'codeAdmission', width: '15%', filter: "true", type: "text" },
       { field: 'dateCreate', header: this.i18nService.getString('DateArriver') || 'DateArriver', width: '12%', filter: "true", type: "text" },
+      { field: 'sums.totalSumPrestation', header: this.i18nService.getString('sumPrestation') || 'sumPrestation', width: '10%', filter: "true", type: "text" },
 
-      { field: 'sumLab', header: this.i18nService.getString('sumLab') || 'sumLab', width: '10%', filter: "true", type: "text" },
-      { field: 'sumPharmacie', header: this.i18nService.getString('sumPharmacie') || 'sumPharmacie', width: '10%', filter: "true", type: "text" },
-      { field: 'sumPrestation', header: this.i18nService.getString('sumPrestation') || 'sumPrestation', width: '10%', filter: "true", type: "text" },
-      { field: 'sumRadio', header: this.i18nService.getString('sumRadio') || 'sumRadio', width: '10%', filter: "true", type: "text" },
+      { field: 'sums.totalSumLab', header: this.i18nService.getString('sumLab') || 'sumLab', width: '10%', filter: "true", type: "text" },
+      { field: 'sums.totalSumRadio', header: this.i18nService.getString('sumRadio') || 'sumRadio', width: '10%', filter: "true", type: "text" },
+      
+      { field: 'sums.totalSumPharmacie', header: this.i18nService.getString('sumPharmacie') || 'sumPharmacie', width: '10%', filter: "true", type: "text" },
+      { field: 'sums.totalLigne', header: this.i18nService.getString('montantTotal') || 'montantTotal', width: '10%', filter: "true", type: "text" },
     ];
   }
 
@@ -249,36 +251,107 @@ export class CoutAdmissionComponent implements OnInit {
           totalSumPrestation: 0,
           admissions: [],
         };
-         
-      }
- 
-      switch (item.codeFamilleFacturation) {
-        case 52:
-          parseFloat(groupedData[patientCode].totalSumLab += item.montantMasterPL).toFixed(3);
-          grandTotalLab += item.montantMasterPL;
-          break;
-        case 58:
-          parseFloat(groupedData[patientCode].totalSumPrestation += item.montantMasterPL).toFixed(3);
-          grandTotalPrestation += item.montantMasterPL;
-          break;
-        case 98:
-          parseFloat(groupedData[patientCode].totalSumPharmacie += item.montantMasterPL).toFixed(3);
-          grandTotalPharmacie += item.montantMasterPL;
-          break;
-        case 53:
-          parseFloat(groupedData[patientCode].totalSumRadio += item.montantMasterPL).toFixed(3);
-          grandTotalRadio += item.montantMasterPL;
-          break;
-      }
-      parseFloat(groupedData[patientCode].totalLigne  = groupedData[patientCode].totalSumLab + 
-        +groupedData[patientCode].totalSumPrestation + +groupedData[patientCode].totalSumPharmacie  + +groupedData[patientCode].totalSumRadio).toFixed(3);
-      groupedData[patientCode].admissions.push({
-        codeAdmisson: item.codeAdmisson,
-        dateCreate: item.dateCreate,
-      });
-    });
 
-    return {patientData :Object.values(groupedData),
+      }
+
+      // switch (item.codeFamilleFacturation) {
+      //   case 52:
+      //     groupedData[patientCode].totalSumLab += item.montantMasterPL;
+      //     grandTotalLab += item.montantMasterPL;
+      //     break;
+      //   case 58:
+      //     groupedData[patientCode].totalSumPrestation += item.montantMasterPL;
+      //     grandTotalPrestation += item.montantMasterPL;
+      //     break;
+      //   case 110:
+      //     groupedData[patientCode].totalSumPrestation += item.montantMasterPL;
+      //     grandTotalPrestation += item.montantMasterPL;
+      //     break;
+      //   case 98:
+
+      //     groupedData[patientCode].totalSumPharmacie += item.montantMasterPL;
+      //     grandTotalPharmacie += item.montantMasterPL;
+      //     break;
+      //   case 53:
+      //     groupedData[patientCode].totalSumRadio += item.montantMasterPL;
+      //     grandTotalRadio += item.montantMasterPL;
+      //     break;
+      // }
+      // groupedData[patientCode].totalLigne = groupedData[patientCode].totalSumLab +
+      //   +groupedData[patientCode].totalSumPrestation + +groupedData[patientCode].totalSumPharmacie + +groupedData[patientCode].totalSumRadio;
+
+
+ 
+
+      // groupedData[patientCode].admissions.push({ 
+      //   codeSaisieAdmission: item.codeSaisieAdmission,
+      //   dateCreate: item.dateCreate,
+      //   codeFamilleFacturation: item.codeFamilleFacturation,
+      //   montantMasterPL: item.montantMasterPL 
+      // } 
+      // );  
+    
+    //Group and Sum Admissions by codeSaisieAdmission
+    let admission = groupedData[patientCode].admissions.find((a:any) => a.codeSaisieAdmission === item.codeSaisieAdmission);
+    if (!admission) {
+      admission = {
+        patientCode: item.patientCode,
+        codeSaisieAdmission: item.codeSaisieAdmission,
+        dateCreate: item.dateCreate,
+        codeFamilleFacturation: {}, // Use object for multiple family codes
+        montantMasterPL: 0,
+        sums: {
+          totalSumPrestation: 0,
+          totalSumLab: 0,
+          totalSumRadio: 0,
+          totalSumPharmacie: 0,
+        }
+      };
+      groupedData[patientCode].admissions.push(admission);
+    }
+      
+    admission.sums.montantMasterPL = (admission.sums.montantMasterPL || 0) + item.montantMasterPL
+
+    switch (item.codeFamilleFacturation) {
+      case 52:
+        admission.sums.totalSumLab += item.montantMasterPL;
+        grandTotalLab += item.montantMasterPL;
+        break;
+      case 58:
+        admission.sums.totalSumPrestation += item.montantMasterPL;
+        grandTotalPrestation += item.montantMasterPL;
+        break;
+      case 110:
+        admission.sums.totalSumPrestation += item.montantMasterPL;
+        grandTotalPrestation += item.montantMasterPL;
+        break;
+      case 98:
+        admission.sums.totalSumPharmacie += item.montantMasterPL;
+        grandTotalPharmacie += item.montantMasterPL;
+        break;
+      case 53:
+        admission.sums.totalSumRadio += item.montantMasterPL;
+        grandTotalRadio += item.montantMasterPL;
+        break;
+    }
+
+      admission.codeFamilleFacturation[item.codeFamilleFacturation] = (admission.codeFamilleFacturation[item.codeFamilleFacturation] || 0) + item.montantMasterPL;
+
+    groupedData[patientCode].totalLigne = groupedData[patientCode].totalSumLab +
+      +groupedData[patientCode].totalSumPrestation + +groupedData[patientCode].totalSumPharmacie + +groupedData[patientCode].totalSumRadio;
+  });
+
+
+
+
+
+    /// details par admission : 
+ 
+
+ 
+
+    return {
+      patientData: Object.values(groupedData),
       grandTotals: {
         totalSumPrestation: grandTotalPrestation,
         totalSumLab: grandTotalLab,
@@ -287,7 +360,7 @@ export class CoutAdmissionComponent implements OnInit {
       },
     }
   }
- 
+
   groupPrestationsByFamille(data: any[]): any[] {
     const grouped: { [key: string]: any } = {};
     data.forEach(cout => {

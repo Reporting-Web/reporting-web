@@ -1,57 +1,60 @@
 <app-alert></app-alert>
 <div class="col-md-12">
-    <div class="card card-container">
-        <img id="profile-img" src="assets/images/avatar_2x.png" class="profile-img-card" />
-        <form *ngIf="!isLoggedIn" name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
-            <div class="form-group">
-                <div class="Langage">
+    <div class="card card-container login-container" style="margin: 0px;">
+        <div class="card card-container " style="width: 340px;">
+            <img id="profile-img" src="assets/images/avatar_2x.png" class="profile-img-card" />
+            <form *ngIf="!isLoggedIn" name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
+                <div class="form-group">
+                    <div class="Langage">
 
-                    <p-dropdown [options]="countries" name="lang" class="dropdown" [style]="{'width':'150px' ,    'border': '1px solid #198754', 'border-radius':' 6px' , 'height':'30px','align-items':'center'}" [(ngModel)]="selectedCountry" optionLabel="name" (onChange)="i18nService.languageChange(countries.value) ;changeLanguage() ">
-                        <ng-template pTemplate="selectedItem">
-                            <div class="flex align-items-center gap-2" *ngIf="selectedCountry">
-                                <!-- <img src="assets/images/flags/flag_placeholder.png" [class]="'flag flag-' + selectedCountry.code.toLowerCase()" style="width: 18px" /> -->
+                        <p-dropdown [options]="countries" name="lang" class="dropdown" [style]="{'width':'150px' ,    'border': '1px solid #198754', 'border-radius':' 6px' , 'height':'30px','align-items':'center'}" [(ngModel)]="selectedCountry" optionLabel="name" (onChange)="i18nService.languageChange(countries.value) ;changeLanguage() ">
+                            <ng-template pTemplate="selectedItem">
+                                <div class="flex align-items-center gap-2" *ngIf="selectedCountry">
+                                    <!-- <img src="assets/images/flags/flag_placeholder.png" [class]="'flag flag-' + selectedCountry.code.toLowerCase()" style="width: 18px" /> -->
 
-                                <img src="assets/images/county/{{selectedCountry.code.toLowerCase()}}.png" style="width: 18px" />
-                                <div>{{ selectedCountry.name }}</div>
-                            </div>
-                        </ng-template>
-                        <ng-template let-country pTemplate="item">
-                            <div class="flex align-items-center gap-2">
-                                <!-- <img src="assets/images/flags/flag_placeholder.png" [class]="'flag flag-' + country.code.toLowerCase()" style="width: 18px" /> -->
-                                <img src="assets/images/county/{{country.code.toLowerCase()}}.png" style="width: 18px" />
-                                <div>{{ country.name }}</div>
-                            </div>
-                        </ng-template>
-                    </p-dropdown>
+                                    <img src="assets/images/county/{{selectedCountry.code.toLowerCase()}}.png" style="width: 18px" />
+                                    <div>{{ selectedCountry.name }}</div>
+                                </div>
+                            </ng-template>
+                            <ng-template let-country pTemplate="item">
+                                <div class="flex align-items-center gap-2">
+                                    <!-- <img src="assets/images/flags/flag_placeholder.png" [class]="'flag flag-' + country.code.toLowerCase()" style="width: 18px" /> -->
+                                    <img src="assets/images/county/{{country.code.toLowerCase()}}.png" style="width: 18px" />
+                                    <div>{{ country.name }}</div>
+                                </div>
+                            </ng-template>
+                        </p-dropdown>
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label for="username" style="float: inline-start; font-size: 13px; font-family: auto;">
-                    {{'UserName' | i18n:i18nService.currentLanguage}}
-                </label>
-                <input type="text" id="userName" class="form-control" name="userName" [(ngModel)]="form.userName" required #userName="ngModel" />
-                <div class="alert alert-danger" role="alert" *ngIf="userName.errors && f.submitted">
-                    Username is required!
+                <div class="form-group">
+                    <label for="username" style="float: inline-start; font-size: 13px; font-family: auto;">
+                        {{'UserName' | i18n:i18nService.currentLanguage}}
+                    </label>
+                    <input type="text" id="userName" class="form-control" name="userName" [(ngModel)]="form.userName" required #userName="ngModel" />
+                    <div class="alert alert-danger" role="alert" *ngIf="userName.errors && f.submitted">
+                        Username is required!
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label for="password" style="float: inline-start; font-size: 13px; font-family: auto; ">
+                <div class="form-group">
+                    <label for="password" style="float: inline-start; font-size: 13px; font-family: auto; ">
+    
+                        {{'Password' | i18n:i18nService.currentLanguage}}
+                    </label>
+                    <input type="password" class="form-control" name="password" [(ngModel)]="form.password" required #password="ngModel" />
 
-                    {{'Password' | i18n:i18nService.currentLanguage}}
-                </label>
-                <input type="password" class="form-control" name="password" [(ngModel)]="form.password" required #password="ngModel" />
 
+                </div>
+                <br>
+                <div class="form-group" style="justify-self: center">
 
-            </div>
-            <br>
-            <div class="form-group" style="justify-self: center">
+                    <button class="btn btn-outline-success btn-block" style=" font-size: 13px; font-family: auto; width: 150px; height: 37px;">
+                        {{'Login' | i18n:i18nService.currentLanguage}}
+                    </button>
+                </div>
+            </form>
+        </div>
 
-                <button class="btn btn-outline-success btn-block" style=" font-size: 13px; font-family: auto; width: 150px; height: 37px;">
-                    {{'Login' | i18n:i18nService.currentLanguage}}
-                </button>
-            </div>
-        </form>
 
     </div>
 </div>

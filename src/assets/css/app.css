@@ -2759,7 +2759,7 @@ input::placeholder {
     direction: rtl;
     overflow-y: auto;
     /* Or 'scroll' for always-visible scrollbar */
-    height: 200px;
+    /* height: 200px; */
     /* Example fixed height to trigger scroll */
 }
 

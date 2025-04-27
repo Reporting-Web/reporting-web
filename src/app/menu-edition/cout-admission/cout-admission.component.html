@@ -120,13 +120,70 @@
                                                 <td>{{ domaine.patientCode }}</td>
                                                 <td>{{ domaine.patientNameAr }}</td>
                                                 <td>{{ domaine.desigCategPatient }}</td>
-                                                <td>{{ domaine.totalSumPrestation }}</td>
-                                                <td>{{ domaine.totalSumLab}}</td>
-                                                <td>{{ domaine.totalSumRadio }}</td>
-                                                <td>{{ domaine.totalSumPharmacie }}</td>
-                                                <td>{{ domaine.totalLigne }}</td>
+                                                <td>{{ (domaine.totalSumPrestation).toFixed(3) }}</td>
+                                                <td>{{ (domaine.totalSumLab).toFixed(3)}}</td>
+                                                <td>{{ (domaine.totalSumRadio).toFixed(3) }}</td>
+                                                <td> {{ (domaine.totalSumPharmacie).toFixed(3)}} </td>
+                                                <td>{{ (domaine.totalLigne).toFixed(3) }}</td>
 
 
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="rowexpansion" let-domaine>
+                                            <tr>
+                                                <td colspan="7">
+                                                    <div class="p-3">
+
+                                                        <div class="table3-container">
+                                                            <p-table sortField="dateCreate" [sortOrder]="-1" sortMode="single" [value]="domaine.admissions" [columns]="ColumnsDetAdmission" dataKey="code">
+                                                                <ng-template pTemplate="colgroup" let-ColumnsPrestation>
+                                                                    <colgroup>
+                                                                        <col *ngFor="let col of ColumnsPrestation" [style.width]="col.width">
+                                                                    </colgroup>
+                                                                </ng-template>
+                                                                <ng-template pTemplate="header" let-col>
+                                                                    <tr>
+                                                                        <th *ngFor="let col of col ; let i = index" [pSortableColumn]="col.field">
+                                                                            <span>
+                                                        {{col.header}}
+                                                        <p-sortIcon [field]="col.field" />
+                                                    </span>
+                                                                        </th>
+                                                                    </tr>
+
+                                                                    <tr class="filter-row">
+                                                                        <th *ngFor="let col of col  ">
+                                                                            <p-columnFilter [hideOnClear]="true" [showMenu]="false" [showAddButton]="false" [showOperator]="false" [matchMode]="'contains'" [showMatchModes]="false" [type]="col.type" field={{col.field}} placeholder=" " ariaLabel="Filter Country"></p-columnFilter>
+                                                                        </th>
+                                                                    </tr>
+                                                                </ng-template>
+                                                                <ng-template pTemplate="body" let-details>
+                                                                    <tr>
+
+                                                                        <!-- <td>{{ details.patientCode }}</td> -->
+                                                                        <td>{{ details.codeSaisieAdmission }}</td>
+                                                                        <td>{{ details.dateCreate }}</td>
+                                                                        <td>{{ details.sums.totalSumPrestation }}</td>
+                                                                        <td>{{ details.sums.totalSumLab }}</td>
+                                                                        <td>{{ details.sums.totalSumRadio }}</td>
+                                                                        <td>{{ details.sums.totalSumPharmacie }}</td>
+                                                                        <td>{{ details.sums.montantMasterPL }}</td>
+
+                                                                        <!-- <td>{{ details.totalLigne}}</td> -->
+                                                                    </tr>
+                                                                </ng-template>
+                                                                <ng-template pTemplate="emptymessage">
+                                                                    <tr>
+                                                                        <td colspan="6">There are no order for this product yet.</td>
+                                                                    </tr>
+                                                                </ng-template>
+                                                            </p-table>
+                                                        </div>
+
+
+
+                                                    </div>
+                                                </td>
                                             </tr>
                                         </ng-template>
                                         <ng-template pTemplate="footer">

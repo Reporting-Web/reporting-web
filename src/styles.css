@@ -28,6 +28,10 @@
 html,
 body {
     height: 100%;
+    /* background-image: url('assets/images/BACKGOUND.jpg');
+ 
+    background-size: cover; 
+    background-repeat: no-repeat; */
 }
 
 body {
