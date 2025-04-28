@@ -82,7 +82,7 @@
                             <div class="material-table">
                                 <div class="card">
 
-                                    <p-table [loading]="loadingData" [paginator]="true" sortField="count" [sortOrder]="-1" sortMode="single" [rows]="20" [rows]="20" [rowsPerPageOptions]="[20, 40,80,100]" [showCurrentPageReport]="true" [first]="first" currentPageReportTemplate="{{'Page' | i18n:i18nService.currentLanguage}} {first} {{'To' | i18n:i18nService.currentLanguage}} {last} {{'of' | i18n:i18nService.currentLanguage}} {totalRecords} {{'entiers' | i18n:i18nService.currentLanguage}}"
+                                    <p-table [loading]="loadingData" [paginator]="true" sortField="patientCode" [sortOrder]="1" sortMode="single" [rows]="20" [rows]="20" [rowsPerPageOptions]="[20, 40,80,100]" [showCurrentPageReport]="true" [first]="first" currentPageReportTemplate="{{'Page' | i18n:i18nService.currentLanguage}} {first} {{'To' | i18n:i18nService.currentLanguage}} {last} {{'of' | i18n:i18nService.currentLanguage}} {totalRecords} {{'entiers' | i18n:i18nService.currentLanguage}}"
                                         #dt1 [columns]="ColumnsGroupedCoutAdmission" [value]="dataAdmission" [globalFilterFields]="['designationAr', 'designationLt']" selectionMode="single" [metaKeySelection]="false" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)"
                                         dataKey="patientCode" [expandedRowKeys]="expandedRows" [tableStyle]="{'min-width': '35rem', 'width': '100%' , 'padding': '1px 1px 1px 1px'}">
 
@@ -200,7 +200,7 @@
                                             <tr>
                                                 <td colspan="8"><strong>المجموع:</strong></td>
 
-                                                <td>{{ grandTotals.totalSumPrestation + grandTotals.totalSumLab + grandTotals.totalSumRadio + grandTotals.totalSumPharmacie }}</td>
+                                                <td>{{ ((grandTotals?.totalSumPrestation ?? 0) + (grandTotals?.totalSumLab ?? 0) + (grandTotals?.totalSumRadio ?? 0) + (grandTotals?.totalSumPharmacie ?? 0)).toFixed(3)}}</td>
                                             </tr>
                                         </ng-template>
                                         <ng-template pTemplate="emptymessage">
