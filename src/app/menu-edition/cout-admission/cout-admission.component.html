@@ -122,8 +122,7 @@
 
                                                 <td>{{ domaine.patientCode }}
 
-                                                    <!-- <p-tag *ngIf="domaine.admissions.lenght > 1" [ngStyle]="{  'margin-right': '5px'}" title="More Then Admission" icon="pi pi-exclamation-triangle" severity="warning" value="" /> -->
-                                                    <p-tag *ngIf="domaine.admissions.length > 1" [ngStyle]="{ 'margin-right': '5px' }" title="More Than One Admission" icon="pi pi-exclamation-triangle" severity="warning" value="" />
+                                                    <p-tag *ngIf="domaine.admissions.length > 1" [ngStyle]="{ 'margin-right': '5px' ,'float': 'inline-end' }" title="More Than One Admission" icon="pi pi-exclamation-triangle" severity="warning" value="" />
 
                                                 </td>
                                                 <td>{{ domaine.patientNameAr }}</td>
