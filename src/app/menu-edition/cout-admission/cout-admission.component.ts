@@ -6,8 +6,7 @@ import { I18nService } from '../../Shared/i18n/i18n.service';
 import { DatePipe } from '@angular/common';
 import { CalanderTransService } from '../../Shared/CalanderService/CalanderTransService';
 import { RapportService } from '../../Shared/service/ServiceClientRapport/rapport.service';
-import { Router } from '@angular/router';
-import { sum } from 'lodash';
+import { Router } from '@angular/router'; 
 
 @Component({
   selector: 'app-cout-admission',
@@ -189,7 +188,7 @@ export class CoutAdmissionComponent implements OnInit {
   GetColumnsGroupedCoutAdmissionTable() {
     this.ColumnsGroupedCoutAdmission = [
       { field: '', header: '', width: '1%', filter: "true" },
-      { field: 'patientCode', header: this.i18nService.getString('CodePatient') || 'CodePatient', width: '10%', filter: "true", type: "text" },
+      { field: 'patientCode', header: this.i18nService.getString('CodePatient') || 'CodePatient', width: '15%', filter: "true", type: "text" },
       { field: 'patientNameAr', header: this.i18nService.getString('NomFullAr') || 'NomFullAr', width: '18%', filter: "true", type: "text" },
       { field: 'codeAdmisson', header: this.i18nService.getString('Sifa') || 'SIFA', width: '15%', filter: "true", type: "text" },
       { field: 'dateCreate', header: this.i18nService.getString('sumPrestation') || 'sumPrestation', width: '12%', filter: "true", type: "text" },

@@ -7633,7 +7633,9 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
     font-size: .75rem;
     font-weight: 700;
     /* padding: .25rem .4rem; */
-    border-radius: 4px
+    border-radius: 4px;
+    width: 25px;
+    height: 20px;
 }
 
 .p-tag.p-tag-success {
@@ -7657,7 +7659,7 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 }
 
 .p-tag .p-tag-icon {
-    margin-right: .25rem;
+    /* margin-right: .25rem; */
     font-size: .75rem
 }
 
