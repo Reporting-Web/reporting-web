@@ -19,7 +19,8 @@
                             <div class="card radius-10 border-start border-0 border-4 border-danger">
                                 <div class="card-body" style="    white-space: break-spaces;">
                                     <div class="flex-row-start   FloatRight flex-12">
-                                        <label class="control-label flex-20" style="font-weight: 700;"> الرقم الوظيفي : </label>
+                                        <label class="control-label flex-20" style="font-weight: 700;"> الرقم الوظيفي :
+                                        </label>
 
                                         <div class="control-input flex-5-45 " style="max-width: 140px;">
                                             <input id="codeSaisie" maxlength="10" name="codeSaisie" type="text" class=" form-control-dev input-xs" required [(ngModel)]="numProfessionel">
@@ -121,7 +122,7 @@
                                                 <td>{{ domaine.patientNameAr }}</td>
                                                 <td>{{ domaine.desigCategPatient }}</td>
                                                 <td>{{ (domaine.totalSumPrestation).toFixed(3) }}</td>
-                                                <td>{{ (domaine.totalSumLab).toFixed(3)}}</td>
+                                                <td>{{ domaine.totalSumLab }}</td>
                                                 <td>{{ (domaine.totalSumRadio).toFixed(3) }}</td>
                                                 <td> {{ (domaine.totalSumPharmacie).toFixed(3)}} </td>
                                                 <td>{{ (domaine.totalLigne).toFixed(3) }}</td>
@@ -129,6 +130,7 @@
 
                                             </tr>
                                         </ng-template>
+
                                         <ng-template pTemplate="rowexpansion" let-domaine>
                                             <tr>
                                                 <td colspan="7">
@@ -169,7 +171,15 @@
                                                                         <td>{{ details.sums.totalSumPharmacie }}</td>
                                                                         <td>{{ details.sums.montantMasterPL }}</td>
 
-                                                                        <!-- <td>{{ details.totalLigne}}</td> -->
+                                                                    </tr>
+                                                                </ng-template>
+                                                                <ng-template pTemplate="footer">
+                                                                    <tr>
+                                                                        <td colspan="6"><strong>المجموع:</strong></td>
+                                                                        <td>
+                                                                            {{ calculateAdmissionSum(domaine.admissions) }}
+                                                                        </td>
+
                                                                     </tr>
                                                                 </ng-template>
                                                                 <ng-template pTemplate="emptymessage">
@@ -188,15 +198,14 @@
                                         </ng-template>
                                         <ng-template pTemplate="footer">
                                             <tr>
-                                                <td colspan="2"><strong>المجموع:</strong></td>
-                                                <!-- <td>{{ calculateTotal() }}</td>
-                                    <td>{{ calculateTotalExam() }}</td>
-                                    <td>{{ calculateTotalCout() }}</td> -->
+                                                <td colspan="8"><strong>المجموع:</strong></td>
+
+                                                <td>{{ grandTotals.totalSumPrestation + grandTotals.totalSumLab + grandTotals.totalSumRadio + grandTotals.totalSumPharmacie }}</td>
                                             </tr>
                                         </ng-template>
                                         <ng-template pTemplate="emptymessage">
                                             <tr>
-                                                <td colspan="5">لا توجد بيانات</td>
+                                                <td colspan="9">لا توجد بيانات</td>
                                             </tr>
                                         </ng-template>
                                     </p-table>

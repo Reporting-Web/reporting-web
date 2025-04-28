@@ -180,7 +180,7 @@ export class CoutAdmissionComponent implements OnInit {
 
       { field: 'sums.totalSumLab', header: this.i18nService.getString('sumLab') || 'sumLab', width: '10%', filter: "true", type: "text" },
       { field: 'sums.totalSumRadio', header: this.i18nService.getString('sumRadio') || 'sumRadio', width: '10%', filter: "true", type: "text" },
-      
+
       { field: 'sums.totalSumPharmacie', header: this.i18nService.getString('sumPharmacie') || 'sumPharmacie', width: '10%', filter: "true", type: "text" },
       { field: 'sums.totalLigne', header: this.i18nService.getString('montantTotal') || 'montantTotal', width: '10%', filter: "true", type: "text" },
     ];
@@ -218,7 +218,7 @@ export class CoutAdmissionComponent implements OnInit {
   dataAdmission: any[] = [];
   groupedData = new Array<any>();
   loadingData = false;
-  grandTotals: any = {}; // Add this line
+  grandTotals: any = {}; // Add this line 
   GetAllAdmission() {
     this.loadingData = true;
     this.rapportService.GetAllDetailsAdmissionByDateAndNumProf(this.dateDeb, this.dateFin, this.numProfessionel).subscribe((data: any) => {
@@ -226,17 +226,23 @@ export class CoutAdmissionComponent implements OnInit {
       this.IsLoading = false;
       const result = this.groupAndSumPatientData(data);
       this.dataAdmission = result.patientData;
-      this.grandTotals = result.grandTotals; // Add grandTotals to component
+      this.grandTotals = result.grandTotals; // Add grandTotals to component 
       this.loadingData = false;
     });
   }
 
-  groupAndSumPatientData(data: any[]): { patientData: any[]; grandTotals: any } {
+  totalPatient = 0;
+  groupAndSumPatientData(data: any[]): { patientData: any[]; grandTotals: any  } {
     const groupedData: { [key: string]: any } = {};
     let grandTotalPrestation = 0;
+    let granddetailsTotalPrestation = 0;
     let grandTotalLab = 0;
+    let granddetailsTotalLab = 0;
     let grandTotalRadio = 0;
+    let granddetailsTotalRadio = 0;
     let grandTotalPharmacie = 0;
+    let granddetailsTotalPharmacie = 0;
+
     data.forEach((item) => {
       const patientCode = item.patientCode;
       if (!groupedData[patientCode]) {
@@ -253,102 +259,95 @@ export class CoutAdmissionComponent implements OnInit {
         };
 
       }
-
-      // switch (item.codeFamilleFacturation) {
-      //   case 52:
-      //     groupedData[patientCode].totalSumLab += item.montantMasterPL;
-      //     grandTotalLab += item.montantMasterPL;
-      //     break;
-      //   case 58:
-      //     groupedData[patientCode].totalSumPrestation += item.montantMasterPL;
-      //     grandTotalPrestation += item.montantMasterPL;
-      //     break;
-      //   case 110:
-      //     groupedData[patientCode].totalSumPrestation += item.montantMasterPL;
-      //     grandTotalPrestation += item.montantMasterPL;
-      //     break;
-      //   case 98:
-
-      //     groupedData[patientCode].totalSumPharmacie += item.montantMasterPL;
-      //     grandTotalPharmacie += item.montantMasterPL;
-      //     break;
-      //   case 53:
-      //     groupedData[patientCode].totalSumRadio += item.montantMasterPL;
-      //     grandTotalRadio += item.montantMasterPL;
-      //     break;
-      // }
-      // groupedData[patientCode].totalLigne = groupedData[patientCode].totalSumLab +
-      //   +groupedData[patientCode].totalSumPrestation + +groupedData[patientCode].totalSumPharmacie + +groupedData[patientCode].totalSumRadio;
+      //Group and Sum Admissions by codeSaisieAdmission
+      let admission = groupedData[patientCode].admissions.find((a: any) => a.codeSaisieAdmission === item.codeSaisieAdmission);
+      if (!admission) {
+        admission = {
+          patientCode: item.patientCode,
+          codeSaisieAdmission: item.codeSaisieAdmission,
+          dateCreate: item.dateCreate,
+          codeFamilleFacturation: {}, // Use object for multiple family codes
+          montantMasterPL: 0,
+          sums: {
+            totalSumPrestation: 0,
+            totalSumLab: 0,
+            totalSumRadio: 0,
+            totalSumPharmacie: 0,
+          }
+        };
+        groupedData[patientCode].admissions.push(admission);
+      }
 
 
- 
 
-      // groupedData[patientCode].admissions.push({ 
-      //   codeSaisieAdmission: item.codeSaisieAdmission,
-      //   dateCreate: item.dateCreate,
-      //   codeFamilleFacturation: item.codeFamilleFacturation,
-      //   montantMasterPL: item.montantMasterPL 
-      // } 
-      // );  
-    
-    //Group and Sum Admissions by codeSaisieAdmission
-    let admission = groupedData[patientCode].admissions.find((a:any) => a.codeSaisieAdmission === item.codeSaisieAdmission);
-    if (!admission) {
-      admission = {
-        patientCode: item.patientCode,
-        codeSaisieAdmission: item.codeSaisieAdmission,
-        dateCreate: item.dateCreate,
-        codeFamilleFacturation: {}, // Use object for multiple family codes
-        montantMasterPL: 0,
-        sums: {
-          totalSumPrestation: 0,
-          totalSumLab: 0,
-          totalSumRadio: 0,
-          totalSumPharmacie: 0,
-        }
-      };
-      groupedData[patientCode].admissions.push(admission);
-    }
-      
-    admission.sums.montantMasterPL = (admission.sums.montantMasterPL || 0) + item.montantMasterPL
+      switch (item.codeFamilleFacturation) {
+        case 52:
+          groupedData[patientCode].totalSumLab += item.montantMasterPL;
+          grandTotalLab += item.montantMasterPL;
+          break;
+        case 58:
+          groupedData[patientCode].totalSumPrestation += item.montantMasterPL;
+          grandTotalPrestation += item.montantMasterPL;
+          break;
+        case 110:
+          groupedData[patientCode].totalSumPrestation += item.montantMasterPL;
+          grandTotalPrestation += item.montantMasterPL;
+          break;
+        case 98:
 
-    switch (item.codeFamilleFacturation) {
-      case 52:
-        admission.sums.totalSumLab += item.montantMasterPL;
-        grandTotalLab += item.montantMasterPL;
-        break;
-      case 58:
-        admission.sums.totalSumPrestation += item.montantMasterPL;
-        grandTotalPrestation += item.montantMasterPL;
-        break;
-      case 110:
-        admission.sums.totalSumPrestation += item.montantMasterPL;
-        grandTotalPrestation += item.montantMasterPL;
-        break;
-      case 98:
-        admission.sums.totalSumPharmacie += item.montantMasterPL;
-        grandTotalPharmacie += item.montantMasterPL;
-        break;
-      case 53:
-        admission.sums.totalSumRadio += item.montantMasterPL;
-        grandTotalRadio += item.montantMasterPL;
-        break;
-    }
+          groupedData[patientCode].totalSumPharmacie += item.montantMasterPL;
+          grandTotalPharmacie += item.montantMasterPL;
+          break;
+        case 53:
+          groupedData[patientCode].totalSumRadio += item.montantMasterPL;
+          grandTotalRadio += item.montantMasterPL;
+          break;
+      }
+
+
+      admission.sums.montantMasterPL = (admission.sums.montantMasterPL || 0) + item.montantMasterPL
+
+
+
+      switch (item.codeFamilleFacturation) {
+        case 52:
+          admission.sums.totalSumLab += item.montantMasterPL;
+          granddetailsTotalLab += admission.sums.totalSumLab;
+          break;
+        case 58:
+          admission.sums.totalSumPrestation += item.montantMasterPL;
+          granddetailsTotalPrestation += admission.sums.totalSumPrestation;
+          break;
+        case 110:
+          admission.sums.totalSumPrestation += item.montantMasterPL;
+          granddetailsTotalPrestation += admission.sums.totalSumPrestation;
+          break;
+        case 98:
+          admission.sums.totalSumPharmacie += item.montantMasterPL;
+          granddetailsTotalPharmacie  += admission.sums.totalSumPharmacie;
+          break;
+        case 53:
+          admission.sums.totalSumRadio += item.montantMasterPL;
+          granddetailsTotalRadio += admission.sums.totalSumRadio;
+          break;
+      }
 
       admission.codeFamilleFacturation[item.codeFamilleFacturation] = (admission.codeFamilleFacturation[item.codeFamilleFacturation] || 0) + item.montantMasterPL;
-
-    groupedData[patientCode].totalLigne = groupedData[patientCode].totalSumLab +
-      +groupedData[patientCode].totalSumPrestation + +groupedData[patientCode].totalSumPharmacie + +groupedData[patientCode].totalSumRadio;
-  });
+ 
+      groupedData[patientCode].totalLigne = groupedData[patientCode].totalSumLab +
+        +groupedData[patientCode].totalSumPrestation + +groupedData[patientCode].totalSumPharmacie + +groupedData[patientCode].totalSumRadio;
+    
+      
+      });
 
 
 
 
 
     /// details par admission : 
- 
 
- 
+
+
 
     return {
       patientData: Object.values(groupedData),
@@ -357,38 +356,21 @@ export class CoutAdmissionComponent implements OnInit {
         totalSumLab: grandTotalLab,
         totalSumRadio: grandTotalRadio,
         totalSumPharmacie: grandTotalPharmacie,
-      },
+      } 
+      
     }
   }
-
-  groupPrestationsByFamille(data: any[]): any[] {
-    const grouped: { [key: string]: any } = {};
-    data.forEach(cout => {
-      const familleCode = cout.familleCodePatient; // Correct way to access code
-      if (!grouped[familleCode]) {
-        grouped[familleCode] = {
-          familleCode,
-          patientNameAr: cout.patientNameAr,
-          codeAdmisson: cout.codeAdmisson,
-          sumLab: cout.sumLab,
-          sumPharmacie: cout.sumPharmacie,
-          sumPrestation: cout.sumPrestation,
-          sumRadio: cout.sumRadio,
-          dateCreate: cout.dateCreate,
-
-
-          patientCode: cout.patientCode,
-          familleCodePatient: cout.familleCodePatient,
-          details: []
-        };
-      }
-      grouped[familleCode].details.push(cout);
-    });
-    console.log("grouped", grouped);
-    return Object.values(grouped);
+  
+  calculateAdmissionSum(admissions: any[]): number {
+    let totalSum = 0;
+    if (admissions && admissions.length > 0) {
+      totalSum = admissions.reduce((sum, admission) => {
+          //Assumes your admission object has a sums property with nested properties for each type
+        return sum + (admission.sums.totalSumPrestation + admission.sums.totalSumLab + admission.sums.totalSumRadio + admission.sums.totalSumPharmacie);
+      }, 0);
+    }
+    return totalSum;
   }
-
-
 
   numProfessionel: any = null;
 
