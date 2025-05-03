@@ -10,6 +10,7 @@ import { ThemeOption } from 'ngx-echarts';
 import { EChartsCoreOption } from 'echarts';
 import { RapportService } from '../../Shared/service/ServiceClientRapport/rapport.service';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 
 interface GroupedCabinetData {
@@ -154,11 +155,11 @@ export class RapportOPDComponent implements OnInit {
   }
 
   dataAdmBySociete = new Array<any>();
-  countPatientPerCabAndSociete374hayet: any=0;
-  countPatientPerCabAndSociete375niyebt: any=0;
-  countPatientPerCabAndSociete379ER: any=0;
-  countPatientPerCabAndSociete376khadamet: any=0;
-  countPatientPerCabAndSocieteOther: any=0;
+  countPatientPerCabAndSociete374hayet: any = 0;
+  countPatientPerCabAndSociete375niyebt: any = 0;
+  countPatientPerCabAndSociete379ER: any = 0;
+  countPatientPerCabAndSociete376khadamet: any = 0;
+  countPatientPerCabAndSocieteOther: any = 0;
   onRowSelect(event: any) {
     this.selectedCabinet = event.data.codeSaisieCabinet;
     this.dataAdmBySociete = new Array<any>();
@@ -181,26 +182,25 @@ export class RapportOPDComponent implements OnInit {
           this.countPatientPerCabAndSociete376khadamet = dataGrouped.count;
 
 
-       
-        } else if (dataGrouped.codeSociete == 379 &&dataGrouped.codeSociete == 377  ) {
-          this.countPatientPerCabAndSociete379ER = dataGrouped.count;
-        } else if (dataGrouped.codeSociete ==99) 
-          { this.countPatientPerCabAndSocieteOther = dataGrouped.count }
 
-      
+        } else if (dataGrouped.codeSociete == 379 && dataGrouped.codeSociete == 377) {
+          this.countPatientPerCabAndSociete379ER = dataGrouped.count;
+        } else if (dataGrouped.codeSociete == 99) { this.countPatientPerCabAndSocieteOther = dataGrouped.count }
+
+
 
 
       })
-      this.createChartOptions(this.countPatientPerCabAndSociete375niyebt , this.countPatientPerCabAndSociete374hayet,
-         this.countPatientPerCabAndSociete376khadamet, this.countPatientPerCabAndSociete379ER,this.countPatientPerCabAndSocieteOther);
+      this.createChartOptions(this.countPatientPerCabAndSociete375niyebt, this.countPatientPerCabAndSociete374hayet,
+        this.countPatientPerCabAndSociete376khadamet, this.countPatientPerCabAndSociete379ER, this.countPatientPerCabAndSocieteOther);
 
 
-      
-        // { value: valeur1, name: "النيابات ", },
-        // { value: valeur2, name: "الهيئات القضائية", },
-        // { value: valeur3, name: 'الخدمات ', },
-        // { value: valeur4, name: 'الطوارئ', },
-        // { value: valeur5, name: 'آخرى', },
+
+      // { value: valeur1, name: "النيابات ", },
+      // { value: valeur2, name: "الهيئات القضائية", },
+      // { value: valeur3, name: 'الخدمات ', },
+      // { value: valeur4, name: 'الطوارئ', },
+      // { value: valeur5, name: 'آخرى', },
 
 
       // console.log("event ", event.data);
@@ -256,15 +256,14 @@ export class RapportOPDComponent implements OnInit {
           this.countPatientPerCabAndSociete376khadamet = dataGrouped.count;
 
 
-        } else if (dataGrouped.codeSociete == 379 &&dataGrouped.codeSociete == 377  ) {
+        } else if (dataGrouped.codeSociete == 379 && dataGrouped.codeSociete == 377) {
           this.countPatientPerCabAndSociete379ER = dataGrouped.count;
-        } else if (dataGrouped.codeSociete != 374 && dataGrouped.codeSociete != 375 && dataGrouped.codeSociete != 376 
-          && dataGrouped.codeSociete != 379) 
-          { this.countPatientPerCabAndSocieteOther = dataGrouped.count }
+        } else if (dataGrouped.codeSociete != 374 && dataGrouped.codeSociete != 375 && dataGrouped.codeSociete != 376
+          && dataGrouped.codeSociete != 379) { this.countPatientPerCabAndSocieteOther = dataGrouped.count }
 
       })
-      this.createChartOptions(this.countPatientPerCabAndSociete375niyebt , this.countPatientPerCabAndSociete374hayet, 
-        this.countPatientPerCabAndSociete376khadamet, this.countPatientPerCabAndSociete379ER,this.countPatientPerCabAndSocieteOther);
+      this.createChartOptions(this.countPatientPerCabAndSociete375niyebt, this.countPatientPerCabAndSociete374hayet,
+        this.countPatientPerCabAndSociete376khadamet, this.countPatientPerCabAndSociete379ER, this.countPatientPerCabAndSocieteOther);
 
 
     });
@@ -367,6 +366,10 @@ export class RapportOPDComponent implements OnInit {
 
   calculateTotal(): number {
     return this.dataAdmission.reduce((sum, item) => sum + item.count, 0);
+  }
+
+  calculateTotalCout(): number {
+    return (this.dataAdmission.reduce((sum, item) => sum + item.coutFactureTotal, 0)).toFixed(3);
   }
 
   dataDetailsAdmissionTemp: any[] = [];
@@ -550,7 +553,67 @@ export class RapportOPDComponent implements OnInit {
     };
   }
 
+  reportServer: any;
+  reportPath: any;
+  showParameters: any;
+  parameters: any;
+  language: any;
+  width: any;
+  height: any;
+  toolbar: any;
+  ssrsReportViewerOptions: any;
+  visibleModalPrint = false;
+  
+  userCreate = JSON.parse(sessionStorage.getItem("auth-user") ?? '{}')?.userName;
+  PrintReporting(dateDebut : any , datefin:any) {
+    this.reportServer = 'http://'+environment.adressIP +'/ReportServer'
+    this.reportPath = 'Reporting/editionOPD';
+    this.showParameters = "true";
+    this.parameters = {
+      "dateDeb": dateDebut,
+      "dateFin": datefin,
+      "user": this.userCreate,
+    };
+    this.language = "en-us";
+    this.width = 50;
+    this.height = 50;
+    this.toolbar = "true";
+    this.visibleModalPrint = true;
+  }
+  pdfData: any;
+  CloseModalPrint() {
+    this.visibleModalPrint = false;
+    this.pdfData == null;
+  }
 
+
+  onOpenModal(mode: string) {  
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.style.display = 'none';
+    button.setAttribute('data-toggle', 'modal');
+
+     if (mode === 'Print') {
+
+      if (this.dateDeb == null || this.dateFin == null) {
+        this.CtrlAlertify.PostionLabelNotification();
+        this.CtrlAlertify.showNotificationِCustom('PleaseSelectedAnyDate');
+      } else if (this.dateFin < this.dateDeb) {
+        this.CtrlAlertify.PostionLabelNotification();
+      this.CtrlAlertify.showNotificationِCustom('ErrorDate');
+      }
+      else {
+
+        button.setAttribute('data-target', '#ModalPrint'); 
+        this.visibleModalPrint = true;
+        this.PrintReporting(this.dateDeb, this.dateFin);
+
+      } 
+
+    }
+
+
+  }
 
 }
 

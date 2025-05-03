@@ -4,5 +4,7 @@ export const environment = {
   API_Parametrage: "/parametrage/",
   API_DASHBORD: "/dashbord/",
   API_RECEPTION: "/reception/",
+  API_PHARMACIE: "/pharmacie/",
   API_SOC: "/soc",
+  adressIP:"localhost",
 };

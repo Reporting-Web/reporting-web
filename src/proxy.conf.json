@@ -41,5 +41,12 @@
         "pathRewrite": {
             "^/api": ""
         }
+    },
+    "/pharmacie": {
+        "target": "http://localhost:5051/api",
+        "secure": false,
+        "logLevel": "debug",
+        "changeOrigin": true,
+        "timeout": 360000
     }
 }

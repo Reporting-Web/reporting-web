@@ -236,15 +236,17 @@ export class DashboardComponent implements OnInit {
       this.dashbordService.GetAllListPatientByDateAndCodeSocieteAndBloquer(this.dateDeb,this.dateFin ,375, true),
       this.dashbordService.GetAllListPatientByDateAndCodeSocieteAndBloquer(this.dateDeb,this.dateFin ,376, true),
       this.dashbordService.GetAllListPatientByDateAndCodeSocieteAndBloquer(this.dateDeb,this.dateFin ,377, true),
+      this.dashbordService.GetAllListPatientByDateAndCodeSocieteAndBloquer(this.dateDeb,this.dateFin ,379, true),
     ];
 
     forkJoin(observables).pipe(
-      map(([data9othatBloquer, dataNiyebetBloquer, data5adametBloquer, dataErBloquer]) => {
+      map(([data9othatBloquer, dataNiyebetBloquer, data5adametBloquer, dataErBloquer, dataErBloquer79]) => {
 
         this.total9othatBloquer = this.sumPatientsBloquer(data9othatBloquer);
         this.totalNiyebetBloquer = this.sumPatientsBloquer(dataNiyebetBloquer);
         this.total5adametBloquer = this.sumPatientsBloquer(data5adametBloquer);
         this.totalErBloquer = this.sumPatientsBloquer(dataErBloquer);
+        this.totalErBloquer = this.sumPatientsBloquer(dataErBloquer79);
         this.totalPatientBloquer = this.total9othatBloquer + this.totalNiyebetBloquer + this.total5adametBloquer + this.totalErBloquer;
       })
     ).subscribe({

@@ -133,6 +133,34 @@ export class RapportService {
     }
      
 
+
+
+    //// Prescription 
+
+    GetAllPrescritpion(  ){
+      return this.http.get(`${environment.API_PHARMACIE}prescription/all`  )
+    }
+
+    // GetAllPrescritpionByDate(dateDebut : any , dateFin : any ,  ){
+    //   return this.http.get(`${environment.API_PHARMACIE}prescription/findAllByDate?dateDebut=`+ dateDebut + `&dateFin=`+dateFin  )
+    // }
+ 
+    GetAllPrescritpionByDateAndChroniqueAndCodeSociete(dateDebut : any , dateFin : any , chronique : boolean , codeSociete : any ){
+      return this.http.get(`${environment.API_PHARMACIE}prescription/findAllByDateAndChroniqueAndSociete?dateDebut=`+ dateDebut + `&dateFin=`+dateFin +`&chronique=`+chronique + `&codeSociete=`+codeSociete  )
+    }
+
+    GetAllPrescritpionByDateAndChronique(dateDebut : any , dateFin : any , chronique : boolean ){
+      return this.http.get(`${environment.API_PHARMACIE}prescription/findAllByDateAndChronique?dateDebut=`+ dateDebut + `&dateFin=`+dateFin +`&chronique=`+chronique  )
+    }
+
+
+    GetAllPrescritpionByDateAndChroniqueAndCodeArticle(dateDebut : any , dateFin : any , chronique : boolean , codeArticle : any ){
+      return this.http.get(`${environment.API_PHARMACIE}prescription/findAllByDateAndChroniqueAndArticle?dateDebut=`+ dateDebut + `&dateFin=`+dateFin +`&chronique=`+chronique +`&codeArticle=`+codeArticle  )
+    }
+
+
+
+
    
 }
 

@@ -6,3 +6,11 @@
     padding-top: 10px;
     margin-left: 25px;
 }
+
+:host ::ng-deep .ModalPrintPaysage {
+    border-radius: 6px;
+    width: 1350px;
+    font-family: auto;
+    margin-top: 30px;
+    overflow-x: hidden;
+}

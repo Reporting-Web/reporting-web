@@ -7,6 +7,7 @@ import { DatePipe } from '@angular/common';
 import { CalanderTransService } from '../../Shared/CalanderService/CalanderTransService';
 import { RapportService } from '../../Shared/service/ServiceClientRapport/rapport.service';
 import { Router } from '@angular/router'; 
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-cout-admission',
@@ -373,5 +374,69 @@ export class CoutAdmissionComponent implements OnInit {
 
   numProfessionel: any = null;
 
+
+  
+    reportServer: any;
+    reportPath: any;
+    showParameters: any;
+    parameters: any;
+    language: any;
+    width: any;
+    height: any;
+    toolbar: any;
+    ssrsReportViewerOptions: any;
+    visibleModalPrint = false;
+    
+    userCreate = JSON.parse(sessionStorage.getItem("auth-user") ?? '{}')?.userName;
+    PrintReporting(dateDebut : any , datefin:any) {
+      this.reportServer = 'http://'+environment.adressIP +'/ReportServer'
+      this.reportPath = 'Reporting/CoutAdmission';
+      this.showParameters = "true";
+      this.parameters = {
+        "dateDeb": dateDebut,
+        "dateFin": datefin,
+        "user": this.userCreate,
+        "NumProf": this.numProfessionel,
+      };
+      this.language = "en-us";
+      this.width = 50;
+      this.height = 50;
+      this.toolbar = "true";
+      this.visibleModalPrint = true;
+    }
+    pdfData: any;
+    CloseModalPrint() {
+      this.visibleModalPrint = false;
+      this.pdfData == null;
+    }
+  
+  
+    onOpenModal(mode: string) {  
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.style.display = 'none';
+      button.setAttribute('data-toggle', 'modal');
+  
+       if (mode === 'Print') {
+  
+        if (this.dateDeb == null || this.dateFin == null || this.numProfessionel == null || this.numProfessionel == "") {
+          this.CtrlAlertify.PostionLabelNotification();
+          this.CtrlAlertify.showNotificationِCustom('PleaseSelectedAnyDateOrNum');
+        } else if (this.dateFin < this.dateDeb) {
+          this.CtrlAlertify.PostionLabelNotification();
+        this.CtrlAlertify.showNotificationِCustom('ErrorDate');
+        }
+        else {
+  
+          button.setAttribute('data-target', '#ModalPrint'); 
+          this.visibleModalPrint = true;
+          this.PrintReporting(this.dateDeb, this.dateFin);
+  
+        } 
+  
+      }
+  
+  
+    }
 
 }

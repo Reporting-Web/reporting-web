@@ -11,31 +11,7 @@ import { ThemeOption } from 'ngx-echarts';
 import { EChartsCoreOption } from 'echarts';
 import { Router } from '@angular/router';
 
-
-interface LabDataItem {
-  code: number;
-  codePrestation: number;
-  designationArPres: string;
-  designationLtPres: string;
-  codePatient: string;
-  codeInterv: number;
-  nomIntervAr: string;
-  codeSociete: number;
-  designationLtSoc: string;
-  designationArSoc: string;
-  dateCreate: string;
-  codeSousFamille: number;
-  designationArSousFam: string;
-  designationLtSousFam: string;
-  codeFamPres: number;
-  desigtionArFam: string;
-  designationLtFam: string;
-  codeAdmission: string;
-  coutFacture: number;
-  count: any;
-  coutFactureTotal: any;
-}
-
+ 
 @Component({
   selector: 'app-rapport-labo',
   templateUrl: './rapport-labo.component.html',

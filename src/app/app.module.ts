@@ -40,7 +40,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { ConfirmDialogModule } from 'primeng/confirmdialog'; 
 import { PanelModule } from 'primeng/panel'; 
 import { TabMenuModule } from 'primeng/tabmenu';
-
+import { ReportViewerModule } from '../../projects/reportviewer/src/public-api';
 
 /////////////////////////////////////////////
 
@@ -149,7 +149,7 @@ const languages = [
      ButtonModule, InputNumberModule, NoopAnimationsModule, // Needed for PrimeNG animations
        
     FormsModule, DialogModule, RadioButtonModule, 
-    CalendarModule, CheckboxModule, TabViewModule,MenubarModule 
+    CalendarModule, CheckboxModule, TabViewModule,MenubarModule ,ReportViewerModule
 
   ],
   // providers: [  provideHttpClient(withInterceptors([customInterceptor])),DatePipe, LoginComponent, LoadingComponent, HttpClient, MessageService,

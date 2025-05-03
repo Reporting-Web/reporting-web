@@ -58,7 +58,11 @@
                                             </div>
                                             <i class="fa-solid fa-magnifying-glass iconPDF"></i>
                                         </button>
-
+                                        <button data-backdrop="false" type="button" class="Bouton-add-new1 btn  btn-default " data-original-title="Add" data-toggle="modal" data-target="#Modal" (click)="onOpenModal('Print')">
+                                            <div class="bouton_style-2"> {{'Print' | i18n:i18nService.currentLanguage}}
+                                            </div>
+                                            <i class="fa-solid fa-print iconPDF"></i>
+                                        </button>
 
                                     </div>
 
@@ -256,3 +260,31 @@
 
     </section>
 </body>
+
+
+
+
+
+<p-dialog id="ModalPrint" header="Header" [scrollLeft]="true" [(visible)]="visibleModalPrint" data-backdrop="false" [modal]="true" styleClass="ModalPrintPaysage" [draggable]="false">
+    <p-toast key="toast1"></p-toast>
+    <ng-template pTemplate="header">
+        <div class="FloatRight">
+            <h2 class="text-default headerForm"> طباعة </h2>
+        </div>
+        <div class="FloatLeft">
+            <button class="btn btn-default cancel-add-ModalSmall" :closable="true" data-dismiss="modal" (click)="CloseModalPrint()">
+                <i class="fa-solid fa-circle-xmark IconBtnModal" style="color: #9e0000;font-size: 16px;"></i>
+                 Close   
+            </button>
+        </div>
+
+
+    </ng-template>
+    <div class="modal-body">
+        <ssrs-reportviewer [reportserver]="reportServer" [reporturl]="reportPath" [showparameters]="showParameters" [parameters]="parameters" [language]="language" [width]="width" [height]="height" [toolbar]="toolbar"></ssrs-reportviewer>
+
+
+
+    </div>
+
+</p-dialog>
