@@ -269,7 +269,7 @@ export class RapportPharmacieChroniqueComponent implements OnInit {
 
 
       
-    this.countPatient += +this.countPatientPerCabAndSociete375niyebt + +this.countPatientPerCabAndSociete374hayet+
+    this.countPatient = +this.countPatientPerCabAndSociete375niyebt + +this.countPatientPerCabAndSociete374hayet+
       +this.countPatientPerCabAndSociete376khadamet + +this.countPatientPerCabAndSociete379ER + +this.countPatientPerCabAndSocieteOther;
     this.coutTotal= (this.dataPharmacieChronique.reduce((sum, item) => sum + item.coutFactureTotal, 0)).toFixed(3);
 
@@ -308,27 +308,29 @@ export class RapportPharmacieChroniqueComponent implements OnInit {
   }
 
 
-
   aggregateDataParSociete(data: any[]): any[] {
-    return data.reduce((accumulator: any[], currentValue: any) => {
-      // const existingIndex = accumulator.findIndex(item => item.designationArSoc === currentValue.designationArSoc);
-      const existingIndex = accumulator.findIndex(item => item.codeSaisieAdmission === currentValue.codeSaisieAdmission);
+    const societyCounts: { [key: number]: Set<number> } = {}; // Use a map to store unique patient IDs per society
 
-      if (existingIndex !== -1) {
-        accumulator[existingIndex].count++;
-      } else {
-        accumulator.push({
-          designationArSoc: currentValue.designationArSoc,
-          designationLtSoc: currentValue.designationLtSoc,
-          codeSociete: currentValue.codeSociete, //You might want to keep one, choose wisely
-          count: 1,
-          // Add other fields if needed from currentValue
-        });
+    data.forEach(currentValue => {
+      const codeSociete = currentValue.codeSociete;
+      const codeSaisieAdmission = currentValue.codeSaisieAdmission;
+
+      if (!societyCounts[codeSociete]) {
+        societyCounts[codeSociete] = new Set();
       }
-      return accumulator;
-    }, []);
-  }
 
+      if (!societyCounts[codeSociete].has(codeSaisieAdmission)) {
+        societyCounts[codeSociete].add(codeSaisieAdmission);
+      }
+    });
+
+
+    return Object.entries(societyCounts).map(([codeSociete, patientIds]) => ({
+      codeSociete: parseInt(codeSociete, 10), //Parse to number
+      count: patientIds.size,
+    }));
+  }
+ 
   countPatient = 0 ;
 
   coutTotal=0;
