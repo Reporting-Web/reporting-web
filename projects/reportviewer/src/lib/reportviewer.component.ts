@@ -1,15 +1,12 @@
-import { Component, OnChanges, Input, Output, EventEmitter, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { Component, OnChanges, Input, Output, EventEmitter, SimpleChanges, ViewEncapsulation  } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { I18nService } from '../../../../src/app/Shared/i18n/i18n.service';
 
 @Component({
   selector: 'ssrs-reportviewer',
   template: `
-  <div class="iframe-container"  >
- 
+  <div class="iframe-container">
     <iframe [src]="source" scrolling="no"></iframe>
   </div>
- 
   `,
   styles: [`
   .iframe-container {
@@ -31,9 +28,6 @@ import { I18nService } from '../../../../src/app/Shared/i18n/i18n.service';
   .iframe-container-4x3 {
     padding-top: 75%;
   }
-
-  
-
   `],
   encapsulation: ViewEncapsulation.ShadowDom
 })
@@ -57,21 +51,19 @@ export class ReportViewerComponent implements OnChanges {
   toolbar?: string = "true";
 
   @Output('error') onError = new EventEmitter<any>();
-  constructor(private sanitizer: DomSanitizer, public i18nService: I18nService) { }
+  constructor(private sanitizer: DomSanitizer) { }
 
-  
+
   source!: SafeResourceUrl;
 
-  ngOnChanges(changes: SimpleChanges) { 
-    if (!this.reporturl) {
-      this.onError.emit("Src cannot be null"); 
-      // return;
+  ngOnChanges(changes: SimpleChanges) {
+    if(!this.reporturl){
+      this.onError.emit("Src cannot be null");
     }
 
     if ('reporturl' in changes) {
       this.source = this.sanitizer
-        .bypassSecurityTrustResourceUrl(this.buildReportUrl());
-   
+      .bypassSecurityTrustResourceUrl(this.buildReportUrl());
     }
   }
 
@@ -99,16 +91,17 @@ export class ReportViewerComponent implements OnChanges {
     return parameterString;
   }
 
-  public buildReportUrl(): string { 
+  public buildReportUrl() : string {
+
     if (!this.reporturl) {
       return "";
     }
-    var parameters = this.buildParameterString(); 
+    var parameters = this.buildParameterString();
+ 
     return this.reportserver + '?/'
       + this.reporturl + '&rs:Embed=true'
       + '&rc:Parameters=' + this.showparameters
       + parameters
-      + '&rs:ParameterLanguage=' + this.language + "&rc:Toolbar=" + this.toolbar;
+      + '&rs:ParameterLanguage=' + this.language + "&rc:Toolbar=" + this.toolbar; 
   }
-
 }
