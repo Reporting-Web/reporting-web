@@ -566,6 +566,7 @@ export class RapportOPDComponent implements OnInit {
   
   userCreate = JSON.parse(sessionStorage.getItem("auth-user") ?? '{}')?.userName;
   PrintReporting(dateDebut : any , datefin:any) {
+    this.IsLoading=true;
     this.reportServer = 'http://'+environment.adressIP +'/ReportServer'
     this.reportPath = 'Reporting/editionOPD';
     this.showParameters = "true";
@@ -578,6 +579,8 @@ export class RapportOPDComponent implements OnInit {
     this.width = 50;
     this.height = 50;
     this.toolbar = "true";
+    this.IsLoading=false;
+
     this.visibleModalPrint = true;
   }
   pdfData: any;

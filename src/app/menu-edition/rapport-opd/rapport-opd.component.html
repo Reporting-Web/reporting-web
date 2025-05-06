@@ -202,7 +202,9 @@
 
 
     </ng-template>
-    <div class="modal-body">
+    <div class="modal-body" [ngClass]="{ 'disabled': IsLoading }">
+        <app-loading [IsLoading]="IsLoading">
+        </app-loading>
         <ssrs-reportviewer [reportserver]="reportServer" [reporturl]="reportPath" [showparameters]="showParameters" [parameters]="parameters" [language]="language" [width]="width" [height]="height" [toolbar]="toolbar"></ssrs-reportviewer>
 
 

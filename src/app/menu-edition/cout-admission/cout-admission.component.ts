@@ -6,7 +6,7 @@ import { I18nService } from '../../Shared/i18n/i18n.service';
 import { DatePipe } from '@angular/common';
 import { CalanderTransService } from '../../Shared/CalanderService/CalanderTransService';
 import { RapportService } from '../../Shared/service/ServiceClientRapport/rapport.service';
-import { Router } from '@angular/router'; 
+import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 
 @Component({
@@ -34,7 +34,8 @@ export class CoutAdmissionComponent implements OnInit {
   selectedCabinet!: any;
   select!: any;
 
-
+  dateDebPrint: any = null;;
+  dateFinPrint: any = null;
 
   ngOnInit(): void {
     this.GetColumns();
@@ -76,6 +77,8 @@ export class CoutAdmissionComponent implements OnInit {
   }
 
   tryParseAndSetDateNew(inputValue: string) {
+    // this.dateDeb=null;
+
     let parts = inputValue.split('/');
     if (parts.length === 3) {
       let day = parseInt(parts[0], 10);
@@ -101,6 +104,8 @@ export class CoutAdmissionComponent implements OnInit {
   }
 
   tryParseAndSetDateNewFin(inputValue: string) {
+    // this.dateFin=null;
+
     let parts = inputValue.split('/');
     if (parts.length === 3) {
       let day = parseInt(parts[0], 10);
@@ -116,18 +121,22 @@ export class CoutAdmissionComponent implements OnInit {
   }
   transformDateFormatNewFin() {
     if (this.dateFin) {
+      // this.dateFin=null;
       this.DateTempNewFin = this.datePipe.transform(this.dateFin, 'yyyy-MM-dd')!;
     }
   };
 
 
   transformDateFormat() {
+    // this.dateDeb =null;
+
     this.dateDeb = this.datePipe.transform(this.dateDeb, "yyyy-MM-dd")
   };
 
 
 
   transformDateFormatFin() {
+    // this.dateFin =null;
     this.dateFin = this.datePipe.transform(this.dateFin, "yyyy-MM-dd")
   };
 
@@ -232,7 +241,7 @@ export class CoutAdmissionComponent implements OnInit {
   }
 
   totalPatient = 0;
-  groupAndSumPatientData(data: any[]): { patientData: any[]; grandTotals: any  } {
+  groupAndSumPatientData(data: any[]): { patientData: any[]; grandTotals: any } {
     const groupedData: { [key: string]: any } = {};
     let grandTotalPrestation = 0;
     let granddetailsTotalPrestation = 0;
@@ -324,7 +333,7 @@ export class CoutAdmissionComponent implements OnInit {
           break;
         case 98:
           admission.sums.totalSumPharmacie += item.montantMasterPL;
-          granddetailsTotalPharmacie  += admission.sums.totalSumPharmacie;
+          granddetailsTotalPharmacie += admission.sums.totalSumPharmacie;
           break;
         case 53:
           admission.sums.totalSumRadio += item.montantMasterPL;
@@ -333,12 +342,12 @@ export class CoutAdmissionComponent implements OnInit {
       }
 
       admission.codeFamilleFacturation[item.codeFamilleFacturation] = (admission.codeFamilleFacturation[item.codeFamilleFacturation] || 0) + item.montantMasterPL;
- 
+
       groupedData[patientCode].totalLigne = groupedData[patientCode].totalSumLab +
         +groupedData[patientCode].totalSumPrestation + +groupedData[patientCode].totalSumPharmacie + +groupedData[patientCode].totalSumRadio;
-    
-      
-      });
+
+
+    });
 
 
 
@@ -356,16 +365,16 @@ export class CoutAdmissionComponent implements OnInit {
         totalSumLab: grandTotalLab,
         totalSumRadio: grandTotalRadio,
         totalSumPharmacie: grandTotalPharmacie,
-      } 
-      
+      }
+
     }
   }
-  
+
   calculateAdmissionSum(admissions: any[]): number {
     let totalSum = 0;
     if (admissions && admissions.length > 0) {
       totalSum = admissions.reduce((sum, admission) => {
-          //Assumes your admission object has a sums property with nested properties for each type
+        //Assumes your admission object has a sums property with nested properties for each type
         return sum + (admission.sums.totalSumPrestation + admission.sums.totalSumLab + admission.sums.totalSumRadio + admission.sums.totalSumPharmacie);
       }, 0);
     }
@@ -375,68 +384,70 @@ export class CoutAdmissionComponent implements OnInit {
   numProfessionel: any = null;
 
 
-  
-    reportServer: any;
-    reportPath: any;
-    showParameters: any;
-    parameters: any;
-    language: any;
-    width: any;
-    height: any;
-    toolbar: any;
-    ssrsReportViewerOptions: any;
-    visibleModalPrint = false;
-    
-    userCreate = JSON.parse(sessionStorage.getItem("auth-user") ?? '{}')?.userName;
-    PrintReporting(dateDebut : any , datefin:any) {
-      this.reportServer = 'http://'+environment.adressIP +'/ReportServer'
-      this.reportPath = 'Reporting/CoutAdmission';
-      this.showParameters = "true";
-      this.parameters = {
-        "dateDeb": dateDebut,
-        "dateFin": datefin,
-        "user": this.userCreate,
-        "NumProf": this.numProfessionel,
-      };
-      this.language = "en-us";
-      this.width = 50;
-      this.height = 50;
-      this.toolbar = "true";
-      this.visibleModalPrint = true;
-    }
-    pdfData: any;
-    CloseModalPrint() {
-      this.visibleModalPrint = false;
-      this.pdfData == null;
-    }
-  
-  
-    onOpenModal(mode: string) {  
-      const button = document.createElement('button');
-      button.type = 'button';
-      button.style.display = 'none';
-      button.setAttribute('data-toggle', 'modal');
-  
-       if (mode === 'Print') {
-  
-        if (this.dateDeb == null || this.dateFin == null || this.numProfessionel == null || this.numProfessionel == "") {
-          this.CtrlAlertify.PostionLabelNotification();
-          this.CtrlAlertify.showNotificationِCustom('PleaseSelectedAnyDateOrNum');
-        } else if (this.dateFin < this.dateDeb) {
-          this.CtrlAlertify.PostionLabelNotification();
+
+  reportServer: any;
+  reportPath: any;
+  showParameters: any;
+  parameters: any;
+  language: any;
+  width: any;
+  height: any;
+  toolbar: any;
+  ssrsReportViewerOptions: any;
+  visibleModalPrint = false;
+
+  userCreate = JSON.parse(sessionStorage.getItem("auth-user") ?? '{}')?.userName;
+  PrintReporting(dateDebut: any, datefin: any) {
+    this.reportServer = 'http://' + environment.adressIP + '/ReportServer'
+    this.reportPath = 'Reporting/CoutAdmission';
+    this.showParameters = "true";
+    this.parameters = {
+      "dateDeb": dateDebut,
+      "dateFin": datefin,
+      "user": this.userCreate,
+      "NumProf": this.numProfessionel,
+    };
+    this.language = "en-us";
+    this.width = 50;
+    this.height = 50;
+    this.toolbar = "true";
+    this.visibleModalPrint = true;
+  }
+  pdfData: any;
+  CloseModalPrint() {
+    this.visibleModalPrint = false;
+    this.pdfData == null;
+    this.dateDebPrint = null;
+    this.dateFinPrint = null;
+    // this.numProfessionel = null;
+  }
+
+
+  onOpenModal(mode: string) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.style.display = 'none';
+    button.setAttribute('data-toggle', 'modal');
+
+    if (mode === 'Print') {
+      if (this.dateDeb == null || this.dateFin == null || this.numProfessionel == null || this.numProfessionel == "") {
+        this.CtrlAlertify.PostionLabelNotification();
+        this.CtrlAlertify.showNotificationِCustom('PleaseSelectedAnyDateOrNum');
+      } else if (this.dateFin < this.dateDeb) {
+        this.CtrlAlertify.PostionLabelNotification();
         this.CtrlAlertify.showNotificationِCustom('ErrorDate');
-        }
-        else {
-  
-          button.setAttribute('data-target', '#ModalPrint'); 
-          this.visibleModalPrint = true;
-          this.PrintReporting(this.dateDeb, this.dateFin);
-  
-        } 
-  
       }
-  
-  
+      else {
+        button.setAttribute('data-target', '#ModalPrint');
+        this.visibleModalPrint = true;
+        this.dateDebPrint = this.dateDeb;
+        this.dateFinPrint = this.dateFin;
+        this.PrintReporting(this.dateDebPrint, this.dateFinPrint);
+      }
+
     }
+
+
+  }
 
 }

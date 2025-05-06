@@ -4,7 +4,7 @@ import { ReportViewerComponent } from './reportviewer.component';
 
 
 @NgModule({
-  declarations: [ReportViewerComponent],
+  declarations: [ReportViewerComponent,],
   imports: [
   ],
   exports: [ReportViewerComponent]
