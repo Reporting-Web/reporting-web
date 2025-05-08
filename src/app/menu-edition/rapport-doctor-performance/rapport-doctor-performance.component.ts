@@ -447,13 +447,12 @@ export class RapportDoctorPerformanceComponent implements OnInit {
       { field: 'codeAdmisson', header: this.i18nService.getString('codeAdmission') || 'codeAdmission', width: '3%', filter: "true", type: "text" },
       { field: 'nomCompeleteAr', header: this.i18nService.getString('NomLt') || 'NomLt', width: '12%', filter: "true", type: "text" },
       { field: 'dateCreate', header: this.i18nService.getString('DateArriver') || 'DateArriver', width: '9%', filter: "true", type: "text" },
-      { field: 'sums.nbreReqPresLabo', header: this.i18nService.getString('nbreReqLabo') || 'nbreReqLabo', width: '9%', filter: "true", type: "text" },
+      { field: 'diganosis', header: this.i18nService.getString('diganosis') || 'diganosis', width: '9%', filter: "true", type: "text" },
 
-      { field: 'sums.nbreReqPresRadio', header: this.i18nService.getString('nbreReqRadio') || 'nbreReqRadio', width: '8%', filter: "true", type: "text" },
-      { field: 'sums.nbrePrescriptionChronique', header: this.i18nService.getString('nbreReqPrescriptionChronique') || 'nbreReqPrescriptionChronique', width: '12%', filter: "true", type: "text" },
+      { field: 'cheifComplaint', header: this.i18nService.getString('cheifComplaint') || 'cheifComplaint', width: '8%', filter: "true", type: "text" },
+      { field: 'prestations', header: this.i18nService.getString('prestations') || 'prestations', width: '12%', filter: "true", type: "text" },
 
-      { field: 'sums.nbrePrescriptionNormal', header: this.i18nService.getString('nbreReqPrescriptionNormal') || 'nbreReqPrescriptionNormal', width: '12%', filter: "true", type: "text" },
-     ];
+      ];
   }
   ColumnsGroupedCoutAdmissionDmi!: any[];
   
@@ -494,43 +493,27 @@ export class RapportDoctorPerformanceComponent implements OnInit {
           nomIntervAr: item.nomIntervAr,
           nomInterv: item.nomInterv,
 
-          dmiAdmissions: [],
-          // admissions: [],
-
-          // codePatient: item.codePatient,
-          // codeSaisieAdmission: item.codeSaisieAdmission,
-          // nomCompeleteAr: item.nomCompeleteAr,
+          dmiAdmissions: [], 
         };
       }
  
-      
-       // Find or create the admission
+       
      let admission = groupedDataDMI[intervenantCode].dmiAdmissions.find(
       (a: any) => a.codeSaisieAdmission === item.codeSaisieAdmission
     );
-
-    // if (!admission) {
+ 
       admission = {
         codePatient: item.codePatient,
         codeSaisieAdmission: item.codeSaisieAdmission,
         nomCompeleteAr: item.nomCompeleteAr,
         dateCreate: item.dateCreate,
-        
-        // sums: {
-        //   nbreReqPresLabo: item.nbreReqPresLabo || 0,
-        //   nbreReqPresRadio: item.nbreReqPresRadio || 0,
-        //   nbrePrescriptionChronique: item.nbrePrescriptionChronique || 0,
-        //   nbrePrescriptionNormal: item.nbrePrescriptionNormal || 0,
-        // },
+        diganosis: item.diganosis,
+        cheifComplaint: item.cheifComplaint,
+        prestations: item.prestations,
+ 
       };
       groupedDataDMI[intervenantCode].dmiAdmissions.push(admission);
-    // } else {
-    //   // Update existing admission sums (this was the main error)
-    //   admission.sums.nbreReqPresLabo = (admission.sums.nbreReqPresLabo || 0) + (item.nbreReqPresLabo || 0);
-    //   admission.sums.nbreReqPresRadio = (admission.sums.nbreReqPresRadio || 0) + (item.nbreReqPresRadio || 0);
-    //   admission.sums.nbrePrescriptionChronique = (admission.sums.nbrePrescriptionChronique || 0) + (item.nbrePrescriptionChronique || 0);
-    //   admission.sums.nbrePrescriptionNormal = (admission.sums.nbrePrescriptionNormal || 0) + (item.nbrePrescriptionNormal || 0);
-    // }
+   
 
 
     
@@ -538,6 +521,9 @@ export class RapportDoctorPerformanceComponent implements OnInit {
 
   return Object.values(groupedDataDMI);
   }
+
+  expandedRowsDMI: any = {};
+
 
 }
 

@@ -251,8 +251,8 @@
                                         <div class="card">
 
                                             <p-table [loading]="loadingData" [paginator]="true" sortField="nomIntervAr" [sortOrder]="1" sortMode="single" [rows]="20" [rows]="20" [rowsPerPageOptions]="[20, 40,80,100]" [showCurrentPageReport]="true" [first]="first" currentPageReportTemplate="{{'Page' | i18n:i18nService.currentLanguage}} {first} {{'To' | i18n:i18nService.currentLanguage}} {last} {{'of' | i18n:i18nService.currentLanguage}} {totalRecords} {{'entiers' | i18n:i18nService.currentLanguage}}"
-                                                #dt1 [columns]="ColumnsGroupedCoutAdmission" [value]="dataDoctorPerformanceDMI" [globalFilterFields]="['designationAr', 'designationLt']" selectionMode="single" [metaKeySelection]="false" (onRowSelect)="onRowSelect($event)"
-                                                (onRowUnselect)="onRowUnselect($event)" dataKey="nomIntervAr" [expandedRowKeys]="expandedRows" [tableStyle]="{'min-width': '35rem', 'width': '100%' , 'padding': '1px 1px 1px 1px'}">
+                                                #dt1 [columns]="ColumnsGroupedCoutAdmissionDmi" [value]="dataDoctorPerformanceDMI" [globalFilterFields]="['designationAr', 'designationLt']" selectionMode="single" [metaKeySelection]="false" (onRowSelect)="onRowSelect($event)"
+                                                (onRowUnselect)="onRowUnselect($event)" dataKey="nomIntervAr" [expandedRowKeys]="expandedRowsDMI" [tableStyle]="{'min-width': '35rem', 'width': '100%' , 'padding': '1px 1px 1px 1px'}">
 
                                                 <ng-template pTemplate="caption">
                                                     <div class="flex align-items-center justify-content-between">
@@ -299,7 +299,7 @@
                                                             <div class="p-3">
 
                                                                 <div class="table3-container">
-                                                                    <p-table sortField="dateCreate" [sortOrder]="1" sortMode="single" [value]="domaine.admissions" [columns]="ColumnsDetAdmission" dataKey="codeSaisieAdmission" selectionMode="single" [metaKeySelection]="false">
+                                                                    <p-table sortField="dateCreate" [sortOrder]="1" sortMode="single" [value]="domaine.dmiAdmissions" [columns]="ColumnsDetAdmissionDmi" dataKey="codeSaisieAdmission" selectionMode="single" [metaKeySelection]="false">
                                                                         <ng-template pTemplate="colgroup" let-ColumnsPrestation>
                                                                             <colgroup>
                                                                                 <col *ngFor="let col of ColumnsPrestation" [style.width]="col.width">
@@ -329,26 +329,14 @@
                                                                                 <td>{{ details.codeSaisieAdmission }}</td>
                                                                                 <td>{{ details.nomCompeleteAr }}</td>
                                                                                 <td>{{ details.dateCreate }}</td>
-                                                                                <td>{{ details.nbreReqPresLabo }}</td>
-                                                                                <td>{{ details.sums.nbreReqPresRadio }}</td>
-                                                                                <td>{{ details.sums.nbrePrescriptionChronique }}</td>
-                                                                                <td>{{ details.sums.nbrePrescriptionNormal }}</td>
+                                                                                <td>{{ details.diganosis }}</td>
+                                                                                <td>{{ details.cheifComplaint }}</td>
+                                                                                <td>{{ details.prestations }}</td>
 
 
                                                                             </tr>
                                                                         </ng-template>
-                                                                        <!-- <ng-template pTemplate="footer">
-                                                                            <tr>
-                                                                                <td colspan="3"><strong>المجموع:</strong></td>
-                                                                                <td>
-                                                                                    <td> {{ calculateSumPresLabDetails()}}</td>
-                                                                                    <td> {{ calculateSumPresRadioDetails()}}</td>
-                                                                                    <td> {{ calculateSumPrescriptionChroniqueDetails()}}</td>
-                                                                                    <td> {{ calculateSumPrescriptionNormalDetails()}} </td>
-        
-        
-                                                                            </tr>
-                                                                        </ng-template> -->
+
                                                                         <ng-template pTemplate="emptymessage">
                                                                             <tr>
                                                                                 <td colspan="6">There are no order for this product yet.</td>
@@ -363,7 +351,7 @@
                                                         </td>
                                                     </tr>
                                                 </ng-template>
-                                                <ng-template pTemplate="footer">
+                                                <!-- <ng-template pTemplate="footer">
                                                     <tr>
                                                         <td colspan="3"><strong>المجموع:</strong></td>
                                                         <td> {{ calculateSumPatient()}}</td>
@@ -373,7 +361,7 @@
                                                         <td> {{ calculateSumPrescriptionChronique()}}</td>
                                                         <td> {{ calculateSumPrescriptionNormal()}} </td>
                                                     </tr>
-                                                </ng-template>
+                                                </ng-template> -->
                                                 <ng-template pTemplate="emptymessage">
                                                     <tr>
                                                         <td colspan="9">لا توجد بيانات</td>

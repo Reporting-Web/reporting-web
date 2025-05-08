@@ -216,6 +216,9 @@ const arI18n = {
  'nbreReqRadio':'عدد الأشعة',
  'nbreReqPrescriptionChronique':'عدد  الوصفات المزمنة',
  'nbreReqPrescriptionNormal':'عدد  الوصفات العادية',
+ 'diganosis':'التشخيص',
+ 'cheifComplaint':'الشكوى الرئيسية',
+ 'prestations':'الخدمات',
 };
 
 
