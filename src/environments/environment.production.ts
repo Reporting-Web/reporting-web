@@ -8,7 +8,8 @@ export const environment = {
     API_DASHBORD: 'http://' + hostName + ':5051/api/dashbord/',
     API_RECEPTION: 'http://' + hostName + ':5051/api/reception/',
     API_SOC: 'http://' + hostName + ':5051/api/soc',
-    API_PHARMACIE: 'http://' + hostName + ':5051/api/pharamcie/',
+    API_PHARMACIE: 'http://' + hostName + ':5051/api/pharmacie/',
+    API_DOCTOR: 'http://' + hostName + ':5051/api/doctor/',
     adressIP: Server,
 
 };

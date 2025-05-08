@@ -111,7 +111,7 @@
                                 <div class="card">
                                     <p-table [paginator]="true" [rows]="20" [rowsPerPageOptions]="[20, 40,80,100]" [showCurrentPageReport]="true" [first]="first" currentPageReportTemplate="{{'Page' | i18n:i18nService.currentLanguage}} {first} {{'To' | i18n:i18nService.currentLanguage}} {last} {{'of' | i18n:i18nService.currentLanguage}} {totalRecords} {{'entiers' | i18n:i18nService.currentLanguage}}"
                                         #dt1 [columns]="cols" sortField="count" [sortOrder]="-1" sortMode="single" [value]="dataPharmacieChronique" [globalFilterFields]="['designationAr', 'designationLt']" selectionMode="single" [metaKeySelection]="false"
-                                        [(selection)]="selectedAdmission" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)" dataKey="codeSaisieCabinet" [tableStyle]="{'min-width': '25rem', 'width': '100%' , 'padding': '1px 1px 1px 1px'}">
+                                        [(selection)]="selectedAdmission" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)" dataKey="codeSaisieAdmission" [tableStyle]="{'min-width': '25rem', 'width': '100%' , 'padding': '1px 1px 1px 1px'}">
 
                                         <ng-template pTemplate="colgroup" let-col>
                                             <colgroup>

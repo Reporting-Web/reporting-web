@@ -1,1 +1,434 @@
-<p>rapport-doctor-performance works!</p>
+<body class="card" [ngClass]="{ 'disabled': IsLoading }">
+    <app-loading [IsLoading]="IsLoading">
+    </app-loading>
+    <header>
+
+        <label class="header_name">{{'DoctorPerformance' | i18n:i18nService.currentLanguage}} </label>
+        <button class="close-button btn btn-default" (click)="closeThisComponent()">X</button>
+    </header>
+    <section id="main-container">
+
+        <div class="row">
+
+            <div class="col-12 col-lg-12 d-flex">
+                <div class="card radius-10 w-100">
+
+                    <div class="card-body">
+
+                        <div class="col">
+                            <div class="card radius-10 border-start border-0 border-4 border-danger">
+                                <div class="card-body" style="    white-space: break-spaces;">
+                                    <div class="flex-row-start   FloatRight flex-12">
+
+
+                                        <label class="control-label flex-20" style="font-weight: 700;"> الفترة </label>
+                                        <label class="control-label flex-20" style="font-weight: 700;"> من </label>
+
+                                        <div class="dop control-input " style="display: flex;">
+
+                                            <p-calendar (keyup.enter)="transformDateFormat()" (onInput)="formatInputNew($event)" (onBlur)="transformDateFormat()" (onChange)="transformDateFormat()" (onSelect)="transformDateFormat()" [(ngModel)]="dateDeb" [ngStyle]="{'width':'100%' , 'margin-right': '15px'}"
+                                                [showButtonBar]="true" appendTo="body" [iconDisplay]="'input'" #calendar dateFormat="yy-mm-dd" [readonlyInput]="false" [showIcon]="true" inputId="icondisplay"></p-calendar>
+
+
+                                        </div>
+
+                                        <label class="control-label flex-20" style="font-weight: 700;"> إلى </label>
+
+                                        <div class="dop control-input " style="display: flex;">
+
+                                            <p-calendar (keyup.enter)="transformDateFormatFin()" (onInput)="formatInputNewFin($event)" (onBlur)="transformDateFormatFin()" (onChange)="transformDateFormatFin()" (onSelect)="transformDateFormatFin()" [(ngModel)]="dateFin" [ngStyle]="{'width':'100%' , 'margin-right': '15px'}"
+                                                [showButtonBar]="true" appendTo="body" [iconDisplay]="'input'" #calendar dateFormat="yy-mm-dd" [readonlyInput]="false" [showIcon]="true" inputId="icondisplay"></p-calendar>
+
+                                        </div>
+
+
+                                    </div>
+
+                                    <div class="flex-row-start flex-8 FloatLeft" style="margin-top: 10px;">
+
+
+                                        <button data-backdrop="false" type="button" class="Bouton-add-new1 btn  btn-default " data-original-title="Add" data-toggle="modal" data-target="#Modal" (click)="GetData()">
+                                            <div class="bouton_style-2"> {{'Voir' | i18n:i18nService.currentLanguage}}
+                                            </div>
+                                            <i class="fa-solid fa-magnifying-glass iconPDF"></i>
+                                        </button>
+                                        <!-- <button data-backdrop="false" type="button"
+                                            class="Bouton-add-new1 btn  btn-default " data-original-title="Add"
+                                            data-toggle="modal" data-target="#Modal" (click)="onOpenModal('Print')">
+                                            <div class="bouton_style-2"> {{'Print' | i18n:i18nService.currentLanguage}}
+                                            </div>
+                                            <i class="fa-solid fa-print iconPDF"></i>
+                                        </button> -->
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="col-12 col-lg-12 d-flex">
+                <div class="card radius-10 w-100">
+
+                    <div class="card-body">
+
+                        <section id="main-container">
+                            <div class="material-table">
+                                <div class="card">
+
+                                    <p-table [loading]="loadingData" [paginator]="true" sortField="nomIntervAr" [sortOrder]="1" sortMode="single" [rows]="20" [rows]="20" [rowsPerPageOptions]="[20, 40,80,100]" [showCurrentPageReport]="true" [first]="first" currentPageReportTemplate="{{'Page' | i18n:i18nService.currentLanguage}} {first} {{'To' | i18n:i18nService.currentLanguage}} {last} {{'of' | i18n:i18nService.currentLanguage}} {totalRecords} {{'entiers' | i18n:i18nService.currentLanguage}}"
+                                        #dt1 [columns]="ColumnsGroupedCoutAdmission" [value]="dataDoctorPerformance" [globalFilterFields]="['designationAr', 'designationLt']" selectionMode="single" [metaKeySelection]="false" (onRowSelect)="onRowSelect($event)"
+                                        (onRowUnselect)="onRowUnselect($event)" dataKey="nomIntervAr" [expandedRowKeys]="expandedRows" [tableStyle]="{'min-width': '35rem', 'width': '100%' , 'padding': '1px 1px 1px 1px'}">
+
+                                        <ng-template pTemplate="caption">
+                                            <div class="flex align-items-center justify-content-between">
+                                                أداء الأطباء
+                                            </div>
+                                        </ng-template>
+
+                                        <ng-template pTemplate="colgroup" let-col>
+                                            <colgroup>
+                                                <col *ngFor="let col of col" [style.width]="col.width">
+                                            </colgroup>
+                                        </ng-template>
+                                        <ng-template pTemplate="header" let-columns>
+                                            <tr>
+                                                <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                                    {{ col.header }}
+                                                    <p-sortIcon [field]="col.field" />
+                                                </th>
+                                            </tr>
+
+                                            <tr class="filter-row">
+                                                <th *ngFor="let col of columns  ">
+                                                    <p-columnFilter [hideOnClear]="true" [showMenu]="false" [showAddButton]="false" [showOperator]="false" [matchMode]="'contains'" [showMatchModes]="false" type={{col.type}} field={{col.field}} placeholder=" " ariaLabel="Filter Country"></p-columnFilter>
+                                                </th>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="body" let-domaine let-expanded="expanded">
+                                            <tr [pSelectableRow]="domaine">
+                                                <td>
+                                                    <p-button type="button" pRipple [pRowToggler]="domaine" [text]="true" [rounded]="true" [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-left'" />
+
+
+                                                </td>
+
+                                                <!-- <td>{{ domaine.patientCode }}
+
+                                                    <p-tag *ngIf="domaine.admissions.length > 1" [ngStyle]="{ 'margin-right': '5px' ,'float': 'inline-end' }" title="More Than One Admission" icon="pi pi-exclamation-triangle" severity="warning" value="" />
+
+                                                </td> -->
+                                                <td>{{ domaine.nomIntervAr }}</td>
+                                                <td>{{ domaine.nomInterv }}</td>
+                                                <td>{{ domaine.countPatientMedecin }}</td>
+                                                <td>{{ domaine.nbreReqPresLabo }}</td>
+                                                <td>{{ domaine.nbreReqPresRadio }}</td>
+                                                <td>{{ domaine.nbrePrescriptionChronique }}</td>
+                                                <td> {{ domaine.nbrePrescriptionNormal }} </td>
+
+
+                                            </tr>
+                                        </ng-template>
+
+                                        <ng-template pTemplate="rowexpansion" let-domaine>
+                                            <tr>
+                                                <td colspan="7">
+                                                    <div class="p-3">
+
+                                                        <div class="table3-container">
+                                                            <p-table sortField="dateCreate" [sortOrder]="1" sortMode="single" [value]="domaine.admissions" [columns]="ColumnsDetAdmission" dataKey="codeSaisieAdmission" selectionMode="single" [metaKeySelection]="false">
+                                                                <ng-template pTemplate="colgroup" let-ColumnsPrestation>
+                                                                    <colgroup>
+                                                                        <col *ngFor="let col of ColumnsPrestation" [style.width]="col.width">
+                                                                    </colgroup>
+                                                                </ng-template>
+                                                                <ng-template pTemplate="header" let-col>
+                                                                    <tr>
+                                                                        <th *ngFor="let col of col ; let i = index" [pSortableColumn]="col.field">
+                                                                            <span>
+                                                        {{col.header}}
+                                                        <p-sortIcon [field]="col.field" />
+                                                    </span>
+                                                                        </th>
+                                                                    </tr>
+
+                                                                    <tr class="filter-row">
+                                                                        <th *ngFor="let col of col  ">
+                                                                            <p-columnFilter [hideOnClear]="true" [showMenu]="false" [showAddButton]="false" [showOperator]="false" [matchMode]="'contains'" [showMatchModes]="false" [type]="col.type" field={{col.field}} placeholder=" " ariaLabel="Filter Country"></p-columnFilter>
+                                                                        </th>
+                                                                    </tr>
+                                                                </ng-template>
+                                                                <ng-template pTemplate="body" let-details>
+                                                                    <tr [pSelectableRow]="details">
+
+                                                                        <!-- <td>{{ details.patientCode }}</td> -->
+                                                                        <td>{{ details.codePatient }}</td>
+                                                                        <td>{{ details.codeSaisieAdmission }}</td>
+                                                                        <td>{{ details.nomCompeleteAr }}</td>
+                                                                        <td>{{ details.dateCreate }}</td>
+                                                                        <td>{{ details.sums.nbreReqPresLabo }}</td>
+                                                                        <td>{{ details.sums.nbreReqPresRadio }}</td>
+                                                                        <td>{{ details.sums.nbrePrescriptionChronique }}</td>
+                                                                        <td>{{ details.sums.nbrePrescriptionNormal }}</td>
+
+
+                                                                    </tr>
+                                                                </ng-template>
+                                                                <!-- <ng-template pTemplate="footer">
+                                                                    <tr>
+                                                                        <td colspan="3"><strong>المجموع:</strong></td>
+                                                                        <td>
+                                                                            <td> {{ calculateSumPresLabDetails()}}</td>
+                                                                            <td> {{ calculateSumPresRadioDetails()}}</td>
+                                                                            <td> {{ calculateSumPrescriptionChroniqueDetails()}}</td>
+                                                                            <td> {{ calculateSumPrescriptionNormalDetails()}} </td>
+
+
+                                                                    </tr>
+                                                                </ng-template> -->
+                                                                <ng-template pTemplate="emptymessage">
+                                                                    <tr>
+                                                                        <td colspan="6">There are no order for this product yet.</td>
+                                                                    </tr>
+                                                                </ng-template>
+                                                            </p-table>
+                                                        </div>
+
+
+
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="footer">
+                                            <tr>
+                                                <td colspan="3"><strong>المجموع:</strong></td>
+                                                <td> {{ calculateSumPatient()}}</td>
+
+                                                <td> {{ calculateSumPresLab()}}</td>
+                                                <td> {{ calculateSumPresRadio()}}</td>
+                                                <td> {{ calculateSumPrescriptionChronique()}}</td>
+                                                <td> {{ calculateSumPrescriptionNormal()}} </td>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="emptymessage">
+                                            <tr>
+                                                <td colspan="9">لا توجد بيانات</td>
+                                            </tr>
+                                        </ng-template>
+                                    </p-table>
+
+
+                                </div>
+
+
+                            </div>
+                        </section>
+
+                    </div>
+
+                </div>
+
+
+
+
+
+            </div>
+            <div class="card radius-10 w-100">
+                <div class="row row-cols-1 row-cols-lg-9" [ngClass]="{ 'disabled': IsLoading }">
+                    <div class="col d-flex">
+                        <div class="card radius-10 w-100" style="margin: 5px;">
+                            <div class="card-body">
+
+                                <section id="main-container">
+                                    <div class="material-table">
+                                        <div class="card">
+
+                                            <p-table [loading]="loadingData" [paginator]="true" sortField="nomIntervAr" [sortOrder]="1" sortMode="single" [rows]="20" [rows]="20" [rowsPerPageOptions]="[20, 40,80,100]" [showCurrentPageReport]="true" [first]="first" currentPageReportTemplate="{{'Page' | i18n:i18nService.currentLanguage}} {first} {{'To' | i18n:i18nService.currentLanguage}} {last} {{'of' | i18n:i18nService.currentLanguage}} {totalRecords} {{'entiers' | i18n:i18nService.currentLanguage}}"
+                                                #dt1 [columns]="ColumnsGroupedCoutAdmission" [value]="dataDoctorPerformanceDMI" [globalFilterFields]="['designationAr', 'designationLt']" selectionMode="single" [metaKeySelection]="false" (onRowSelect)="onRowSelect($event)"
+                                                (onRowUnselect)="onRowUnselect($event)" dataKey="nomIntervAr" [expandedRowKeys]="expandedRows" [tableStyle]="{'min-width': '35rem', 'width': '100%' , 'padding': '1px 1px 1px 1px'}">
+
+                                                <ng-template pTemplate="caption">
+                                                    <div class="flex align-items-center justify-content-between">
+                                                        أداء الأطباء في الملف الطبي
+
+                                                    </div>
+                                                </ng-template>
+
+                                                <ng-template pTemplate="colgroup" let-col>
+                                                    <colgroup>
+                                                        <col *ngFor="let col of col" [style.width]="col.width">
+                                                    </colgroup>
+                                                </ng-template>
+                                                <ng-template pTemplate="header" let-columns>
+                                                    <tr>
+                                                        <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                                            {{ col.header }}
+                                                            <p-sortIcon [field]="col.field" />
+                                                        </th>
+                                                    </tr>
+
+                                                    <tr class="filter-row">
+                                                        <th *ngFor="let col of columns  ">
+                                                            <p-columnFilter [hideOnClear]="true" [showMenu]="false" [showAddButton]="false" [showOperator]="false" [matchMode]="'contains'" [showMatchModes]="false" type={{col.type}} field={{col.field}} placeholder=" " ariaLabel="Filter Country"></p-columnFilter>
+                                                        </th>
+                                                    </tr>
+                                                </ng-template>
+                                                <ng-template pTemplate="body" let-domaine let-expanded="expanded">
+                                                    <tr [pSelectableRow]="domaine">
+                                                        <td>
+                                                            <p-button type="button" pRipple [pRowToggler]="domaine" [text]="true" [rounded]="true" [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-left'" />
+
+
+                                                        </td>
+                                                        <td>{{ domaine.nomIntervAr }}</td>
+                                                        <td>{{ domaine.nomInterv }}</td>
+
+                                                    </tr>
+                                                </ng-template>
+
+                                                <ng-template pTemplate="rowexpansion" let-domaine>
+                                                    <tr>
+                                                        <td colspan="7">
+                                                            <div class="p-3">
+
+                                                                <div class="table3-container">
+                                                                    <p-table sortField="dateCreate" [sortOrder]="1" sortMode="single" [value]="domaine.admissions" [columns]="ColumnsDetAdmission" dataKey="codeSaisieAdmission" selectionMode="single" [metaKeySelection]="false">
+                                                                        <ng-template pTemplate="colgroup" let-ColumnsPrestation>
+                                                                            <colgroup>
+                                                                                <col *ngFor="let col of ColumnsPrestation" [style.width]="col.width">
+                                                                            </colgroup>
+                                                                        </ng-template>
+                                                                        <ng-template pTemplate="header" let-col>
+                                                                            <tr>
+                                                                                <th *ngFor="let col of col ; let i = index" [pSortableColumn]="col.field">
+                                                                                    <span>
+                                                                {{col.header}}
+                                                                <p-sortIcon [field]="col.field" />
+                                                            </span>
+                                                                                </th>
+                                                                            </tr>
+
+                                                                            <tr class="filter-row">
+                                                                                <th *ngFor="let col of col  ">
+                                                                                    <p-columnFilter [hideOnClear]="true" [showMenu]="false" [showAddButton]="false" [showOperator]="false" [matchMode]="'contains'" [showMatchModes]="false" [type]="col.type" field={{col.field}} placeholder=" " ariaLabel="Filter Country"></p-columnFilter>
+                                                                                </th>
+                                                                            </tr>
+                                                                        </ng-template>
+                                                                        <ng-template pTemplate="body" let-details>
+                                                                            <tr [pSelectableRow]="details">
+
+                                                                                <!-- <td>{{ details.patientCode }}</td> -->
+                                                                                <td>{{ details.codePatient }}</td>
+                                                                                <td>{{ details.codeSaisieAdmission }}</td>
+                                                                                <td>{{ details.nomCompeleteAr }}</td>
+                                                                                <td>{{ details.dateCreate }}</td>
+                                                                                <td>{{ details.nbreReqPresLabo }}</td>
+                                                                                <td>{{ details.sums.nbreReqPresRadio }}</td>
+                                                                                <td>{{ details.sums.nbrePrescriptionChronique }}</td>
+                                                                                <td>{{ details.sums.nbrePrescriptionNormal }}</td>
+
+
+                                                                            </tr>
+                                                                        </ng-template>
+                                                                        <!-- <ng-template pTemplate="footer">
+                                                                            <tr>
+                                                                                <td colspan="3"><strong>المجموع:</strong></td>
+                                                                                <td>
+                                                                                    <td> {{ calculateSumPresLabDetails()}}</td>
+                                                                                    <td> {{ calculateSumPresRadioDetails()}}</td>
+                                                                                    <td> {{ calculateSumPrescriptionChroniqueDetails()}}</td>
+                                                                                    <td> {{ calculateSumPrescriptionNormalDetails()}} </td>
+        
+        
+                                                                            </tr>
+                                                                        </ng-template> -->
+                                                                        <ng-template pTemplate="emptymessage">
+                                                                            <tr>
+                                                                                <td colspan="6">There are no order for this product yet.</td>
+                                                                            </tr>
+                                                                        </ng-template>
+                                                                    </p-table>
+                                                                </div>
+
+
+
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </ng-template>
+                                                <ng-template pTemplate="footer">
+                                                    <tr>
+                                                        <td colspan="3"><strong>المجموع:</strong></td>
+                                                        <td> {{ calculateSumPatient()}}</td>
+
+                                                        <td> {{ calculateSumPresLab()}}</td>
+                                                        <td> {{ calculateSumPresRadio()}}</td>
+                                                        <td> {{ calculateSumPrescriptionChronique()}}</td>
+                                                        <td> {{ calculateSumPrescriptionNormal()}} </td>
+                                                    </tr>
+                                                </ng-template>
+                                                <ng-template pTemplate="emptymessage">
+                                                    <tr>
+                                                        <td colspan="9">لا توجد بيانات</td>
+                                                    </tr>
+                                                </ng-template>
+                                            </p-table>
+
+
+                                        </div>
+
+
+                                    </div>
+                                </section>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+    </section>
+</body>
+
+
+
+
+
+<p-dialog id="ModalPrint" header="Header" [scrollLeft]="true" [(visible)]="visibleModalPrint" data-backdrop="false" [modal]="true" styleClass="ModalPrintPaysage" [draggable]="false">
+    <p-toast key="toast1"></p-toast>
+    <ng-template pTemplate="header">
+        <div class="FloatRight">
+            <h2 class="text-default headerForm"> طباعة </h2>
+        </div>
+        <div class="FloatLeft">
+            <button class="btn btn-default cancel-add-ModalSmall" :closable="true" data-dismiss="modal" (click)="CloseModalPrint()">
+                <i class="fa-solid fa-circle-xmark IconBtnModal" style="color: #9e0000;font-size: 16px;"></i>
+                Close
+            </button>
+        </div>
+
+
+    </ng-template>
+    <div class="modal-body">
+        <ssrs-reportviewer [reportserver]="reportServer" [reporturl]="reportPath" [showparameters]="showParameters" [parameters]="parameters" [language]="language" [width]="width" [height]="height" [toolbar]="toolbar"></ssrs-reportviewer>
+
+
+
+    </div>
+
+</p-dialog>

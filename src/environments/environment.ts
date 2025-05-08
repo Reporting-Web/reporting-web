@@ -6,5 +6,6 @@ export const environment = {
   API_RECEPTION: "/reception/",
   API_PHARMACIE: "/pharmacie/",
   API_SOC: "/soc",
+  API_DOCTOR: "/doctor/",
   adressIP:"localhost",
 };

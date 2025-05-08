@@ -1,5 +1,4 @@
-import { Component, EventEmitter, Output, OnInit } from '@angular/core';
-
+import { Component, EventEmitter, Output, OnInit } from '@angular/core'; 
 import { LoadingComponent } from '../../Shared/loading/loading.component';
 import { ControlServiceAlertify } from '../../Shared/Control/ControlRow';
 import { I18nService } from '../../Shared/i18n/i18n.service';

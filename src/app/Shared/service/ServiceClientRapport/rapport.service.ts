@@ -162,5 +162,21 @@ export class RapportService {
 
 
    
+
+     
+    //// doctor Performance 
+
+    GetAllDoctorPerformance(  ){
+      return this.http.get(`${environment.API_DOCTOR}doctor_performance/all`  )
+    }
+
+    GetAllDoctorPerformanceByDate(dateDebut : any , dateFin : any ,  ){
+      return this.http.get(`${environment.API_DOCTOR}doctor_performance/findAllByDate?dateDebut=`+ dateDebut + `&dateFin=`+dateFin  )
+    }
+ 
+    
+     
+
+
 }
 

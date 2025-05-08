@@ -205,6 +205,17 @@ const arI18n = {
  'codeAdmission':'رقم الدخول',
  'Sifa':'الصفة',
  'montantTotal':'المجموع',
+ 'nomIntervAr':'اسم الطبيب بالعربي',
+ 'nomInterv':'اسم الطبيب باللاتيني',
+ 'nbreReqPresLabo':'عدد المرضى التحاليل',
+ 'nbreReqPresRadio':'عدد المرضى الأشعة',
+ 'nbrePrescriptionChronique':'عدد المرضى الوصفات المزمنة',
+ 'nbrePrescriptionNormal':'عدد المرضى الوصفات العادية',
+ 
+ 'nbreReqLabo':'عدد التحاليل',
+ 'nbreReqRadio':'عدد الأشعة',
+ 'nbreReqPrescriptionChronique':'عدد  الوصفات المزمنة',
+ 'nbreReqPrescriptionNormal':'عدد  الوصفات العادية',
 };
 
 
