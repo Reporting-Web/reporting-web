@@ -170,12 +170,12 @@ export class RapportService {
     return this.http.get(`${environment.API_DOCTOR}doctor_performance/all`)
   }
 
-  GetAllDoctorPerformanceByDate(dateDebut: any, dateFin: any,) {
-    return this.http.get(`${environment.API_DOCTOR}doctor_performance/findAllByDate?dateDebut=` + dateDebut + `&dateFin=` + dateFin)
+  GetAllDoctorPerformanceByDate(dateDebut: any, dateFin: any,presDent : boolean) {
+    return this.http.get(`${environment.API_DOCTOR}doctor_performance/findAllByDateAndPresDent?dateDebut=` + dateDebut + `&dateFin=` + dateFin+ `&presDent=` + presDent)
   }
 
-  GetAllDoctorPerformanceByDateAndCodeSpecialite(dateDebut: any, dateFin: any,codeSpecialite : number) {
-    return this.http.get(`${environment.API_DOCTOR}doctor_performance/findAllByDateAndSpecialite?dateDebut=` + dateDebut + `&dateFin=` + dateFin + `&codeSpecialite=` +codeSpecialite)
+  findAllByDateAndSpecialiteAndPresDent(dateDebut: any, dateFin: any,codeSpecialite : number,presDent : boolean) {
+    return this.http.get(`${environment.API_DOCTOR}doctor_performance/findAllByDateAndSpecialiteAndPresDent?dateDebut=` + dateDebut + `&dateFin=` + dateFin + `&codeSpecialite=` +codeSpecialite + `&presDent=` + presDent)
   }
 
 

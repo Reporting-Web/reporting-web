@@ -201,7 +201,7 @@ export class RapportDoctorPerformanceComponent implements OnInit {
 
       { field: 'nomInterv', header: this.i18nService.getString('nomInterv') || 'nomInterv', width: '10%', filter: "true", type: "text" },
       { field: 'designationArSpec', header: this.i18nService.getString('Specialite') || 'Specialite', width: '10%', filter: "true", type: "text" },
-      { field: 'countPatient', header: this.i18nService.getString('countPatient') || 'countPatient', width: '10%', filter: "true", type: "text" },
+      { field: 'countPatientMedecin', header: this.i18nService.getString('countPatient') || 'countPatient', width: '10%', filter: "true", type: "text" },
       { field: 'nbreReqPresLabo', header: this.i18nService.getString('nbreReqPresLabo') || 'nbreReqPresLabo', width: '10%', filter: "true", type: "text" },
       { field: 'nbreReqPresRadio', header: this.i18nService.getString('nbreReqPresRadio') || 'nbreReqPresRadio', width: '10%', filter: "true", type: "text" },
       { field: 'nbrePrescriptionChronique', header: this.i18nService.getString('nbrePrescriptionChronique') || 'nbrePrescriptionChronique', width: '10%', filter: "true", type: "text" },
@@ -230,13 +230,15 @@ export class RapportDoctorPerformanceComponent implements OnInit {
   grandTotals: any = {}; // Add this line 
   GetAllDoctorPerformance() {
     this.loadingData = true;
-    this.rapportService.GetAllDoctorPerformanceByDate(this.dateDeb, this.dateFin).subscribe((data: any) => {
+    this.rapportService.GetAllDoctorPerformanceByDate(this.dateDeb, this.dateFin,false).subscribe((data: any) => {
       this.loadingComponent.IsLoading = false;
       this.IsLoading = false;
       this.dataDoctorPerformance = this.groupData(data);
       this.dataDoctorPerformanceDMI = this.groupDataDMI(data);
        
       this.loadingData = false;
+      
+      
      
         this.GetSpecialiteMedecin();
   
@@ -319,6 +321,48 @@ export class RapportDoctorPerformanceComponent implements OnInit {
 
   return Object.values(groupedData);
   }
+
+  groupDataDMI(data: any[]): any[] {
+    const groupedDataDMI: { [key: number]: any } = {};
+  
+    data.forEach(item => {
+      const intervenantCode = item.codeIntervenant;
+      if (!groupedDataDMI[intervenantCode]) {
+        groupedDataDMI[intervenantCode] = {
+          codeIntervenant: intervenantCode,
+          nomIntervAr: item.nomIntervAr,
+          nomInterv: item.nomInterv,
+          dmiAdmissions: [],
+        };
+      }
+  
+      // Find existing admission or create a new one.
+      let admission = groupedDataDMI[intervenantCode].dmiAdmissions.find(
+        (a: any) => a.codeSaisieAdmission === item.codeSaisieAdmission
+      );
+  
+      // If admission doesn't exist, create it.
+      if (!admission) {
+        admission = {
+          codePatient: item.codePatient,
+          codeSaisieAdmission: item.codeSaisieAdmission,
+          nomCompeleteAr: item.nomCompeleteAr,
+          dateCreate: item.dateCreate,
+          diganosis: item.diganosis,
+          cheifComplaint: item.cheifComplaint,
+          prestations: item.nbrePresDent,
+        };
+        groupedDataDMI[intervenantCode].dmiAdmissions.push(admission);
+      } else {
+        //Admission already exists;  No action needed here since you only want 
+        // one row per admission.  The existing data is correct.
+      }
+  
+    });
+  
+    return Object.values(groupedDataDMI);
+  }
+
  
   calculateSumPresLab(): number {
     let totalSum = 0;
@@ -476,59 +520,10 @@ export class RapportDoctorPerformanceComponent implements OnInit {
   }
 
   dataDoctorPerformanceDMI: any[] = [];
+ 
+ 
 
-    
-  // GetAllDoctorPerformanceDMI() {
-  //   this.loadingData = true;
-  //   this.rapportService.GetAllDoctorPerformanceByDate(this.dateDeb, this.dateFin).subscribe((data: any) => {
-  //     this.loadingComponent.IsLoading = false;
-  //     this.IsLoading = false;
-  //     this.dataDoctorPerformance = this.groupData(data);
-       
-  //     this.loadingData = false;
-  //   });
-  // }
-
-  groupDataDMI(data: any[]): any[] {
-    const groupedDataDMI: { [key: number]: any } = {};
   
-    data.forEach(item => {
-      const intervenantCode = item.codeIntervenant;
-      if (!groupedDataDMI[intervenantCode]) {
-        groupedDataDMI[intervenantCode] = {
-          codeIntervenant: intervenantCode,
-          nomIntervAr: item.nomIntervAr,
-          nomInterv: item.nomInterv,
-
-          dmiAdmissions: [], 
-        };
-      }
- 
-       
-     let admission = groupedDataDMI[intervenantCode].dmiAdmissions.find(
-      (a: any) => a.codeSaisieAdmission === item.codeSaisieAdmission
-    );
- 
-      admission = {
-        codePatient: item.codePatient,
-        codeSaisieAdmission: item.codeSaisieAdmission,
-        nomCompeleteAr: item.nomCompeleteAr,
-        dateCreate: item.dateCreate,
-        diganosis: item.diganosis,
-        cheifComplaint: item.cheifComplaint,
-        prestations: item.prestations,
- 
-      };
-      groupedDataDMI[intervenantCode].dmiAdmissions.push(admission);
-   
-
-
-    
-  });
-
-  return Object.values(groupedDataDMI);
-  }
-
   expandedRowsDMI: any = {};
 
 
@@ -553,7 +548,7 @@ export class RapportDoctorPerformanceComponent implements OnInit {
 
     if(this.selectedSpecialiteMedecin !=null){
       this.loadingData = true;
-      this.rapportService.GetAllDoctorPerformanceByDateAndCodeSpecialite(this.dateDeb, this.dateFin,codeSpecialite).subscribe((data: any) => {
+      this.rapportService.findAllByDateAndSpecialiteAndPresDent(this.dateDeb, this.dateFin,codeSpecialite,true).subscribe((data: any) => {
         this.loadingComponent.IsLoading = false;
         this.IsLoading = false; 
         this.dataDoctorPerformanceDMI = this.groupDataDMI(data);
@@ -565,6 +560,17 @@ export class RapportDoctorPerformanceComponent implements OnInit {
     
   }
 
+
+
+  GetAllDoctorPerformanceDent() {
+    this.loadingData = true;
+    this.rapportService.GetAllDoctorPerformanceByDate(this.dateDeb, this.dateFin,true).subscribe((data: any) => {
+      this.loadingComponent.IsLoading = false;
+      this.IsLoading = false; 
+      this.dataDoctorPerformanceDMI = this.groupDataDMI(data); 
+      this.loadingData = false;   
+    });
+  }
 
 
 }
