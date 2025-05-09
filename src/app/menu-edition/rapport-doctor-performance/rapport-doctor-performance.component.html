@@ -88,7 +88,15 @@
 
                                         <ng-template pTemplate="caption">
                                             <div class="flex align-items-center justify-content-between">
-                                                أداء الأطباء
+
+
+                                                <div class="FloatRight">
+
+                                                    <label class="header_name" style="padding-right: 10px;">{{'DoctorPerformance' | i18n:i18nService.currentLanguage}} </label>
+                                                </div>
+
+
+
                                             </div>
                                         </ng-template>
 
@@ -126,6 +134,7 @@
                                                 </td> -->
                                                 <td>{{ domaine.nomIntervAr }}</td>
                                                 <td>{{ domaine.nomInterv }}</td>
+                                                <td>{{ domaine.designationArSpec }}</td>
                                                 <td>{{ domaine.countPatientMedecin }}</td>
                                                 <td>{{ domaine.nbreReqPresLabo }}</td>
                                                 <td>{{ domaine.nbreReqPresRadio }}</td>
@@ -167,7 +176,6 @@
                                                                 <ng-template pTemplate="body" let-details>
                                                                     <tr [pSelectableRow]="details">
 
-                                                                        <!-- <td>{{ details.patientCode }}</td> -->
                                                                         <td>{{ details.codePatient }}</td>
                                                                         <td>{{ details.codeSaisieAdmission }}</td>
                                                                         <td>{{ details.nomCompeleteAr }}</td>
@@ -208,7 +216,7 @@
                                         </ng-template>
                                         <ng-template pTemplate="footer">
                                             <tr>
-                                                <td colspan="3"><strong>المجموع:</strong></td>
+                                                <td colspan="4"><strong>المجموع:</strong></td>
                                                 <td> {{ calculateSumPatient()}}</td>
 
                                                 <td> {{ calculateSumPresLab()}}</td>
@@ -250,15 +258,46 @@
                                     <div class="material-table">
                                         <div class="card">
 
+
+
+
+
                                             <p-table [loading]="loadingData" [paginator]="true" sortField="nomIntervAr" [sortOrder]="1" sortMode="single" [rows]="20" [rows]="20" [rowsPerPageOptions]="[20, 40,80,100]" [showCurrentPageReport]="true" [first]="first" currentPageReportTemplate="{{'Page' | i18n:i18nService.currentLanguage}} {first} {{'To' | i18n:i18nService.currentLanguage}} {last} {{'of' | i18n:i18nService.currentLanguage}} {totalRecords} {{'entiers' | i18n:i18nService.currentLanguage}}"
                                                 #dt1 [columns]="ColumnsGroupedCoutAdmissionDmi" [value]="dataDoctorPerformanceDMI" [globalFilterFields]="['designationAr', 'designationLt']" selectionMode="single" [metaKeySelection]="false" (onRowSelect)="onRowSelect($event)"
                                                 (onRowUnselect)="onRowUnselect($event)" dataKey="nomIntervAr" [expandedRowKeys]="expandedRowsDMI" [tableStyle]="{'min-width': '35rem', 'width': '100%' , 'padding': '1px 1px 1px 1px'}">
 
                                                 <ng-template pTemplate="caption">
-                                                    <div class="flex align-items-center justify-content-between">
-                                                        أداء الأطباء في الملف الطبي
+                                                    <div class="flex align-items-center justify-content-between" style="display: flex;">
+
+
+
+                                                        <div class="FloatRight">
+
+                                                            <label class="header_name" style="padding-right: 10px;">   أداء الأطباء في الملف الطبي  </label>
+                                                        </div>
+
+                                                        <div class="flex-row-start flex-12" style="padding-right: 100px;">
+                                                            <section class="flex-row-start flex-6">
+                                                                <label class="control-label  flex-4" style="width: 25%; "> {{'SpecialiteMedecin' |
+                                                                    i18n:i18nService.currentLanguage}} : <i
+                                                                        class="fa-lg fa-fw fa fa-times iconRequired"></i></label>
+                                                                <div class="dop control-input " style="display: flex; place-content: space-evenly;">
+                                                                    <p-dropdown name="SpecialiteMedecin" [filter]="true" appendTo="body" [options]="ListSpecialiteMedecin" [showClear]="true" [(ngModel)]="selectedSpecialiteMedecin" [style]="{'width':'200px'}" [autoDisplayFirst]="true" placeholder="&nbsp;" [lazy]="true"
+                                                                        #SpecialiteMedecin="ngModel" (ngModelChange)="GetAllDoctorPerformanceBySpecialite(this.selectedSpecialiteMedecin)" (onClear)="GetAllDoctorPerformance()">
+                                                                    </p-dropdown>
+                                                                </div>
+                                                            </section>
+                                                            <section class="flex-row-start flex-6 ">
+                                                                <div class="flex-6">
+
+                                                                </div>
+
+                                                            </section>
+                                                        </div>
+
 
                                                     </div>
+
                                                 </ng-template>
 
                                                 <ng-template pTemplate="colgroup" let-col>

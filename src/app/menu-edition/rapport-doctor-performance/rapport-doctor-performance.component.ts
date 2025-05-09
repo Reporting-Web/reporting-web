@@ -200,6 +200,7 @@ export class RapportDoctorPerformanceComponent implements OnInit {
       { field: 'nomIntervAr', header: this.i18nService.getString('nomIntervAr') || 'nomIntervAr', width: '10%', filter: "true", type: "text" },
 
       { field: 'nomInterv', header: this.i18nService.getString('nomInterv') || 'nomInterv', width: '10%', filter: "true", type: "text" },
+      { field: 'designationArSpec', header: this.i18nService.getString('Specialite') || 'Specialite', width: '10%', filter: "true", type: "text" },
       { field: 'countPatient', header: this.i18nService.getString('countPatient') || 'countPatient', width: '10%', filter: "true", type: "text" },
       { field: 'nbreReqPresLabo', header: this.i18nService.getString('nbreReqPresLabo') || 'nbreReqPresLabo', width: '10%', filter: "true", type: "text" },
       { field: 'nbreReqPresRadio', header: this.i18nService.getString('nbreReqPresRadio') || 'nbreReqPresRadio', width: '10%', filter: "true", type: "text" },
@@ -236,6 +237,10 @@ export class RapportDoctorPerformanceComponent implements OnInit {
       this.dataDoctorPerformanceDMI = this.groupDataDMI(data);
        
       this.loadingData = false;
+     
+        this.GetSpecialiteMedecin();
+  
+      
     });
   }
 
@@ -249,6 +254,8 @@ export class RapportDoctorPerformanceComponent implements OnInit {
           codeIntervenant: intervenantCode,
           nomIntervAr: item.nomIntervAr,
           nomInterv: item.nomInterv,
+          designationArSpec: item.designationArSpec,
+          designationLtSpec: item.designationLtSpec, 
           nbreReqPresLabo: 0,
           nbreReqPresRadio: 0,
           nbrePrescriptionChronique: 0,
@@ -523,6 +530,41 @@ export class RapportDoctorPerformanceComponent implements OnInit {
   }
 
   expandedRowsDMI: any = {};
+
+
+  ListSpecialiteMedecin = new Array<any>();
+  dataSpecialiteMedecin = new Array<any>();
+  listSpecialitePushed = new Array<any>();
+  selectedSpecialiteMedecin:any=null;
+  GetSpecialiteMedecin() {
+    this.rapportService.GetAllSpecialiteMedecin().subscribe((data: any) => {
+      this.dataSpecialiteMedecin = data;
+      this.listSpecialitePushed = [];
+      for (let i = 0; i < this.dataSpecialiteMedecin.length; i++) {
+        this.listSpecialitePushed.push({ label: this.dataSpecialiteMedecin[i].designationAr, value: this.dataSpecialiteMedecin[i].code })
+      }
+      this.ListSpecialiteMedecin = this.listSpecialitePushed;
+    })
+  }
+
+
+
+  GetAllDoctorPerformanceBySpecialite(codeSpecialite:number) {
+
+    if(this.selectedSpecialiteMedecin !=null){
+      this.loadingData = true;
+      this.rapportService.GetAllDoctorPerformanceByDateAndCodeSpecialite(this.dateDeb, this.dateFin,codeSpecialite).subscribe((data: any) => {
+        this.loadingComponent.IsLoading = false;
+        this.IsLoading = false; 
+        this.dataDoctorPerformanceDMI = this.groupDataDMI(data);
+         
+        this.loadingData = false; 
+      });
+
+    }
+    
+  }
+
 
 
 }
