@@ -2319,9 +2319,12 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 .p-button.p-button-secondary,
 .p-buttonset.p-button-secondary>.p-button,
 .p-splitbutton.p-button-secondary>.p-button {
-    color: #fff;
+    /* color: #fff;
     background: #6c757d;
-    border: 1px solid #6c757d
+    border: 1px solid #6c757d */
+    background: transparent;
+    border-color: transparent;
+    color: var(--p-button-text-secondary-color);
 }
 
 .p-button.p-button-secondary:enabled:hover,

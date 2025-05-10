@@ -178,6 +178,9 @@ export class RapportService {
     return this.http.get(`${environment.API_DOCTOR}doctor_performance/findAllByDateAndSpecialiteAndPresDent?dateDebut=` + dateDebut + `&dateFin=` + dateFin + `&codeSpecialite=` +codeSpecialite + `&presDent=` + presDent)
   }
 
+  findAllByDateAndSpecialitet(dateDebut: any, dateFin: any,codeSpecialite : number) {
+    return this.http.get(`${environment.API_DOCTOR}doctor_performance/findAllByDateAndSpecialite?dateDebut=` + dateDebut + `&dateFin=` + dateFin + `&codeSpecialite=` +codeSpecialite )
+  }
 
   GetAllSpecialiteMedecin() {
     return this.http.get(`${environment.API_DOCTOR}specialite_medecin/all`)

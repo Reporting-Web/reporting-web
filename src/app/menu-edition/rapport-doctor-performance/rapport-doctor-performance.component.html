@@ -122,16 +122,11 @@
                                         <ng-template pTemplate="body" let-domaine let-expanded="expanded">
                                             <tr [pSelectableRow]="domaine">
                                                 <td>
-                                                    <p-button type="button" pRipple [pRowToggler]="domaine" [text]="true" [rounded]="true" [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-left'" />
-
+                                                    <p-button pRipple [pRowToggler]="domaine" severity="secondary" [text]="false" [rounded]="true" [icon]="expanded ? 'fa-solid fa-chevron-down' : ' fa-solid fa-chevron-left'" />
 
                                                 </td>
 
-                                                <!-- <td>{{ domaine.patientCode }}
 
-                                                    <p-tag *ngIf="domaine.admissions.length > 1" [ngStyle]="{ 'margin-right': '5px' ,'float': 'inline-end' }" title="More Than One Admission" icon="pi pi-exclamation-triangle" severity="warning" value="" />
-
-                                                </td> -->
                                                 <td>{{ domaine.nomIntervAr }}</td>
                                                 <td>{{ domaine.nomInterv }}</td>
                                                 <td>{{ domaine.designationArSpec }}</td>
@@ -322,7 +317,8 @@
                                                 <ng-template pTemplate="body" let-domaine let-expanded="expanded">
                                                     <tr [pSelectableRow]="domaine">
                                                         <td>
-                                                            <p-button type="button" pRipple [pRowToggler]="domaine" [text]="true" [rounded]="true" [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-left'" />
+                                                            <!-- <p-button pRipple [pRowToggler]="domaine" severity="secondary" [text]="false" [rounded]="true" [icon]="expanded ? 'fa-solid fa-chevron-down' : ' fa-solid fa-chevron-left'" /> -->
+                                                            <p-button pRipple [pRowToggler]="domaine" severity="secondary" [text]="false" [rounded]="true" [icon]="expanded ? 'fa-solid fa-chevron-down' : ' fa-solid fa-chevron-left'" />
 
 
                                                         </td>
@@ -370,7 +366,7 @@
                                                                                 <td>{{ details.dateCreate }}</td>
                                                                                 <td>{{ details.diganosis }}</td>
                                                                                 <td>{{ details.cheifComplaint }}</td>
-                                                                                <td>{{ details.prestations }}</td>
+                                                                                <td>{{ details.nbrePresDent }}</td>
 
 
                                                                             </tr>

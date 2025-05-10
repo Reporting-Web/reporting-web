@@ -54,7 +54,7 @@ export class RapportDoctorPerformanceComponent implements OnInit {
   }
 
 
-
+ 
   GetColumns() {
     this.cols = [
       { field: 'designationArCabinet', header: this.i18nService.getString('Cabinet') || 'عيادة', width: '25%' },
@@ -182,7 +182,7 @@ export class RapportDoctorPerformanceComponent implements OnInit {
   GetColumnsDetailsTable() {
     this.ColumnsDetAdmission = [
       { field: 'codePatient', header: this.i18nService.getString('CodePatient') || 'CodePatient', width: '3%', filter: "true", type: "text" },
-      { field: 'codeAdmisson', header: this.i18nService.getString('codeAdmission') || 'codeAdmission', width: '3%', filter: "true", type: "text" },
+      { field: 'codeSaisieAdmission', header: this.i18nService.getString('codeAdmission') || 'codeAdmission', width: '3%', filter: "true", type: "text" },
       { field: 'nomCompeleteAr', header: this.i18nService.getString('NomLt') || 'NomLt', width: '12%', filter: "true", type: "text" },
       { field: 'dateCreate', header: this.i18nService.getString('DateArriver') || 'DateArriver', width: '9%', filter: "true", type: "text" },
       { field: 'sums.nbreReqPresLabo', header: this.i18nService.getString('nbreReqLabo') || 'nbreReqLabo', width: '9%', filter: "true", type: "text" },
@@ -241,6 +241,7 @@ export class RapportDoctorPerformanceComponent implements OnInit {
       
      
         this.GetSpecialiteMedecin();
+        this.selectedSpecialiteMedecin=null;
   
       
     });
@@ -350,7 +351,7 @@ export class RapportDoctorPerformanceComponent implements OnInit {
           dateCreate: item.dateCreate,
           diganosis: item.diganosis,
           cheifComplaint: item.cheifComplaint,
-          prestations: item.nbrePresDent,
+          nbrePresDent: item.nbrePresDent,
         };
         groupedDataDMI[intervenantCode].dmiAdmissions.push(admission);
       } else {
@@ -495,13 +496,13 @@ export class RapportDoctorPerformanceComponent implements OnInit {
    GetColumnsDetailsTableDMI() {
     this.ColumnsDetAdmissionDmi = [
       { field: 'codePatient', header: this.i18nService.getString('CodePatient') || 'CodePatient', width: '3%', filter: "true", type: "text" },
-      { field: 'codeAdmisson', header: this.i18nService.getString('codeAdmission') || 'codeAdmission', width: '3%', filter: "true", type: "text" },
+      { field: 'codeSaisieAdmission', header: this.i18nService.getString('codeAdmission') || 'codeAdmission', width: '3%', filter: "true", type: "text" },
       { field: 'nomCompeleteAr', header: this.i18nService.getString('NomLt') || 'NomLt', width: '12%', filter: "true", type: "text" },
       { field: 'dateCreate', header: this.i18nService.getString('DateArriver') || 'DateArriver', width: '9%', filter: "true", type: "text" },
       { field: 'diganosis', header: this.i18nService.getString('diganosis') || 'diganosis', width: '9%', filter: "true", type: "text" },
 
       { field: 'cheifComplaint', header: this.i18nService.getString('cheifComplaint') || 'cheifComplaint', width: '8%', filter: "true", type: "text" },
-      { field: 'prestations', header: this.i18nService.getString('prestations') || 'prestations', width: '12%', filter: "true", type: "text" },
+      { field: 'nbrePresDent', header: this.i18nService.getString('prestations') || 'prestations', width: '12%', filter: "true", type: "text" },
 
       ];
   }
@@ -548,7 +549,7 @@ export class RapportDoctorPerformanceComponent implements OnInit {
 
     if(this.selectedSpecialiteMedecin !=null){
       this.loadingData = true;
-      this.rapportService.findAllByDateAndSpecialiteAndPresDent(this.dateDeb, this.dateFin,codeSpecialite,true).subscribe((data: any) => {
+      this.rapportService.findAllByDateAndSpecialitet(this.dateDeb, this.dateFin,codeSpecialite).subscribe((data: any) => {
         this.loadingComponent.IsLoading = false;
         this.IsLoading = false; 
         this.dataDoctorPerformanceDMI = this.groupDataDMI(data);
