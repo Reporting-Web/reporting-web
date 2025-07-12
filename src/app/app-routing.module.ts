@@ -13,6 +13,8 @@ const routes: Routes = [
  
    { path: 'menu_edition', loadChildren: () => import('./menu-edition/menu-edition.module').then(m => m.MenuEditionModule), data:{title:'Edition',icon:'bx bxs-report'} },
  
+  { path: 'menu_pharmacie', loadChildren: () => import('./menu-pharmacie/menu-pharmacie.module').then(m => m.MenuPharmacieModule) , data:{title:'Pharmacie',icon:'bx bxs-report'} },
+ 
 ];
 
 @NgModule({

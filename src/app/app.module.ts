@@ -91,6 +91,7 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { RapportDoctorPerformanceComponent } from './menu-edition/rapport-doctor-performance/rapport-doctor-performance.component';
 import { RapportRadioComponent } from './menu-edition/rapport-radio/rapport-radio.component';
 import { CoutAdmissionComponent } from './menu-edition/cout-admission/cout-admission.component';
+import { OrdonnanceComponent } from './menu-pharmacie/ordonnance/ordonnance.component';
  
 const languages = [
   { lang: 'عربي', flag: 'assets/images/county/ar.png', file: arI18n, valeur: 'ar' },
@@ -131,7 +132,7 @@ const languages = [
 
     RapportOPDComponent,RapportDoctorPerformanceComponent,RapportEmployeeComponent,RapportLaboComponent,
     RapportPharmacieChroniqueComponent,RapportPharmacieNormalComponent,RapportRadioComponent,CoutAdmissionComponent,
-    
+    OrdonnanceComponent,
   ],
   imports: [   
     BrowserModule, NgxEchartsModule.forRoot({

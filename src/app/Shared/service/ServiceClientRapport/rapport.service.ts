@@ -170,7 +170,11 @@ export class RapportService {
     return this.http.get(`${environment.API_DOCTOR}doctor_performance/all`)
   }
 
-  GetAllDoctorPerformanceByDate(dateDebut: any, dateFin: any,presDent : boolean) {
+
+  GetAllDoctorPerformanceByDate(dateDebut: any, dateFin: any) {
+    return this.http.get(`${environment.API_DOCTOR}doctor_performance/findAllByDate?dateDebut=` + dateDebut + `&dateFin=` + dateFin)
+  }
+  GetAllDoctorPerformanceByDateAndPresDent(dateDebut: any, dateFin: any,presDent : boolean) {
     return this.http.get(`${environment.API_DOCTOR}doctor_performance/findAllByDateAndPresDent?dateDebut=` + dateDebut + `&dateFin=` + dateFin+ `&presDent=` + presDent)
   }
 
@@ -186,6 +190,12 @@ export class RapportService {
     return this.http.get(`${environment.API_DOCTOR}specialite_medecin/all`)
   }
 
+
+  ////Ordonnance
+
+  GetAllOrdonnance(dateDebut: any, dateFin: any, codePatient: string) {
+    return this.http.get(`${environment.API_PHARMACIE}ordonnance/findAllByDateAndCodePatient?dateDebut=` + dateDebut + `&dateFin=` + dateFin + `&codePatient=` + codePatient)
+  }
 
 
 }

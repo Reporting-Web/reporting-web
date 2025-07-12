@@ -10,21 +10,20 @@ import { LoadingComponent } from '../Shared/loading/loading.component';
 import { I18nService } from '../Shared/i18n/i18n.service';
 import { ControlServiceAlertify } from '../Shared/Control/ControlRow';
 import { DatePipe } from '@angular/common';
-import { CalanderTransService } from '../Shared/CalanderService/CalanderTransService'; 
+import { CalanderTransService } from '../Shared/CalanderService/CalanderTransService';
 import { RapportService } from '../Shared/service/ServiceClientRapport/rapport.service';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css', '.../../../src/assets/css/newStyle.css'
     , '.../../../src/assets/css/StyleApplication.css'],
-    providers: [ CalanderTransService]
+  providers: [CalanderTransService]
 })
 
 export class DashboardComponent implements OnInit {
   constructor(private dashbordService: DashbordService, private loadingComponent: LoadingComponent,
-    public i18nService: I18nService,private datePipe: DatePipe, private CtrlAlertify: ControlServiceAlertify
-    , private calandTrans: CalanderTransService,private rapportService: RapportService)
-     {  this.calandTrans.setLangAR(); }
+    public i18nService: I18nService, private datePipe: DatePipe, private CtrlAlertify: ControlServiceAlertify
+    , private calandTrans: CalanderTransService, private rapportService: RapportService) { this.calandTrans.setLangAR(); }
 
 
   logoNiyebet: SafeResourceUrl | string | null = null;
@@ -33,24 +32,25 @@ export class DashboardComponent implements OnInit {
   logoService: SafeResourceUrl | string | null = null;
   logoStoped: SafeResourceUrl | string | null = null;
   logoPatient: SafeResourceUrl | string | null = null;
-  
+
   ngOnInit(): void {
     // this.createChartOptions(); 
 
 
     this.getLogoData(); // Combine logo fetching
- this.createChartOptions();
+    this.createChartOptions();
 
+    this.GetUserConnecter();
   }
 
   GetData() {
-    if (this.dateDeb == null || this.dateFin == null  ) {
+    if (this.dateDeb == null || this.dateFin == null) {
       this.CtrlAlertify.PostionLabelNotification();
       this.CtrlAlertify.showNotificationِCustom('PleaseSelectedAnyDate');
     } else if (this.dateFin < this.dateDeb) {
       this.CtrlAlertify.PostionLabelNotification();
       this.CtrlAlertify.showNotificationِCustom('ErrorDate');
-    } else   {
+    } else {
       this.getTotalPatients(); // Get total patient counts
       this.getTotalPatientsBloquer(); // Get total patient counts
       this.GetTotalAdmissionByDate();
@@ -72,15 +72,15 @@ export class DashboardComponent implements OnInit {
   }
 
   GetLogo9othat() {
-    this.logo9othat =  `${window.location.origin}/assets/images/ccagp_pec_image/9othat.png`;
+    this.logo9othat = `${window.location.origin}/assets/images/ccagp_pec_image/9othat.png`;
   }
 
   GetLogoER() {
- 
-    this.logoER =  `${window.location.origin}/assets/images/ccagp_pec_image/emergency.png`;
+
+    this.logoER = `${window.location.origin}/assets/images/ccagp_pec_image/emergency.png`;
   }
   GetLogoFreeze() {
-    this.logoStoped =  `${window.location.origin}/assets/images/ccagp_pec_image/freeze.png`;
+    this.logoStoped = `${window.location.origin}/assets/images/ccagp_pec_image/freeze.png`;
   }
 
   GetLogoService() {
@@ -95,7 +95,7 @@ export class DashboardComponent implements OnInit {
   options11: EChartsCoreOption | null = null;
 
 
-  createChartOptions(valeur1 : any =0, valeur2 : any =0, valeur3:any=0 , valeur4 : any=0): void {  // void return type
+  createChartOptions(valeur1: any = 0, valeur2: any = 0, valeur3: any = 0, valeur4: any = 0): void {  // void return type
     this.options11 = {
       title: {
         left: '50%',
@@ -174,11 +174,11 @@ export class DashboardComponent implements OnInit {
   getTotalPatients(): void {
     this.IsLoading = true; // Set loading state
 
-    const observables: Observable<any>[] = [ 
-      this.dashbordService.GetAllListPatientByDateAndCodeSociete(this.dateDeb,this.dateFin ,374),
-      this.dashbordService.GetAllListPatientByDateAndCodeSociete(this.dateDeb,this.dateFin ,375),
-      this.dashbordService.GetAllListPatientByDateAndCodeSociete(this.dateDeb,this.dateFin ,376),
-      this.dashbordService.GetAllListPatientByDateAndCodeSociete(this.dateDeb,this.dateFin ,377),
+    const observables: Observable<any>[] = [
+      this.dashbordService.GetAllListPatientByDateAndCodeSociete(this.dateDeb, this.dateFin, 374),
+      this.dashbordService.GetAllListPatientByDateAndCodeSociete(this.dateDeb, this.dateFin, 375),
+      this.dashbordService.GetAllListPatientByDateAndCodeSociete(this.dateDeb, this.dateFin, 376),
+      this.dashbordService.GetAllListPatientByDateAndCodeSociete(this.dateDeb, this.dateFin, 377),
     ];
 
     forkJoin(observables).pipe(
@@ -187,10 +187,10 @@ export class DashboardComponent implements OnInit {
         this.totalNiyebet = this.sumPatients(dataNiyebet);
         this.total5adamet = this.sumPatients(data5adamet);
         this.totalEr = this.sumPatients(dataEr);
-        this.totalPatient = this.total9othat + this.totalNiyebet + this.total5adamet ;
-        this.createChartOptions(this.totalNiyebet,this.total9othat,this.total5adamet,this.totalEr);
-        
-       
+        this.totalPatient = this.total9othat + this.totalNiyebet + this.total5adamet;
+        this.createChartOptions(this.totalNiyebet, this.total9othat, this.total5adamet, this.totalEr);
+
+
       })
     ).subscribe({
       complete: () => (this.IsLoading = false, this.loadingComponent.IsLoading = false), // Reset loading state
@@ -213,30 +213,30 @@ export class DashboardComponent implements OnInit {
     return sum;
   }
 
-  totalAdmission:any = 0 ;
-  GetTotalAdmissionByDate(){
+  totalAdmission: any = 0;
+  GetTotalAdmissionByDate() {
     this.IsLoadingTotalAdmission = true;
     this.rapportService.GetAllAdmissionByDate(this.dateDeb, this.dateFin).subscribe((data: any) => {
       this.loadingComponent.IsLoading = false;
       this.IsLoadingTotalAdmission = false;
       this.totalAdmission = data.length;
-    
+
     });
   }
 
 
- 
+
   /////  patient bloquer
   Blocked: any = false;
   getTotalPatientsBloquer(): void {
 
-    this.IsLoading=true;
+    this.IsLoading = true;
     const observables: Observable<any>[] = [
-      this.dashbordService.GetAllListPatientByDateAndCodeSocieteAndBloquer(this.dateDeb,this.dateFin ,374, true),
-      this.dashbordService.GetAllListPatientByDateAndCodeSocieteAndBloquer(this.dateDeb,this.dateFin ,375, true),
-      this.dashbordService.GetAllListPatientByDateAndCodeSocieteAndBloquer(this.dateDeb,this.dateFin ,376, true),
-      this.dashbordService.GetAllListPatientByDateAndCodeSocieteAndBloquer(this.dateDeb,this.dateFin ,377, true),
-      this.dashbordService.GetAllListPatientByDateAndCodeSocieteAndBloquer(this.dateDeb,this.dateFin ,379, true),
+      this.dashbordService.GetAllListPatientByDateAndCodeSocieteAndBloquer(this.dateDeb, this.dateFin, 374, true),
+      this.dashbordService.GetAllListPatientByDateAndCodeSocieteAndBloquer(this.dateDeb, this.dateFin, 375, true),
+      this.dashbordService.GetAllListPatientByDateAndCodeSocieteAndBloquer(this.dateDeb, this.dateFin, 376, true),
+      this.dashbordService.GetAllListPatientByDateAndCodeSocieteAndBloquer(this.dateDeb, this.dateFin, 377, true),
+      this.dashbordService.GetAllListPatientByDateAndCodeSocieteAndBloquer(this.dateDeb, this.dateFin, 379, true),
     ];
 
     forkJoin(observables).pipe(
@@ -250,7 +250,7 @@ export class DashboardComponent implements OnInit {
         this.totalPatientBloquer = this.total9othatBloquer + this.totalNiyebetBloquer + this.total5adametBloquer + this.totalErBloquer;
       })
     ).subscribe({
-      complete: () => (this.Blocked = false ,this.IsLoading=false), // Reset loading state
+      complete: () => (this.Blocked = false, this.IsLoading = false), // Reset loading state
       error: (error) => {
         console.error("Error fetching patient data:", error);
 
@@ -267,7 +267,7 @@ export class DashboardComponent implements OnInit {
     }
     return sum;
   }
- 
+
   DateTempNew: any;
   formatInputNew(event: any) {  // Use any because of p-calendar event type
     let inputValue = event.target.value.replace(/\D/g, ''); // Remove non-digits
@@ -292,7 +292,7 @@ export class DashboardComponent implements OnInit {
         this.DateTempNew = this.datePipe.transform(dateObject, 'yyyy-MM-dd')!; // Format here
       }
     }
-  } 
+  }
   dateDeb: any = '2023-08-01';;
   dateFin: any = null;
 
@@ -338,6 +338,17 @@ export class DashboardComponent implements OnInit {
     this.dateFin = this.datePipe.transform(this.dateFin, "yyyy-MM-dd")
   };
 
+
+  USerAdmin: boolean = true;
+  GetUserConnecter() {
+    const userConnect = JSON.parse(sessionStorage.getItem("auth-user") ?? '{}')?.userName;
+    if (userConnect === 'a' || userConnect === 'A' || userConnect != 'Clinisys' || userConnect != 'clinisys' || userConnect != 'CLINISYS') {
+
+      this.USerAdmin = false;
+    } else {
+      this.USerAdmin = true;
+    }
+  }
 
 }
 

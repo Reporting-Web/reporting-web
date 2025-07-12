@@ -220,6 +220,14 @@ const arI18n = {
  'diganosis':'التشخيص',
  'cheifComplaint':'الشكوى الرئيسية',
  'prestations':'الخدمات',
+ 'Ordonnance':'الوصفات',
+ 'designationArticle':'الصنف',
+ 'designationUnite':'الوحدة',
+ 'quantite':'كمية الصرف',
+ 'userCreate':'المستخدم',
+ 'dateMvt':'تاريخ الإستلام',
+ 'QteReminder':'الكمية المتبقية',
+ 'QteDemade':'الكمية المطلوبة',
 };
 
 

@@ -12,7 +12,7 @@
     </div>
     <!--navigation-->
     <ul class="metismenu" id="menu">
-        <li>
+        <li *ngIf="USerAdmin">
             <a [routerLink]="['/home']">
                 <div class="parent-icon"><i class='bx bxs-dashboard'></i>
                 </div>
@@ -21,7 +21,7 @@
         </li>
 
 
-        <li>
+        <li *ngIf="USerAdmin">
             <a [routerLink]="['/menu_edition']">
                 <div class="parent-icon"><i class='bx bxs-report'></i>
                 </div>
@@ -30,6 +30,14 @@
 
         </li>
 
+        <li>
+            <a [routerLink]="['/menu_pharmacie']">
+                <div class="parent-icon"><i class='fa-solid fa-kit-medical'></i>
+                </div>
+                <div class="menu-title">{{'Ordonnance' | i18n:i18nService.currentLanguage}}</div>
+            </a>
+
+        </li>
 
 
 

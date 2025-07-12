@@ -230,7 +230,7 @@ export class RapportDoctorPerformanceComponent implements OnInit {
   grandTotals: any = {}; // Add this line 
   GetAllDoctorPerformance() {
     this.loadingData = true;
-    this.rapportService.GetAllDoctorPerformanceByDate(this.dateDeb, this.dateFin,false).subscribe((data: any) => {
+    this.rapportService.GetAllDoctorPerformanceByDate(this.dateDeb, this.dateFin).subscribe((data: any) => {
       this.loadingComponent.IsLoading = false;
       this.IsLoading = false;
       this.dataDoctorPerformance = this.groupData(data);
@@ -270,6 +270,7 @@ export class RapportDoctorPerformanceComponent implements OnInit {
           chroniqueSet: new Set(),
           normalSet: new Set(),
           countPatient: new Set(),
+          countAdmission: new Set(),
         };
       }
  
@@ -309,6 +310,7 @@ export class RapportDoctorPerformanceComponent implements OnInit {
     if (item.nbrePrescriptionNormal > 0) groupedData[intervenantCode].normalSet.add(item.codeSaisieAdmission);
 
     groupedData[intervenantCode].countPatient.add(item.codePatient);
+    groupedData[intervenantCode].countAdmission.add(item.codeSaisieAdmission);
 
     
 
@@ -316,7 +318,7 @@ export class RapportDoctorPerformanceComponent implements OnInit {
     groupedData[intervenantCode].nbreReqPresRadio = groupedData[intervenantCode].radioSet.size;
     groupedData[intervenantCode].nbrePrescriptionChronique = groupedData[intervenantCode].chroniqueSet.size;
     groupedData[intervenantCode].nbrePrescriptionNormal = groupedData[intervenantCode].normalSet.size;
-      groupedData[intervenantCode].countPatientMedecin = groupedData[intervenantCode].countPatient.size;
+      groupedData[intervenantCode].countPatientMedecin = groupedData[intervenantCode].countAdmission.size;
   
   });
 
@@ -324,6 +326,7 @@ export class RapportDoctorPerformanceComponent implements OnInit {
   }
 
   groupDataDMI(data: any[]): any[] {
+    console.log("v111");
     const groupedDataDMI: { [key: number]: any } = {};
   
     data.forEach(item => {
@@ -341,10 +344,11 @@ export class RapportDoctorPerformanceComponent implements OnInit {
       let admission = groupedDataDMI[intervenantCode].dmiAdmissions.find(
         (a: any) => a.codeSaisieAdmission === item.codeSaisieAdmission
       );
-  
+    
       // If admission doesn't exist, create it.
       if (!admission) {
         admission = {
+          code:item.code,
           codePatient: item.codePatient,
           codeSaisieAdmission: item.codeSaisieAdmission,
           nomCompeleteAr: item.nomCompeleteAr,
@@ -565,7 +569,7 @@ export class RapportDoctorPerformanceComponent implements OnInit {
 
   GetAllDoctorPerformanceDent() {
     this.loadingData = true;
-    this.rapportService.GetAllDoctorPerformanceByDate(this.dateDeb, this.dateFin,true).subscribe((data: any) => {
+    this.rapportService.GetAllDoctorPerformanceByDateAndPresDent(this.dateDeb, this.dateFin,true).subscribe((data: any) => {
       this.loadingComponent.IsLoading = false;
       this.IsLoading = false; 
       this.dataDoctorPerformanceDMI = this.groupDataDMI(data); 
@@ -573,6 +577,49 @@ export class RapportDoctorPerformanceComponent implements OnInit {
     });
   }
 
+  currentValue:any;
+  calculateSumAdmissionTab(domaines: any[]): number {
+    let totalSumTab = 0;
+    // if (domaines && domaines.length > 0) {
+    //   totalSumTab =   domaines.reduce((sum, domaine) => {
+    //     const existingIndex = sum.findIndex((item:any) => item.codePatient === this.currentValue.codePatient);
+    //      return sum + ( sum[existingIndex].count++  );
+    //   }, 0);
+    // }
+    return totalSumTab;
+  }
+
+ 
+
+
+  calculateSumAdmissionDiagnosis(): number {
+    let totalSumTab = 0;
+    if (this.dataDoctorPerformanceDMI && this.dataDoctorPerformanceDMI.length > 0) {
+      totalSumTab = this.dataDoctorPerformanceDMI.reduce((sum, domaine) => {
+         return sum + (domaine.dmiAdmissions.diganosis  );
+      }, 0);
+    }
+    return totalSumTab;
+  }
+
+  calculateSumAdmissionCheifComplaint(): number {
+    let totalSumTab = 0;
+    if (this.dataDoctorPerformanceDMI && this.dataDoctorPerformanceDMI.length > 0) {
+      totalSumTab = this.dataDoctorPerformanceDMI.reduce((sum, domaine) => {
+         return sum + (domaine.dmiAdmissions.cheifComplaint  );
+      }, 0);
+    }
+    return totalSumTab;
+  }
+  calculateSumAdmissionPresDent(): number {
+    let totalSumTab = 0;
+    if (this.dataDoctorPerformanceDMI && this.dataDoctorPerformanceDMI.length > 0) {
+      totalSumTab = this.dataDoctorPerformanceDMI.reduce((sum, domaine) => {
+         return sum + (domaine.dmiAdmissions.nbrePresDent  );
+      }, 0);
+    }
+    return totalSumTab;
+  }
 
 }
 
