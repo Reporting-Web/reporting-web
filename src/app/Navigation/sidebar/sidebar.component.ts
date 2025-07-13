@@ -59,16 +59,11 @@ export class SidebarComponent {
 
 
   }
-
+ 
   USerAdmin: boolean = true;
   GetUserConnecter() {
-    const userConnect = JSON.parse(sessionStorage.getItem("auth-user") ?? '{}')?.userName;
-    if (userConnect === 'a' || userConnect === 'A' || userConnect != 'Clinisys' || userConnect != 'clinisys' || userConnect != 'CLINISYS') {
-      this.USerAdmin = false;
-    } else {
-      this.USerAdmin = true;
-    }
+    const userConnect = JSON.parse(sessionStorage.getItem("auth-user") ?? '{}')?.userName; 
+    this.USerAdmin = userConnect?.toLowerCase() === 'clinisys';
   }
-
 
 }
