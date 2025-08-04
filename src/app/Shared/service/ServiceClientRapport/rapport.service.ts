@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 
@@ -197,6 +197,31 @@ export class RapportService {
     return this.http.get(`${environment.API_PHARMACIE}ordonnance/findAllByDateAndCodePatient?dateDebut=` + dateDebut + `&dateFin=` + dateFin + `&codePatient=` + codePatient)
   }
 
+  // GetAllOrdonnanceCodePatientAndNumProf(dateDebut: any, dateFin: any, codePatient: string,numProf:string) {
+  //   return this.http.get(`${environment.API_PHARMACIE}ordonnance/findAll?dateDebut=` + dateDebut + `&dateFin=` + dateFin + `&codePatient=` + codePatient + `&numProf=`+numProf)
+  // }
+
+  GetAllOrdonnanceCodePatientAndNumProf(dateDebut: any, dateFin: any, codePatient: string | null, numProf: string | null, patientNameAr: string | null) {
+ 
+    let params = new HttpParams(); 
+    if (dateDebut) {
+      params = params.append('dateDebut', dateDebut);
+    }
+    if (dateFin) {
+      params = params.append('dateFin', dateFin);
+    }
+    if (codePatient) {  
+      params = params.append('codePatient', codePatient);
+    }
+    if (numProf) { 
+      params = params.append('numProf', numProf);
+    } 
+    if (patientNameAr) { 
+      params = params.append('patientNameAr', patientNameAr);
+    } 
+    const url = `${environment.API_PHARMACIE}ordonnance/findAll`;
+    return this.http.get(url, { params: params });
+  }
 
 }
 

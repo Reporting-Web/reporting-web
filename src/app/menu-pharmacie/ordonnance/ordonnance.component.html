@@ -17,53 +17,73 @@
                         <div class="col">
                             <div class="card radius-10 border-start border-0 border-4 border-danger">
                                 <div class="card-body" style="    white-space: break-spaces;">
-                                    <div class="flex-row-start   FloatRight flex-12">
-                                        <label class="control-label flex-20" style="font-weight: 700;"> الرقم الطبي :
-                                        </label>
 
-                                        <div class="control-input flex-5-45 " style="max-width: 140px;">
-                                            <input id="codeSaisie" maxlength="20" name="codeSaisie" type="text" class=" form-control-dev input-xs" required [(ngModel)]="codePatient">
+                                    <div class="block-row" style="border-radius: 6px; border: none;">
+                                        <div class="flex-row-start   FloatRight flex-12">
 
+
+                                            <label class="control-label flex-20" style="font-weight: 700;"> الرقم الطبي :
+                                                </label>
+
+                                            <div class="control-input flex-5-45 " style="max-width: 140px;">
+                                                <input id="codeSaisie" maxlength="20" name="codeSaisie" type="text" class=" form-control-dev input-xs" required [(ngModel)]="codePatient">
+
+                                            </div>
+                                            <label class="control-label flex-20" style="font-weight: 700;"> الرقم الوطني :
+                                                </label>
+
+                                            <div class="control-input flex-5-45 " style="max-width: 140px;">
+                                                <input id="numProf" maxlength="20" name="numProf" type="text" class=" form-control-dev input-xs" required [(ngModel)]="numProf">
+
+                                            </div>
+
+                                            <label class="control-label flex-20" style="font-weight: 700;"> الفترة </label>
+                                            <label class="control-label flex-20" style="font-weight: 700;"> من </label>
+
+                                            <div class="dop control-input " style="display: flex;">
+
+                                                <p-calendar (keyup.enter)="transformDateFormat()" (onInput)="formatInputNew($event)" (onBlur)="transformDateFormat()" (onChange)="transformDateFormat()" (onSelect)="transformDateFormat()" [(ngModel)]="dateDeb" [ngStyle]="{'width':'100%' , 'margin-right': '15px'}"
+                                                    [showButtonBar]="true" appendTo="body" [iconDisplay]="'input'" #calendar dateFormat="yy-mm-dd" [readonlyInput]="false" [showIcon]="true" inputId="icondisplay"></p-calendar>
+
+
+                                            </div>
+
+                                            <label class="control-label flex-20" style="font-weight: 700;"> إلى </label>
+
+                                            <div class="dop control-input " style="display: flex;">
+
+                                                <p-calendar (keyup.enter)="transformDateFormatFin()" (onInput)="formatInputNewFin($event)" (onBlur)="transformDateFormatFin()" (onChange)="transformDateFormatFin()" (onSelect)="transformDateFormatFin()" [(ngModel)]="dateFin" [ngStyle]="{'width':'100%' , 'margin-right': '15px'}"
+                                                    [showButtonBar]="true" appendTo="body" [iconDisplay]="'input'" #calendar dateFormat="yy-mm-dd" [readonlyInput]="false" [showIcon]="true" inputId="icondisplay"></p-calendar>
+
+                                            </div>
                                         </div>
 
-                                        <label class="control-label flex-20" style="font-weight: 700;"> الفترة </label>
-                                        <label class="control-label flex-20" style="font-weight: 700;"> من </label>
+                                        <div class="flex-row-start flex-8 FloatRight" style="margin-top: 10px;">
 
-                                        <div class="dop control-input " style="display: flex;">
+                                            <label class="control-label flex-2" style="font-weight: 700;"> الإسم :
+                                            </label>
 
-                                            <p-calendar (keyup.enter)="transformDateFormat()" (onInput)="formatInputNew($event)" (onBlur)="transformDateFormat()" (onChange)="transformDateFormat()" (onSelect)="transformDateFormat()" [(ngModel)]="dateDeb" [ngStyle]="{'width':'100%' , 'margin-right': '15px'}"
-                                                [showButtonBar]="true" appendTo="body" [iconDisplay]="'input'" #calendar dateFormat="yy-mm-dd" [readonlyInput]="false" [showIcon]="true" inputId="icondisplay"></p-calendar>
+                                            <div class="control-input flex-12 " style="width: 395px;">
+                                                <input id="codeSaisie" maxlength="20" name="codeSaisie" type="text" class=" form-control-dev input-xs" required [(ngModel)]="patientNameAr">
 
-
+                                            </div>
                                         </div>
+                                    </div>
+                                    <div class="block-row" style="border-radius: 6px; border: none;align-content: center;">
 
-                                        <label class="control-label flex-20" style="font-weight: 700;"> إلى </label>
-
-                                        <div class="dop control-input " style="display: flex;">
-
-                                            <p-calendar (keyup.enter)="transformDateFormatFin()" (onInput)="formatInputNewFin($event)" (onBlur)="transformDateFormatFin()" (onChange)="transformDateFormatFin()" (onSelect)="transformDateFormatFin()" [(ngModel)]="dateFin" [ngStyle]="{'width':'100%' , 'margin-right': '15px'}"
-                                                [showButtonBar]="true" appendTo="body" [iconDisplay]="'input'" #calendar dateFormat="yy-mm-dd" [readonlyInput]="false" [showIcon]="true" inputId="icondisplay"></p-calendar>
-
+                                        <div class="flex-row-start flex-8 FloatLeft" style="margin-top: 10px;">
+                                            <button data-backdrop="false" type="button" class="Bouton-add-new1 btn  btn-default " data-original-title="Add" data-toggle="modal" data-target="#Modal" (click)="GetData()">
+                                                <div class="bouton_style-2"> {{'Voir' | i18n:i18nService.currentLanguage}}
+                                                </div>
+                                                <i class="fa-solid fa-magnifying-glass iconPDF"></i>
+                                            </button>
                                         </div>
-
-
                                     </div>
 
-                                    <div class="flex-row-start flex-8 FloatLeft" style="margin-top: 10px;">
 
 
-                                        <button data-backdrop="false" type="button" class="Bouton-add-new1 btn  btn-default " data-original-title="Add" data-toggle="modal" data-target="#Modal" (click)="GetData()">
-                                            <div class="bouton_style-2"> {{'Voir' | i18n:i18nService.currentLanguage}}
-                                            </div>
-                                            <i class="fa-solid fa-magnifying-glass iconPDF"></i>
-                                        </button>
-                                        <!-- <button data-backdrop="false" type="button" class="Bouton-add-new1 btn  btn-default " data-original-title="Add" data-toggle="modal" data-target="#Modal" (click)="onOpenModal('Print')">
-                                            <div class="bouton_style-2"> {{'Print' | i18n:i18nService.currentLanguage}}
-                                            </div>
-                                            <i class="fa-solid fa-print iconPDF"></i>
-                                        </button> -->
 
-                                    </div>
+
 
                                 </div>
                             </div>

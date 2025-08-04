@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, OnInit } from '@angular/core'; 
+import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 import { LoadingComponent } from '../../Shared/loading/loading.component';
 import { ControlServiceAlertify } from '../../Shared/Control/ControlRow';
 import { I18nService } from '../../Shared/i18n/i18n.service';
@@ -139,16 +139,42 @@ export class OrdonnanceComponent implements OnInit {
   };
 
 
+  // GetData() {
+  //   if (this.dateDeb == null || this.dateFin == null && this.codePatient == null || this.codePatient == ""  || this.numProf == null || this.numProf =="" || this.patientNameAr == null || this.patientNameAr == "") {
+  //     this.CtrlAlertify.PostionLabelNotification();
+  //     this.CtrlAlertify.showNotificationِCustom('PleaseSelectedAnyDateOrNum');
+  //   } else if (this.dateFin < this.dateDeb) {
+  //     this.CtrlAlertify.PostionLabelNotification();
+  //     this.CtrlAlertify.showNotificationِCustom('ErrorDate');
+  //   } else {
+  //     this.GetAllAdmission();
+  //   }
+  // }
   GetData() {
-    if (this.dateDeb == null || this.dateFin == null || this.codePatient == null || this.codePatient == "") {
+    // Check if all text inputs are empty. Using .trim() handles cases where the user enters only spaces.
+    const isCodePatientEmpty = !this.codePatient || this.codePatient.trim() === '';
+    const isNumProfEmpty = !this.numProf || this.numProf.trim() === '';
+    const isPatientNameArEmpty = !this.patientNameAr || this.patientNameAr.trim() === '';
+  
+    // --- VALIDATION 1: Check if ALL fields are empty ---
+    // If the dates are null AND all text fields are empty, then block the search.
+    if (this.dateDeb == null || this.dateFin == null  && isCodePatientEmpty && isNumProfEmpty && isPatientNameArEmpty) {
       this.CtrlAlertify.PostionLabelNotification();
-      this.CtrlAlertify.showNotificationِCustom('PleaseSelectedAnyDateOrNum');
-    } else if (this.dateFin < this.dateDeb) {
-      this.CtrlAlertify.PostionLabelNotification();
-      this.CtrlAlertify.showNotificationِCustom('ErrorDate');
-    } else {
-      this.GetAllAdmission();
+      // Use a more descriptive message for the user
+      this.CtrlAlertify.showNotificationِCustom('PleaseRemiplreAllField'); 
+      return; // Stop the function here
     }
+  
+    // --- VALIDATION 2: Check for a valid date range ---
+    // This check should only run if both dates have been entered.
+    if (this.dateDeb && this.dateFin && this.dateFin < this.dateDeb) {
+      this.CtrlAlertify.PostionLabelNotification();
+      this.CtrlAlertify.showNotificationِCustom('ErrorDate'); // Or "End date cannot be before start date."
+      return; // Stop the function here
+    }
+  
+    // If all validations pass, proceed with the search.
+    this.GetAllAdmission();
   }
 
 
@@ -190,7 +216,7 @@ export class OrdonnanceComponent implements OnInit {
       { field: 'userCreate', header: this.i18nService.getString('userCreate') || 'userCreate', width: '10%', filter: "true", type: "text" },
       { field: 'dateMvt', header: this.i18nService.getString('dateMvt') || 'dateMvt', width: '10%', filter: "true", type: "text" },
 
-      ];
+    ];
   }
 
   GetColumnsGroupedCoutAdmissionTable() {
@@ -200,7 +226,7 @@ export class OrdonnanceComponent implements OnInit {
       { field: 'patientNameAr', header: this.i18nService.getString('NomFullAr') || 'NomFullAr', width: '18%', filter: "true", type: "text" },
       { field: 'codeAdmisson', header: this.i18nService.getString('codeAdmission') || 'codeAdmission', width: '15%', filter: "true", type: "text" },
       { field: 'dateArrivee', header: this.i18nService.getString('DateArriver') || 'DateArriver', width: '12%', filter: "true", type: "text" },
-   
+
     ];
 
 
@@ -222,22 +248,28 @@ export class OrdonnanceComponent implements OnInit {
   groupedData = new Array<any>();
   loadingData = false;
   grandTotals: any = {}; // Add this line 
-  GetAllAdmission() {
-    this.loadingData = true;
-    this.rapportService.GetAllOrdonnance(this.dateDeb, this.dateFin, this.codePatient).subscribe((data: any) => {
-      // this.loadingComponent.IsLoading = false;
-      // this.IsLoading = false;
-      // const result = this.groupAndSumPatientData(data);
-      // this.dataAdmission = result.patientData; 
+  // GetAllAdmission() {
+  //   this.loadingData = true;
+  //   this.rapportService.GetAllOrdonnance(this.dateDeb, this.dateFin, this.codePatient).subscribe((data: any) => { 
+  //     this.dataAdmission = this.groupDataByAdmission(data); 
+  //     this.loadingData = false;
+  //   });
+  // }
 
-      this.dataAdmission = this.groupDataByAdmission(data); 
-      this.loadingData = false;
-    });
+  GetAllAdmission(): void {
+    this.loadingData = true;
+    this.dataAdmission = []; // Clear previous results
+    this.rapportService.GetAllOrdonnanceCodePatientAndNumProf(this.dateDeb, this.dateFin, this.codePatient, this.numProf,this.patientNameAr)
+      .subscribe((data: any) => {
+        this.dataAdmission = this.groupDataByAdmission(data);
+        this.loadingData = false;
+      });
   }
 
+
   totalPatient = 0;
-  groupAndSumPatientData(data: any[]): { patientData: any[]} {
-    const groupedData: { [key: string]: any } = {}; 
+  groupAndSumPatientData(data: any[]): { patientData: any[] } {
+    const groupedData: { [key: string]: any } = {};
 
     data.forEach((item) => {
       const patientCode = item.patientCode;
@@ -246,44 +278,37 @@ export class OrdonnanceComponent implements OnInit {
           patientCode: patientCode,
           patientNameAr: item.patientNameAr,
           codeAdmisson: item.codeAdmisson,
-          dateArrivee: item.dateArrivee, 
+          dateArrivee: item.dateArrivee,
           admissions: [],
         };
 
       }
-      //Group and Sum Admissions by codeSaisieAdmission
       let admission = groupedData[patientCode].admissions.find((a: any) => a.codeAdmisson === item.codeAdmisson);
       if (!admission) {
         admission = {
           patientCode: item.patientCode,
           codeAdmisson: item.codeAdmisson,
           designationArticle: item.designationArticle,
-          codeSaisie:item.codeSaisie,
-          designationUnite:item.designationUnite,
-          userCreate:item.userCreate,
-          quantite:item.quantite,
-          dateMvt:item.dateMvt,
-          qteReminder:item.qteReminder,
-          qteDemander:item.qteDemander,
-           
-         
+          codeSaisie: item.codeSaisie,
+          designationUnite: item.designationUnite,
+          userCreate: item.userCreate,
+          quantite: item.quantite,
+          dateMvt: item.dateMvt,
+          qteReminder: item.qteReminder,
+          qteDemander: item.qteDemander,
+
+
         };
         groupedData[patientCode].admissions.push(admission);
       }
 
- 
+
 
     });
-
- 
-
-
     return {
-      patientData: Object.values(groupedData) 
+      patientData: Object.values(groupedData)
     }
   }
-
-  
   groupDataByAdmission(data: any[]): any[] {
     const groupedAdmissions: { [key: string]: any } = {};
 
@@ -299,10 +324,10 @@ export class OrdonnanceComponent implements OnInit {
           codeAdmisson: admissionCode,
           dateArrivee: item.dateArrivee,
           // Initialize an array to hold all articles for this admission
-          admissions: [] 
+          admissions: []
         };
       }
-      
+
       // Add the current article/item to the list for this admission group.
       // We push the whole 'item' so all its properties are available in the sub-table.
       groupedAdmissions[admissionCode].admissions.push(item);
@@ -313,7 +338,9 @@ export class OrdonnanceComponent implements OnInit {
   }
   codePatient: any = null;
 
+  patientNameAr: any = null;
 
+  numProf: any = null;
 
   reportServer: any;
   reportPath: any;

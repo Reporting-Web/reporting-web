@@ -190,6 +190,8 @@ const arI18n = {
  'Annee':'السنة',
 'PleaseSelectedAnyDate':'الرجاء إختيار تاريخ',
 'PleaseSelectedAnyDateOrNum':'الرجاء إختيار تاريخ أو الرقم الوظيفي',
+'PleaseRemiplreAllField':'الرجاء التأكد من عناصر البحث',
+
 'ErrorDate':'الرجاء التأكد من التاريخ',
 'Count':'عدد المرضى',
 'CountLab':'عدد التحاليل',
