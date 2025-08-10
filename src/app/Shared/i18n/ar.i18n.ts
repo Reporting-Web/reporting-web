@@ -191,7 +191,7 @@ const arI18n = {
 'PleaseSelectedAnyDate':'الرجاء إختيار تاريخ',
 'PleaseSelectedAnyDateOrNum':'الرجاء إختيار تاريخ أو الرقم الوظيفي',
 'PleaseRemiplreAllField':'الرجاء التأكد من عناصر البحث',
-
+'ChoiseAnySpecialiteToPrint':'الرجاء إختار التحصص للطباعة',
 'ErrorDate':'الرجاء التأكد من التاريخ',
 'Count':'عدد المرضى',
 'CountLab':'عدد التحاليل',

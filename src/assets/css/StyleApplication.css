@@ -423,10 +423,11 @@ tr.mat-footer-row {
 
 :host ::ng-deep .ModalPrint {
     border-radius: 6px;
-    width: 1100px;
+    width: 1200px;
     font-family: auto;
-    margin-top: 90px;
+    margin-top: 50px;
     overflow-x: hidden;
+    height: 80%;
 }
 
 .sidebar.open+.mainbox {

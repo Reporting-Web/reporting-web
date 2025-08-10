@@ -52,13 +52,11 @@
                                             </div>
                                             <i class="fa-solid fa-magnifying-glass iconPDF"></i>
                                         </button>
-                                        <!-- <button data-backdrop="false" type="button"
-                                            class="Bouton-add-new1 btn  btn-default " data-original-title="Add"
-                                            data-toggle="modal" data-target="#Modal" (click)="onOpenModal('Print')">
+                                        <button data-backdrop="false" type="button" class="Bouton-add-new1 btn  btn-default " data-original-title="Add" data-toggle="modal" data-target="#Modal" (click)="onOpenModal('Print')">
                                             <div class="bouton_style-2"> {{'Print' | i18n:i18nService.currentLanguage}}
                                             </div>
                                             <i class="fa-solid fa-print iconPDF"></i>
-                                        </button> -->
+                                        </button>
 
                                     </div>
 
@@ -272,8 +270,12 @@
                                                                 </div>
                                                             </section>
                                                             <section class="flex-row-start flex-6 ">
-                                                                <div class="flex-6">
-
+                                                                <div class="flex-6 FloatLeft">
+                                                                    <button data-backdrop="false" type="button" class="Bouton-add-new1 btn  btn-default " data-original-title="Add" data-toggle="modal" data-target="#ModalDentaire" (click)="onOpenModal('PrintDentaire')">
+                                                                        <div class="bouton_style-2"> {{'Print' | i18n:i18nService.currentLanguage}}
+                                                                        </div>
+                                                                        <i class="fa-solid fa-print iconPDF"></i>
+                                                                    </button>
                                                                 </div>
 
                                                             </section>
@@ -434,26 +436,47 @@
 
 
 
-<p-dialog id="ModalPrint" header="Header" [scrollLeft]="true" [(visible)]="visibleModalPrint" data-backdrop="false" [modal]="true" styleClass="ModalPrintPaysage" [draggable]="false">
-    <p-toast key="toast1"></p-toast>
+<p-dialog id="ModalPrintFinal" header="Header" [scrollLeft]="true" [closeOnEscape]="true" [(visible)]="visibleModalPrint" (onHide)="CloseModalPrint()" data-backdrop="false" [modal]="true" styleClass="ModalPrint" [draggable]="false" [resizable]="true">
+
     <ng-template pTemplate="header">
-        <div class="FloatRight">
-            <h2 class="text-default headerForm"> طباعة </h2>
-        </div>
-        <div class="FloatLeft">
-            <button class="btn btn-default cancel-add-ModalSmall" :closable="true" data-dismiss="modal" (click)="CloseModalPrint()">
-                <i class="fa-solid fa-circle-xmark IconBtnModal" style="color: #9e0000;font-size: 16px;"></i>
-                Close
-            </button>
-        </div>
-
-
+        <h2 class="text-default headerForm">طباعة أداء الأطباء </h2>
+        <button class="btn btn-default cancel-add-ModalSmall" (click)="CloseModalPrint()">
+            <i class="fa-solid fa-circle-xmark" style="color: #9e0000;font-size: 16px;"></i>
+            {{'Close' | i18n:i18nService.currentLanguage}}
+        </button>
     </ng-template>
-    <div class="modal-body">
-        <ssrs-reportviewer [reportserver]="reportServer" [reporturl]="reportPath" [showparameters]="showParameters" [parameters]="parameters" [language]="language" [width]="width" [height]="height" [toolbar]="toolbar"></ssrs-reportviewer>
 
+    <div class="modal-body" style="height: 100%; position: relative;">
+        <div *ngIf="isLoading" class="loading-indicator">
+            <p-progressSpinner></p-progressSpinner>
+            <span>جاري تحميل ...</span>
+        </div>
 
-
+        <iframe *ngIf="pdfSrc && !isLoading" [src]="pdfSrc" frameborder="0" style="width: 100%; height: 100%; border: none;">
+        </iframe>
     </div>
+</p-dialog>
 
+
+
+<p-dialog id="ModalPrintFinalDentaire" header="Header" [scrollLeft]="true" [closeOnEscape]="true" [(visible)]="visibleModalPrintDentaire" (onHide)="CloseModalPrintDentaire()" data-backdrop="false" [modal]="true" styleClass="ModalPrint" [draggable]="false"
+    [resizable]="true">
+
+    <ng-template pTemplate="header">
+        <h2 class="text-default headerForm">طباعة أداء الأطباء حسب التخصص</h2>
+        <button class="btn btn-default cancel-add-ModalSmall" (click)="CloseModalPrintDentaire()">
+            <i class="fa-solid fa-circle-xmark" style="color: #9e0000;font-size: 16px;"></i>
+            {{'Close' | i18n:i18nService.currentLanguage}}
+        </button>
+    </ng-template>
+
+    <div class="modal-body" style="height: 100%; position: relative;">
+        <div *ngIf="isLoading" class="loading-indicator">
+            <p-progressSpinner></p-progressSpinner>
+            <span>جاري تحميل ...</span>
+        </div>
+
+        <iframe *ngIf="pdfSrcDent && !isLoading" [src]="pdfSrcDent" frameborder="0" style="width: 100%; height: 100%; border: none;">
+        </iframe>
+    </div>
 </p-dialog>

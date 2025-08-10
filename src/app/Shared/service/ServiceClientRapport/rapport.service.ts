@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -170,6 +171,13 @@ export class RapportService {
     return this.http.get(`${environment.API_DOCTOR}doctor_performance/all`)
   }
 
+
+  GetAllDoctorPerformanceEditionByCode(dateDebut: any, dateFin: any): Observable<any> {
+    return this.http.get(`${environment.API_DOCTOR}doctor_performance/edition?dateDebutStr=` + dateDebut + `&dateFinStr=`+dateFin, { responseType: 'blob' })
+  }
+  GetAllDoctorPerformanceEditionByDateAndSpecialite(dateDebut: any, dateFin: any,codeSpecialite: any): Observable<any> {
+    return this.http.get(`${environment.API_DOCTOR}doctor_performance/editionDentaire?dateDebutStr=` + dateDebut + `&dateFinStr=`+dateFin + `&codeSpecialite=`+codeSpecialite, { responseType: 'blob' })
+  }
 
   GetAllDoctorPerformanceByDate(dateDebut: any, dateFin: any) {
     return this.http.get(`${environment.API_DOCTOR}doctor_performance/findAllByDate?dateDebut=` + dateDebut + `&dateFin=` + dateFin)

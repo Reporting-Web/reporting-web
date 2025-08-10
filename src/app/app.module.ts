@@ -75,6 +75,7 @@ import { ToFixedRoundPipe } from './Shared/service/ToFixedRoundPipe';
  
 import { TreeTableModule } from 'primeng/treetable';
  
+import { ProgressSpinnerModule } from 'primeng/progressspinner'; 
 import { ToastModule } from 'primeng/toast'; 
 import { CustomSelectComponent } from './Shared/TAB/custom-select.component'; 
 import { AuthInterceptor, authInterceptorProviders } from './Authenfication/_helpers/auth.interceptor';
@@ -149,7 +150,7 @@ const languages = [
      TableModule, InputTextModule, FileUploadModule,
      ButtonModule, InputNumberModule, NoopAnimationsModule, // Needed for PrimeNG animations
        
-    FormsModule, DialogModule, RadioButtonModule, 
+    FormsModule, DialogModule, RadioButtonModule, ProgressSpinnerModule,
     CalendarModule, CheckboxModule, TabViewModule,MenubarModule ,ReportViewerModule
 
   ],

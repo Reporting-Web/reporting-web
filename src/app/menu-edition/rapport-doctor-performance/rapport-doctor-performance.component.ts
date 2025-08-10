@@ -7,6 +7,7 @@ import { CalanderTransService } from '../../Shared/CalanderService/CalanderTrans
 import { RapportService } from '../../Shared/service/ServiceClientRapport/rapport.service';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-rapport-doctor-performance',
@@ -17,7 +18,8 @@ import { environment } from '../../../environments/environment';
 })
 export class RapportDoctorPerformanceComponent implements OnInit {
   constructor(private router: Router, private rapportService: RapportService, private loadingComponent: LoadingComponent,
-    public i18nService: I18nService, private datePipe: DatePipe, private CtrlAlertify: ControlServiceAlertify
+    public i18nService: I18nService, private datePipe: DatePipe, private CtrlAlertify: ControlServiceAlertify,
+    private sanitizer: DomSanitizer
     , private calandTrans: CalanderTransService) { this.calandTrans.setLangAR(); }
 
 
@@ -436,31 +438,41 @@ export class RapportDoctorPerformanceComponent implements OnInit {
   toolbar: any;
   ssrsReportViewerOptions: any;
   visibleModalPrint = false;
+  visibleModalPrintDentaire = false;
 
   userCreate = JSON.parse(sessionStorage.getItem("auth-user") ?? '{}')?.userName;
-  PrintReporting(dateDebut: any, datefin: any) {
-    this.reportServer = 'http://' + environment.adressIP + '/ReportServer'
-    this.reportPath = 'Reporting/CoutAdmission';
-    this.showParameters = "true";
-    this.parameters = {
-      "dateDeb": dateDebut,
-      "dateFin": datefin,
-      "user": this.userCreate,
-      "NumProf": this.numProfessionel,
-    };
-    this.language = "en-us";
-    this.width = 50;
-    this.height = 50;
-    this.toolbar = "true";
-    this.visibleModalPrint = true;
-  }
+  // PrintReporting(dateDebut: any, datefin: any) {
+  //   this.reportServer = 'http://' + environment.adressIP + '/ReportServer'
+  //   this.reportPath = 'Reporting/CoutAdmission';
+  //   this.showParameters = "true";
+  //   this.parameters = {
+  //     "dateDeb": dateDebut,
+  //     "dateFin": datefin,
+  //     "user": this.userCreate,
+  //     "NumProf": this.numProfessionel,
+  //   };
+  //   this.language = "en-us";
+  //   this.width = 50;
+  //   this.height = 50;
+  //   this.toolbar = "true";
+  //   this.visibleModalPrint = true;
+  // }
   pdfData: any;
   CloseModalPrint() {
     this.visibleModalPrint = false;
     this.pdfData == null;
     this.dateDebPrint = null;
     this.dateFinPrint = null;
+    this.isLoading=false; 
     // this.numProfessionel = null;
+  }
+
+  CloseModalPrintDentaire() {
+    this.visibleModalPrintDentaire = false;
+    this.pdfData == null;
+    this.dateDebPrint = null;
+    this.dateFinPrint = null;
+    this.isLoading=false;  
   }
 
 
@@ -480,10 +492,36 @@ export class RapportDoctorPerformanceComponent implements OnInit {
       }
       else {
         button.setAttribute('data-target', '#ModalPrint');
+        // this.IsLoading = true;
         this.visibleModalPrint = true;
         this.dateDebPrint = this.dateDeb;
         this.dateFinPrint = this.dateFin;
-        this.PrintReporting(this.dateDebPrint, this.dateFinPrint);
+        // this.PrintReporting(this.dateDebPrint, this.dateFinPrint);
+        this.PrintDoctorPerformance(this.dateDebPrint, this.dateFinPrint);
+      }
+
+    }
+
+    if (mode === 'PrintDentaire') {
+      if (this.dateDeb == null || this.dateFin == null ) {
+        this.CtrlAlertify.PostionLabelNotification();
+        this.CtrlAlertify.showNotificationِCustom('PleaseSelectedAnyDate');
+      } else if (this.dateFin < this.dateDeb) {
+        this.CtrlAlertify.PostionLabelNotification();
+        this.CtrlAlertify.showNotificationِCustom('ErrorDate');
+      }
+      else if (this.selectedSpecialiteMedecin == null || this.selectedSpecialiteMedecin == undefined || this.selectedSpecialiteMedecin ==""){
+        this.CtrlAlertify.PostionLabelNotification();
+        this.CtrlAlertify.showNotificationِCustom('ChoiseAnySpecialiteToPrint');
+      }
+      else {
+        button.setAttribute('data-target', '#ModalPrintDentaire');
+        // this.IsLoading = true;
+        this.visibleModalPrintDentaire = true;
+        this.dateDebPrint = this.dateDeb;
+        this.dateFinPrint = this.dateFin;
+        // this.PrintReporting(this.dateDebPrint, this.dateFinPrint);
+        this.PrintDoctorPerformanceDentaire(this.dateDebPrint, this.dateFinPrint,this.selectedSpecialiteMedecin);
       }
 
     }
@@ -491,7 +529,7 @@ export class RapportDoctorPerformanceComponent implements OnInit {
 
   }
 
-
+  isLoading = false;
 
 
    ///////  details dmi 
@@ -619,6 +657,46 @@ export class RapportDoctorPerformanceComponent implements OnInit {
       }, 0);
     }
     return totalSumTab;
+  }
+
+  pdfSrc: SafeResourceUrl | null = null; 
+  PrintDoctorPerformance(dateDebut: any, datefin: any) { 
+    this.isLoading = true;
+    this.pdfSrc = null; // Reset on each new request 
+    this.rapportService.GetAllDoctorPerformanceEditionByCode(dateDebut,datefin).subscribe({
+      next: (data: Blob) => {
+        const blob = new Blob([data], { type: 'application/pdf' });
+        const unsafeUrl = URL.createObjectURL(blob);
+        this.pdfSrc = this.sanitizer.bypassSecurityTrustResourceUrl(unsafeUrl);
+        this.isLoading = false; 
+      },
+      error: (error: any) => {
+        this.isLoading = false;
+        this.CtrlAlertify.showNotificationِCustom('FailedToLoadPDF');
+        console.error('Error loading PDF:', error);
+      }
+    });
+  }
+
+
+  
+  pdfSrcDent: SafeResourceUrl | null = null; 
+  PrintDoctorPerformanceDentaire(dateDebut: any, datefin: any,codeSpecialite:any) { 
+    this.isLoading = true;
+    this.pdfSrcDent = null; // Reset on each new request 
+    this.rapportService.GetAllDoctorPerformanceEditionByDateAndSpecialite(dateDebut,datefin,codeSpecialite).subscribe({
+      next: (data: Blob) => {
+        const blob = new Blob([data], { type: 'application/pdf' });
+        const unsafeUrl = URL.createObjectURL(blob);
+        this.pdfSrcDent = this.sanitizer.bypassSecurityTrustResourceUrl(unsafeUrl);
+        this.isLoading = false; 
+      },
+      error: (error: any) => {
+        this.isLoading = false;
+        this.CtrlAlertify.showNotificationِCustom('FailedToLoadPDF');
+        console.error('Error loading PDF:', error);
+      }
+    });
   }
 
 }
